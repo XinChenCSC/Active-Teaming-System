@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane blendMode="EXCLUSION" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="660.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.SignupController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane cache="false" fitToHeight="false" fitToWidth="false" hbarPolicy="AS_NEEDED" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" mouseTransparent="false" pannable="true" prefHeight="660.0" prefViewportHeight="0.0" prefWidth="1280.0" vbarPolicy="AS_NEEDED" vmax="1.0" vvalue="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <Pane prefHeight="-1.0" prefWidth="1265.0">
+          <children>
+            <GridPane alignment="CENTER" blendMode="DIFFERENCE" layoutX="382.0" layoutY="-15.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
+              <children>
+                <TextField id="Firstname" fx:id="FirstnameF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                    <Insets left="40.0" right="20.0" fx:id="x4" />
+                  </GridPane.margin>
+                </TextField>
+                <TextField fx:id="lastnameF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="4" />
+                <TextField fx:id="idF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="6" />
+                <TextField fx:id="newpasswordF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="8" />
+                <TextField fx:id="repeatpasswordF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="10" />
+                <Button fx:id="signupButton" blendMode="HARD_LIGHT" cache="false" cacheHint="QUALITY" defaultButton="false" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#Signup_Click" prefHeight="40.0" prefWidth="440.0" text="Create account" textFill="#000833" textOverrun="WORD_ELLIPSIS" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="13">
+                  <GridPane.margin>
+                    <Insets left="40.0" top="10.0" />
+                  </GridPane.margin>
+                </Button>
+                <Label alignment="CENTER" blendMode="EXCLUSION" contentDisplay="LEFT" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="400.0" text="Registration" textFill="#ff9533" underline="true" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                  <font>
+                    <Font name="Arial Black" size="50.0" />
+                  </font>
+                  <GridPane.margin>
+                    <Insets bottom="10.0" left="10.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="100.0" text="First name" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                  <font>
+                    <Font size="20.0" fx:id="x1" />
+                  </font>
+                  <textFill>
+                    <Color blue="0.400" green="0.976" red="1.000" fx:id="x5" />
+                  </textFill>
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER" font="$x1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="100.0" text="Last name" textFill="$x5" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="3" />
+                <Label alignment="CENTER_LEFT" font="$x1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="100.0" text="ID" textFill="$x5" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="5" />
+                <Label alignment="CENTER_LEFT" font="$x1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="176.0" text="Choose a password" textFill="$x5" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="7" />
+                <Label alignment="CENTER_LEFT" font="$x1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="157.0" text="Repeat password" textFill="$x5" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="9" />
+                <Label text="E-mail address" textFill="$x5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                  <font>
+                    <Font size="19.0" />
+                  </font>
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Label>
+                <TextField focusTraversable="false" prefHeight="40.0" prefWidth="0.0" GridPane.columnIndex="0" GridPane.rowIndex="12">
+                  <GridPane.margin>
+                    <Insets left="40.0" right="20.0" fx:id="x4" />
+                  </GridPane.margin>
+                </TextField>
+                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                    <Insets left="150.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="Format error" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                  <GridPane.margin>
+                    <Insets left="150.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                  <GridPane.margin>
+                    <Insets left="150.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_RIGHT" prefWidth="264.0" text="Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="7">
+                  <GridPane.margin>
+                    <Insets left="215.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_RIGHT" prefWidth="264.0" text="Incorrect!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                  <GridPane.margin>
+                    <Insets left="215.0" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_RIGHT" prefWidth="264.0" text="Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                  <GridPane.margin>
+                    <Insets left="215.0" />
+                  </GridPane.margin>
+                </Label>
+              </children>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="10.0" prefWidth="500.0" />
+              </columnConstraints>
+              <padding>
+                <Insets fx:id="x3" />
+              </padding>
+              <rowConstraints>
+                <RowConstraints maxHeight="178.0" prefHeight="111.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="123.0" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="114.0" minHeight="-Infinity" prefHeight="59.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.0" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="150.0" minHeight="-Infinity" prefHeight="150.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <Button fx:id="BackButton" focusTraversable="false" layoutX="0.0" layoutY="0.0" mnemonicParsing="false" onAction="#Back_Click" prefWidth="-1.0" text="Back" textFill="#002966">
+              <font>
+                <Font name="System Bold" size="19.0" />
+              </font>
+            </Button>
+          </children>
+          <padding>
+            <Insets fx:id="x3" />
+          </padding>
+        </Pane>
+      </content>
+    </ScrollPane>
+  </children>
+  <padding>
+    <Insets fx:id="x3" />
+  </padding>
+</AnchorPane>
