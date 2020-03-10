@@ -3,6 +3,9 @@ package application;
 import java.io.*; 
 
 import java.util.ResourceBundle;
+
+import com.sun.prism.Image;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +18,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,8 @@ public class LoginController {
     
     //Username for checkbox
     private String CB_username;
+
+	private ImageView imageView;
 
 
     @FXML

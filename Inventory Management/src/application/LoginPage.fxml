@@ -16,12 +16,12 @@
       <content>
         <AnchorPane id="Content" blendMode="EXCLUSION" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
           <children>
-            <ImageView blendMode="EXCLUSION" cache="false" cacheHint="DEFAULT" fitHeight="853.0" fitWidth="1280.0" opacity="1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="0.0">
+            <ImageView blendMode="EXCLUSION" cache="false" cacheHint="DEFAULT" fitHeight="853.0" fitWidth="1280.0" opacity="1.0" pickOnBounds="true" preserveRatio="true" visible="true" AnchorPane.bottomAnchor="-200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="0.0">
               <image>
-                <Image url="file:/C:/Users/you23/Downloads/brown-sand-127582.jpg" />
+                <Image url="@../../Images/brown-sand-127582.jpg" backgroundLoading="true" />
               </image>
             </ImageView>
-            <GridPane alignment="CENTER" blendMode="EXCLUSION" cache="false" focusTraversable="false" gridLinesVisible="false" hgap="0.0" layoutX="285.0" layoutY="174.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="700.0" visible="true">
+            <GridPane alignment="CENTER" blendMode="EXCLUSION" cache="false" focusTraversable="false" gridLinesVisible="false" hgap="0.0" layoutX="477.0" layoutY="142.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" visible="true">
               <children>
                 <TextField id="Username" fx:id="usernameF" alignment="CENTER" cache="false" editable="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="30.0" prefWidth="180.0" promptText="Username" text="" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <GridPane.margin>
