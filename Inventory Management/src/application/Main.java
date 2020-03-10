@@ -23,8 +23,6 @@ public class Main extends Application {
 			Scene fir_scene = new Scene(first_pane, width/2, height/2);
 	        
 			primaryStage.setScene(fir_scene);
-			System.out.println("Good");
-			System.out.println("Good");
 
 			primaryStage.setTitle("Inventory Management");
 			primaryStage.setMaximized(true);
