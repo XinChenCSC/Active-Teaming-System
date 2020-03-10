@@ -22,7 +22,6 @@ public class Main extends Application {
             Parent first_pane = firstLoader.load();
 			Scene fir_scene = new Scene(first_pane, width/2, height/2);
 	        
-			String i = "Q";
 			primaryStage.setScene(fir_scene);
 			System.out.println("Good");
 			primaryStage.setTitle("Inventory Management");
