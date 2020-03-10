@@ -24,6 +24,7 @@ public class Main extends Application {
 	        
 			primaryStage.setScene(fir_scene);
 			System.out.println("Good");
+			System.out.println("Good");
 
 			primaryStage.setTitle("Inventory Management");
 			primaryStage.setMaximized(true);
