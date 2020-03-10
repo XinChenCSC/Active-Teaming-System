@@ -24,6 +24,7 @@ public class Main extends Application {
 	        
 			primaryStage.setScene(fir_scene);
 			//123
+			//324
 			primaryStage.setTitle("Inventory Management");
 			primaryStage.setMaximized(true);
 			primaryStage.show();
