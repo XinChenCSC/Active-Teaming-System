@@ -4,8 +4,6 @@ import java.io.*;
 
 import java.util.ResourceBundle;
 
-import com.sun.prism.Image;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
