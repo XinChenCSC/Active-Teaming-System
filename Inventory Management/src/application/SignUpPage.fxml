@@ -23,9 +23,9 @@
                   </GridPane.margin>
                 </TextField>
                 <TextField fx:id="lastnameF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="4" />
-                <TextField fx:id="idF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="6" />
-                <TextField fx:id="newpasswordF" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="8" />
-                <TextField focusTraversable="false" prefHeight="40.0" prefWidth="0.0" GridPane.columnIndex="0" GridPane.rowIndex="10">
+                <TextField id="idF" fx:id="Interest" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="6" />
+                <TextField id="newpasswordF" fx:id="Referer" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="40.0" prefWidth="430.0" promptText="" text="" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="8" />
+                <TextField fx:id="Email" focusTraversable="false" prefHeight="40.0" prefWidth="0.0" GridPane.columnIndex="0" GridPane.rowIndex="10">
                   <GridPane.margin>
                     <Insets left="40.0" right="20.0" fx:id="x4" />
                   </GridPane.margin>
@@ -65,27 +65,27 @@
                     <Insets left="40.0" fx:id="x2" />
                   </GridPane.margin>
                 </Label>
-                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label id="Last_N_Error" fx:id="First_N_Error" alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <GridPane.margin>
                     <Insets left="150.0" />
                   </GridPane.margin>
                 </Label>
-                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label fx:id="Last_N_Error" alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="3">
                   <GridPane.margin>
                     <Insets left="150.0" />
                   </GridPane.margin>
                 </Label>
-                <Label alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                <Label id="Interest_error" fx:id="Interest_Error" alignment="CENTER_RIGHT" prefWidth="330.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="5">
                   <GridPane.margin>
                     <Insets left="150.0" />
                   </GridPane.margin>
                 </Label>
-                <Label alignment="CENTER_RIGHT" prefWidth="264.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="7">
+                <Label fx:id="Referer_Error" alignment="CENTER_RIGHT" prefWidth="264.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="7">
                   <GridPane.margin>
                     <Insets left="215.0" />
                   </GridPane.margin>
                 </Label>
-                <Label alignment="CENTER_RIGHT" prefWidth="264.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                <Label fx:id="Email_A_Error" alignment="CENTER_RIGHT" prefWidth="264.0" text="*Format error!" textAlignment="LEFT" textFill="RED" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="9">
                   <GridPane.margin>
                     <Insets left="215.0" />
                   </GridPane.margin>
