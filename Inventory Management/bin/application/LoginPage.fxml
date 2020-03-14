@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane cache="false" cacheHint="DEFAULT" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="660.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.LoginController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ImageView disable="false" fitHeight="1300.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true" y="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <image>
+        <Image url="@../../Images/brown-sand-127582.jpg" />
+      </image>
+    </ImageView>
+    <GridPane alignment="CENTER" cache="false" focusTraversable="false" gridLinesVisible="false" hgap="0.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <TextField fx:id="usernameF" alignment="CENTER" cache="false" editable="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="30.0" prefWidth="180.0" promptText="Username" text="" GridPane.columnIndex="0" GridPane.rowIndex="1">
+          <GridPane.margin>
+            <Insets bottom="5.0" left="60.0" right="5.0" top="5.0" fx:id="x1" />
+          </GridPane.margin>
+        </TextField>
+        <PasswordField fx:id="passwordF" alignment="CENTER" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="180.0" promptText="Password" text="" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="2" />
+        <Button fx:id="LoginButton" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#Login_Click" prefHeight="20.0" prefWidth="180.0" text="Log in" textFill="BLACK" textOverrun="CLIP" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="3">
+          <font>
+            <Font size="11.0" fx:id="x2" />
+          </font>
+          <GridPane.margin>
+            <Insets bottom="5.0" left="60.0" right="5.0" top="5.0" fx:id="x1" />
+          </GridPane.margin>
+        </Button>
+        <Label alignment="CENTER" contentDisplay="CENTER" disable="false" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="1.0" prefHeight="-1.0" prefWidth="-1.0" text="If you don't have account please," textFill="RED" GridPane.columnIndex="0" GridPane.rowIndex="5">
+          <GridPane.margin>
+            <Insets left="12.0" />
+          </GridPane.margin>
+        </Label>
+        <Hyperlink fx:id="SignupLink" alignment="CENTER_RIGHT" contentDisplay="CENTER" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#Signup_Click" prefHeight="-1.0" prefWidth="-1.0" text="Sign up" textAlignment="LEFT" textFill="#00ff29" underline="true" visited="false" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="5">
+          <effect>
+            <Glow />
+          </effect>
+          <GridPane.margin>
+            <Insets left="230.0" />
+          </GridPane.margin>
+        </Hyperlink>
+        <CheckBox fx:id="SaveCheckBox" allowIndeterminate="false" cache="false" ellipsisString="Save" focusTraversable="false" mnemonicParsing="false" mouseTransparent="false" onAction="#Save_Click" pickOnBounds="false" selected="false" style="&#10;" text="" textAlignment="LEFT" textOverrun="LEADING_ELLIPSIS" GridPane.columnIndex="0" GridPane.rowIndex="1">
+          <tooltip>
+            <Tooltip text="Save username" />
+          </tooltip>
+          <GridPane.margin>
+            <Insets left="245.0" />
+          </GridPane.margin>
+        </CheckBox>
+        <Label fx:id="wrong_info" contentDisplay="CENTER" prefHeight="20.0" prefWidth="284.0" text="Incorrect username or passowrd." textFill="#cc0000" visible="false" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
+          <font>
+            <Font size="14.0" />
+          </font>
+          <GridPane.margin>
+            <Insets bottom="-50.0" left="60.0" right="5.0" top="5.0" />
+          </GridPane.margin>
+        </Label>
+        <Button fx:id="guestMode_B" focusTraversable="false" font="$x2" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#Guest_Mode" prefHeight="20.0" prefWidth="180.0" text="Guest mode" textFill="BLACK" textOverrun="CLIP" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="4">
+          <GridPane.margin>
+            <Insets bottom="5.0" left="60.0" right="5.0" top="5.0" fx:id="x1" />
+          </GridPane.margin>
+        </Button>
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="300.0" minWidth="-1.0" prefWidth="200.0" />
+      </columnConstraints>
+      <padding>
+        <Insets />
+      </padding>
+      <rowConstraints>
+        <RowConstraints maxHeight="300.0" minHeight="-Infinity" prefHeight="218.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="218.0" minHeight="-Infinity" prefHeight="42.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="283.0" minHeight="-Infinity" prefHeight="38.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="317.0" minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="200.0" minHeight="-Infinity" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+        <RowConstraints maxHeight="400.0" minHeight="-Infinity" prefHeight="302.0" valignment="CENTER" vgrow="NEVER" />
+      </rowConstraints>
+    </GridPane>
+  </children>
+  <padding>
+    <Insets />
+  </padding>
+</AnchorPane>
