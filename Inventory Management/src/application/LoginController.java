@@ -99,7 +99,7 @@ public class LoginController {
     	Parent signup_page = FXMLLoader.load(getClass().getResource("SignUpPage.fxml"));
         Stage signup_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
         signup_scene.setScene(new Scene(signup_page));
-        signup_scene.setMaximized(true);
+        signup_scene.setTitle("Signup");
     }
 
     @FXML

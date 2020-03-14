@@ -64,15 +64,10 @@ public class SignupController {
     	Parent login_page = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         primaryStage.setScene(new Scene(login_page));
-        primaryStage.setMaximized(true);
-    }
+	}
 
     @FXML
     void Signup_Click(ActionEvent event)throws IOException {
-       	Parent completed_page = FXMLLoader.load(getClass().getResource("AccCreated.fxml"));
-        Stage completed_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        completed_scene.setScene(new Scene(completed_page));
-        completed_scene.setMaximized(true);
     }
 
     @FXML
