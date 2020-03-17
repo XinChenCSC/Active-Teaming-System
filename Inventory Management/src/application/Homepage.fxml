@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="930.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.homepageController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="930.0" prefWidth="1400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="930.0" prefWidth="1400.0">
+          <children>
+            <ImageView fx:id="Background" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <image>
+                <Image url="@../../Images/Homepage_Background.jpg" />
+              </image>
+            </ImageView>
+          </children>
+        </AnchorPane>
+      </content>
+    </ScrollPane>
+  </children>
+</AnchorPane>

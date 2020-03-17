@@ -1,7 +1,6 @@
 package application;
 
-import java.io.*; 
-
+import java.io.*;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -18,8 +17,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +51,15 @@ public class LoginController {
     @FXML
     private Button guestMode_B;
     
+    @FXML
+    private AnchorPane parentPane;
+    
+    @FXML
+    private GridPane Gridroot;
+    
+    @FXML
+    private ImageView Background;
+    
     
     //List of each information
     private List<Personal_Information> lst = new ArrayList<>();
@@ -56,19 +67,22 @@ public class LoginController {
     //Username for checkbox
     private String CB_username;
 
-	private ImageView imageView;
-
-
     @FXML
     void Login_Click(ActionEvent event) throws IOException {
-    	for (int i = 1; i <= lst.size(); ++i) {
+    	
+    	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+        Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        home_scene.setScene(new Scene(homepage));
+        home_scene.setTitle("Searching area");
+        home_scene.show();
+    	/*for (int i = 1; i <= lst.size(); ++i) {
     		if(lst.get(i).getId().compareTo(usernameF.getText()) == 0 &&
     				lst.get(i).getPassword().compareTo(passwordF.getText()) == 0) {
     			//Enter the home page
     			break; // no more iterations
     		}
     	}
-    	wrong_info.setOpacity(1); // display incorrect notification 
+    	wrong_info.setOpacity(1); // display incorrect notification */
     }
 
     @FXML
@@ -100,15 +114,20 @@ public class LoginController {
     	//Switch to the signup scene..
     	Parent signup_page = FXMLLoader.load(getClass().getResource("SignUpPage.fxml"));
         Stage signup_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        
+    
         signup_scene.setScene(new Scene(signup_page));
         signup_scene.setTitle("Signup");
-        signup_scene.setFullScreen(true);
-        //signup_scene.setMaximized(true);
+        signup_scene.show();
     }
 
     @FXML
     void initialize() throws IOException {
+    	//Resize the background image
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+        Background.setFitWidth(screen.getWidth());
+        Background.setFitHeight(screen.getHeight()*1.5);
+        //////////////////////////////////////////////////////////
+       
     	wrong_info.setOpacity(0);
 
     	//Get the current dir. path

@@ -9,15 +9,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane cache="false" cacheHint="DEFAULT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="930.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.LoginController">
+<AnchorPane fx:id="parentPane" cache="false" cacheHint="DEFAULT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="930.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.LoginController">
   <!-- TODO Add Nodes -->
   <children>
-    <ImageView disable="false" fitHeight="1500.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true" translateX="0.0" y="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <ImageView fx:id="Background" disable="false" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" translateX="0.0" y="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <image>
         <Image url="@../../Images/brown-sand-127582.jpg" />
       </image>
     </ImageView>
-    <GridPane alignment="CENTER" cache="false" focusTraversable="false" gridLinesVisible="false" hgap="0.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <GridPane fx:id="Gridroot" alignment="CENTER" cache="false" focusTraversable="false" gridLinesVisible="false" hgap="0.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
         <TextField fx:id="usernameF" alignment="CENTER" cache="false" editable="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" prefHeight="30.0" prefWidth="180.0" promptText="Username" text="" GridPane.columnIndex="0" GridPane.rowIndex="1">
           <GridPane.margin>

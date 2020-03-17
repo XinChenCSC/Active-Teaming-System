@@ -15,9 +15,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -25,17 +25,17 @@ import javafx.scene.Scene;
 
 public class SignupController {
 
-    @FXML
+	@FXML
     private ResourceBundle resources;
 
     @FXML
     private URL location;
 
     @FXML
-    private TextField FirstnameF;
+    private TextField Firstname;
     
     @FXML
-    private TextField lastnameF;
+    private TextField Lastname;
     
     @FXML
     private TextField Interest;
@@ -50,16 +50,16 @@ public class SignupController {
     private Button BackButton;
 
     @FXML
-    private Label Email_A_Error;
+    private Label Email_Error;
 
     @FXML
-    private Label First_N_Error;
+    private Label First_Error;
 
     @FXML
     private Label Interest_Error;
 
     @FXML
-    private Label Last_N_Error;
+    private Label Last_Error;
 
     @FXML
     private Label Referer_Error;
@@ -67,10 +67,17 @@ public class SignupController {
     @FXML
     private Button signupButton;
     
+    @FXML
+    private AnchorPane parentPane;
+    
+    @FXML
+    private GridPane Gridroot;
+    
     //Patterns for the registring fields
-    private final Pattern patternName = Pattern.compile("[A-Z]+[a-z]{2,}\\s*"); 
-
-
+    //Start with an uppercase letter followed by at least two characters (includes Firstname, Lastname, and Interest)
+    private final Pattern patternName = Pattern.compile("[A-Z][a-z]{2,}$");
+    private final Pattern patternReferer = Pattern.compile("[A-Z][a-z]{2,}\\s[A-Z][a-z]{2,}$");
+    private final Pattern patternEmail = Pattern.compile("[a-zA-Z_0-9]{4,}@([a-zA-z]{1,}\\.{1}){1,}[a-zA-Z]{2,}$");
 
     @FXML
     void Back_Click(ActionEvent event)throws IOException {
@@ -102,26 +109,70 @@ public class SignupController {
     private void MoveToLoginPage(ActionEvent event)throws IOException{
     	Parent login_page = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        
+      
         primaryStage.setScene(new Scene(login_page));
         primaryStage.setTitle("Login");
-        primaryStage.setFullScreen(true);
-        //primaryStage.setMaximized(true);
+        primaryStage.show();
     }
     
     // Check the pattern of fields
     private boolean ValidateFields() {
         boolean result = true;
         
-        ObservableList<String> styleClass = FirstnameF.getStyleClass();
-
-        if (!patternName.matcher(FirstnameF.getText()).matches()) {
-        	First_N_Error.setVisible(true);
-        	styleClass.removeAll(Collections.singleton("correct"));
-        	 result = false;
+        ObservableList<String> fn = Firstname.getStyleClass();
+        ObservableList<String> ln = Lastname.getStyleClass();
+        ObservableList<String> it = Interest.getStyleClass();
+        ObservableList<String> rf = Referer.getStyleClass();
+        ObservableList<String> em = Email.getStyleClass();
+        
+        if (!patternName.matcher(Firstname.getText()).matches()) {
+        	First_Error.setVisible(true);
+        	fn.removeAll(Collections.singleton("correct"));
+        	result = false;
+        }
+        else {
+        	First_Error.setVisible(false);
+        	fn.removeAll(Collections.singleton("error"));
+        }
+        if (!patternName.matcher(Lastname.getText()).matches()) {
+        	Last_Error.setVisible(true);
+        	ln.removeAll(Collections.singleton("correct"));
+        	result = false;
+        }
+        else {
+        	Last_Error.setVisible(false);
+        	ln.removeAll(Collections.singleton("error"));
+        }
+        if (!patternName.matcher(Interest.getText()).matches()) {
+        	Interest_Error.setVisible(true);
+        	it.removeAll(Collections.singleton("correct"));
+        	result = false;
+        }
+        else {
+        	Interest_Error.setVisible(false);
+        	it.removeAll(Collections.singleton("error"));
+        }
+        if (!patternReferer.matcher(Referer.getText()).matches()) {
+        	Referer_Error.setVisible(true);
+        	rf.removeAll(Collections.singleton("correct"));
+        	result = false;
+        }
+        else {
+        	Referer_Error.setVisible(false);
+        	rf.removeAll(Collections.singleton("error"));
+        }
+        if (!patternEmail.matcher(Email.getText()).matches()) {
+        	Email_Error.setVisible(true);
+        	em.removeAll(Collections.singleton("correct"));
+        	result = false;
+        }
+        else {
+        	Email_Error.setVisible(false);
+        	em.removeAll(Collections.singleton("error"));
         }
         return result;
     }
+  
     @FXML
     void initialize() {
     }
