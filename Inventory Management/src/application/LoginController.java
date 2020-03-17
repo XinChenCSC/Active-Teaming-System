@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,8 +100,11 @@ public class LoginController {
     	//Switch to the signup scene..
     	Parent signup_page = FXMLLoader.load(getClass().getResource("SignUpPage.fxml"));
         Stage signup_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
         signup_scene.setScene(new Scene(signup_page));
         signup_scene.setTitle("Signup");
+        signup_scene.setFullScreen(true);
+        //signup_scene.setMaximized(true);
     }
 
     @FXML

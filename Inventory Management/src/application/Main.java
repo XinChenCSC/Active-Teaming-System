@@ -1,12 +1,12 @@
 package application;
-	
-import java.awt.Dimension;
+
+
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.geom.Rectangle2D;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
@@ -19,21 +19,20 @@ public class Main extends Application {
 		try {
 			FXMLLoader firstLoader = new FXMLLoader(getClass().getResource("LoginPage.fxml"));
             Parent first_pane = firstLoader.load();
-			Scene fir_scene = new Scene(first_pane);
-			
-			primaryStage.setScene(fir_scene);
+	        Scene fir_scene = new Scene(first_pane);
 
-	        javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-			primaryStage.setTitle("Login");
-	        //set Stage boundaries to visible bounds of the main screen
-	        primaryStage.setX(primaryScreenBounds.getMinX());
-	        primaryStage.setY(primaryScreenBounds.getMinY());
-	        primaryStage.setWidth(primaryScreenBounds.getWidth());
-	        primaryStage.setHeight(primaryScreenBounds.getHeight());
-	        primaryStage.setMaximized(true);
-	        primaryStage.show();
+	        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+	        System.out.println(primaryScreenBounds);
 	        
+	        //set Stage boundaries to visible bounds of the main screen
+	        primaryStage.setWidth(primaryScreenBounds.getWidth()/1.5);
+	        primaryStage.setHeight(primaryScreenBounds.getHeight()/1.2);
+	        
+	        primaryStage.setScene(fir_scene);
+			primaryStage.setTitle("Login");
+	        primaryStage.show();
+	        primaryStage.setFullScreen(true);
+	        //primaryStage.setMaximized(true);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
