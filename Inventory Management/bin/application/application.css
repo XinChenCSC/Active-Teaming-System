@@ -1,4 +1,6 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+
 .text-field.error {
   -fx-text-box-border: red ;
   -fx-focus-color: red ;
@@ -8,3 +10,83 @@
 	-fx-text-box-border: black ;
 	-fx-focus-color: black;
 }
+
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+.menu-button {
+	-fx-border-color: #48D1CC;
+	-fx-background-color: #00BFFF;
+	-fx-border-radius: 20;
+	-fx-background-radius: 20;
+}
+
+.menu-item{
+	-fx-background-color: linear-gradient(transparent, #6495ED);
+	-fx-border-color: #7CFC00;
+	-fx-pref-height: 50;
+	-fx-padding: 5px;
+}
+
+.menu-item.label{
+	-fx-text-alignment: center;
+}
+
+.menu-item:hover, .menu-item:focused{
+	-fx-background-color: #00FFFF;
+}
+
+.menu-button:hover{
+    -fx-background-color: #87CEFA;
+    -fx-border-color: #48D1CC;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-rotate: 5;
+}
+
+#more{
+	-fx-content-display: right;
+}
+
+#search_button, #filter_button{
+	-fx-background-color: #F5FFFA;
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+}
+
+#search_button:hover, #filter_button:hover{
+	-fx-background-color: #D3D3D3;
+	-fx-border-color: #D3D3D3;
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+}
+
+#search_field{
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-color: #48D1CC;
+}
+
+.check-box .box{
+	-fx-background-color: white;
+	-fx-border-color:grey;
+	-fx-background-radius:30px;
+	-fx-border-radius:30px;
+}
+
+.check-box .box:hover{
+	-fx-background-color: #FFFFE0;
+}
+
+#Filter_Ok{
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+	-fx-background-color: white;
+	-fx-border-color:black;
+}
+
+#Filter_Ok:hover{
+	-fx-background-color: #FFFFE0;
+}
+

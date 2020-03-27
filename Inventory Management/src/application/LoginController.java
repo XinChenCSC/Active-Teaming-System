@@ -68,13 +68,13 @@ public class LoginController {
     private String CB_username;
 
     @FXML
-    void Login_Click(ActionEvent event) throws IOException {
-    	
+    void Login_Click(ActionEvent event) throws IOException {	
     	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home_scene.setScene(new Scene(homepage));
         home_scene.setTitle("Searching area");
         home_scene.show();
+        
     	/*for (int i = 1; i <= lst.size(); ++i) {
     		if(lst.get(i).getId().compareTo(usernameF.getText()) == 0 &&
     				lst.get(i).getPassword().compareTo(passwordF.getText()) == 0) {
@@ -147,7 +147,12 @@ public class LoginController {
     }
     
     @FXML
-    void Guest_Mode(ActionEvent event) {
+    void Guest_Mode(ActionEvent event) throws IOException {
+    	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+        Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        home_scene.setScene(new Scene(homepage));
+        home_scene.setTitle("Searching area");
+        home_scene.show();
     }
 
 }
