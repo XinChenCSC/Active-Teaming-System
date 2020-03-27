@@ -13,23 +13,19 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -114,6 +110,35 @@ public class homepageController {
     }
     
     @FXML
+    void Email_Click(ActionEvent event) {
+    	//Get the screen size
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
+        //Get the main scene size
+        Stage mainScene = (Stage) Profile.getScene().getWindow();
+        //Create new stage
+        StackPane secondaryLayout = new StackPane();
+        Scene secondScene = new Scene(secondaryLayout, screen.getWidth()/2, screen.getHeight()/2);
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Email");
+        newWindow.setScene(secondScene);
+        newWindow.setResizable(false);
+        
+        // Specifies the modality for new window.
+        newWindow.initModality(Modality.WINDOW_MODAL);
+
+        // Specifies the owner Window (parent) for new window
+        newWindow.initOwner(mainScene);
+        
+        //Set the window default position
+        newWindow.setX(screen.getWidth()/4);
+        newWindow.setY(screen.getHeight()/4);
+        System.out.println(mainScene.getX()+800);
+        System.out.println(mainScene.getY());
+        newWindow.show();
+    }
+    
+    @FXML
     void Message_Click(ActionEvent event) {   
     	//Get the screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
@@ -135,19 +160,19 @@ public class homepageController {
         newWindow.initOwner(mainScene);
         
         //Set the window default position
-        newWindow.setX(mainScene.getX()+ screen.getWidth() - 100 - screen.getWidth()/4);
-        newWindow.setY(mainScene.getY()+ screen.getHeight() - 100 - screen.getHeight()/2);
+        newWindow.setX(screen.getWidth()/1.3);
+        newWindow.setY(screen.getHeight()/2.5);
         newWindow.show();
     }
     
     @FXML
     void initialize() throws IOException, InterruptedException {
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
     	//Resize the background image
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
         //--------------------------------------------     
-        Profile.setLayoutX(screen.getWidth()-120);
+        Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
         //--------------------------------------------
         Images_Animation();
     }
