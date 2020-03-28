@@ -12,19 +12,30 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -108,6 +119,106 @@ public class homepageController {
     		Filter_Categories.setVisible(false);
     	});
     }
+
+    @FXML
+    void Group_Click(ActionEvent event) {
+    	//Get the screen size
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
+        //Get the main scene size
+        Stage mainScene = (Stage) Profile.getScene().getWindow();
+        //Create new stage
+        StackPane subScene = new StackPane();
+        subScene.setPadding(new Insets(10,10,10,10));
+        double subScene_height = screen.getHeight()/3;
+        double subScene_width = screen.getWidth()/5;
+        //Create label
+        Label lb = new Label();
+        lb.setText("Currently no group avaliable!"); // Display group status
+        
+        //Create a button
+        Button createButton = new Button();
+        createButton.setText("Create");
+        createButton.setFocusTraversable(false);
+        createButton.setStyle("-fx-background-radius: 20;"
+        					+ "-fx-border-radius: 20;"
+        					+ "-fx-border-color: black;");
+        //set the position
+        StackPane.setAlignment(createButton, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(lb, Pos.CENTER);
+        subScene.getChildren().addAll(createButton, lb);
+
+        
+        Scene secondScene = new Scene(subScene, subScene_width, subScene_height);
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Group");
+        newWindow.setScene(secondScene);
+        newWindow.setResizable(false);
+        
+        // Specifies the modality for new window.
+        newWindow.initModality(Modality.WINDOW_MODAL);
+
+        // Specifies the owner Window (parent) for new window
+        newWindow.initOwner(mainScene);
+        
+        //Set the window default position
+        newWindow.setX(screen.getWidth()/2);
+        newWindow.setY(screen.getHeight()/4);
+        newWindow.show();
+        
+        //Creating scene
+        createButton.setOnAction(e->{
+
+        	GridPane gp = new GridPane();
+        	ScrollPane sp = new ScrollPane(gp);
+        	AnchorPane ap = new AnchorPane();
+        	sp.setFitToHeight(true);
+        	sp.setFitToWidth(true);
+        	sp.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+        	sp.setVbarPolicy(ScrollBarPolicy.NEVER);
+        	gp.setVgap(10);
+        	gp.setHgap(120);
+        	gp.setPadding(new Insets(20,20,10,0));
+        	ColumnConstraints column1 = new ColumnConstraints(100);
+        	ColumnConstraints column2 = new ColumnConstraints(70);
+        	gp.getColumnConstraints().addAll(column1, column2);
+        	//Show all avaliable friends
+        	for(int i = 0; i < 5; ++i) {
+            	//Label names
+            	Label l1 = new Label("Unknown");
+            	l1.setFont(new Font(16));
+        		GridPane.setHalignment(l1, HPos.RIGHT);
+            	gp.add(l1, 0, i);
+            	//set up invite button
+            	Button b1 = new Button("Invite");
+            	b1.setFocusTraversable(false);
+            	b1.setStyle("-fx-background-radius: 20;"
+            			+ "-fx-border-radius: 20;"
+            			+ "-fx-border-color: black;");
+            	GridPane.setHalignment(b1, HPos.LEFT);
+            	gp.add(b1, 1, i);
+        	}
+        	
+        	
+        	Scene thirdScene = new Scene(sp, 300, 600);
+            // New window (Stage)
+            Stage newWindow_2 = new Stage();
+            newWindow_2.setTitle("Friends");
+            newWindow_2.setScene(thirdScene);
+            newWindow_2.setResizable(false);
+            
+            // Specifies the modality for new window.
+            newWindow_2.initModality(Modality.WINDOW_MODAL);
+
+            // Specifies the owner Window (parent) for new window
+            newWindow_2.initOwner(newWindow);
+            
+            //Set the window default position
+            newWindow_2.setX(screen.getWidth()/1.3);
+            newWindow_2.setY(screen.getHeight()/4);
+            newWindow_2.show();
+        });
+    }
     
     @FXML
     void Email_Click(ActionEvent event) {
@@ -133,8 +244,6 @@ public class homepageController {
         //Set the window default position
         newWindow.setX(screen.getWidth()/4);
         newWindow.setY(screen.getHeight()/4);
-        System.out.println(mainScene.getX()+800);
-        System.out.println(mainScene.getY());
         newWindow.show();
     }
     
