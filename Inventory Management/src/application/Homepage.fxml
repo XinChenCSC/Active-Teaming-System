@@ -89,7 +89,7 @@
                 <URL value="@application.css" />
               </stylesheets>
             </Button>
-            <TextField id="search_field" layoutX="925.0" layoutY="313.0" prefHeight="30.0" prefWidth="300.0">
+            <TextField id="search_field" alignment="CENTER_LEFT" layoutX="925.0" layoutY="313.0" prefHeight="30.0" prefWidth="300.0" promptText="" text="">
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
@@ -108,7 +108,7 @@
                 <RadioButton id="" fx:id="R5" disable="false" focusTraversable="false" layoutX="611.0" layoutY="326.0" mnemonicParsing="false" opacity="1.0" prefHeight="15.0" prefWidth="15.0" text="" />
               </children>
             </Pane>
-            <GridPane id="Categories" fx:id="Filter_Categories" gridLinesVisible="true" layoutX="599.0" layoutY="389.0" prefHeight="270.0" prefWidth="353.0" style="-fx-background-color: white;" visible="false">
+            <GridPane id="Categories" fx:id="Filter_Categories" disable="false" gridLinesVisible="true" layoutX="599.0" layoutY="389.0" prefHeight="270.0" prefWidth="353.0" style="-fx-background-color: white;" visible="false">
               <children>
                 <CheckBox mnemonicParsing="false" text="Computer" GridPane.columnIndex="0" GridPane.rowIndex="0">
                   <stylesheets>
