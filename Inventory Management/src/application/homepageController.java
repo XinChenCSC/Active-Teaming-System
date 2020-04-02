@@ -11,9 +11,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -26,11 +23,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -42,6 +40,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -118,6 +117,20 @@ public class homepageController {
     
 	// Number of existing emails.
 	int emailNum = 5;
+	// Number of existing messages
+	int messageNum = 5;
+    
+    @FXML
+    void initialize() throws IOException, InterruptedException {
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
+    	//Resize the background image
+        Background.setLayoutX(screen.getWidth());
+        Background.setLayoutY(screen.getHeight()); 
+        //--------------------------------------------     
+        Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
+        //--------------------------------------------
+        Images_Animation();
+    }
     
     @FXML
     void Filter_Click(ActionEvent event) {
@@ -165,9 +178,8 @@ public class homepageController {
         Button createButton = new Button();
         createButton.setText("Create");
         createButton.setFocusTraversable(false);
-        createButton.setStyle("-fx-background-radius: 20;"
-        					+ "-fx-border-radius: 20;"
-        					+ "-fx-border-color: black;");
+        ButtonStyle(createButton);
+        
         //set the position
         StackPane.setAlignment(createButton, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(lb, Pos.CENTER);
@@ -177,50 +189,30 @@ public class homepageController {
         Scene secondScene = new Scene(subScene, subScene_width, subScene_height);
         // New window (Stage)
         Stage newWindow = new Stage();
-        newWindow.setTitle("Group");
-        newWindow.setScene(secondScene);
-        newWindow.setResizable(false);
+        // set new window
+        NewWindow(newWindow, secondScene, mainScene, "Group", screen.getWidth()/2, screen.getHeight()/4); 
         
-        // Specifies the modality for new window.
-        newWindow.initModality(Modality.WINDOW_MODAL);
-
-        // Specifies the owner Window (parent) for new window
-        newWindow.initOwner(mainScene);
-        
-        //Set the window default position
-        newWindow.setX(screen.getWidth()/2);
-        newWindow.setY(screen.getHeight()/4);
-        newWindow.show();
         //------------------------------------------------------------------
         //Group information-------------------------------------------------
         createButton.setOnAction(e->{
         	Pane pane = new Pane();
         	//Group title
         	TextField group_title =  new TextField();
-        	group_title.setPrefWidth(300);
+        	getButton(group_title, 300, 0, 30, 30);
         	group_title.setPadding(new Insets(10,10,10,10));
-        	group_title.setLayoutX(30);
-        	group_title.setLayoutY(30);
         	group_title.setPromptText("Group name");
-        	group_title.setFocusTraversable(false);
         	group_title.setStyle("-fx-border-color:#DEB887;"
         						+ "-fx-border-width: 5;");
         	//Group description
         	TextField group_description =  new TextField();
-        	group_description.setPrefWidth(300);
+        	getButton(group_description, 300, 0, 30, 100);
         	group_description.setPadding(new Insets(10,10,300,10));
-        	group_description.setLayoutX(30);
-        	group_description.setLayoutY(100);
         	group_description.setPromptText("Group Description");
-        	group_description.setFocusTraversable(false);
         	group_description.setStyle("-fx-border-color:#DEB887;"      						
         							+ "-fx-border-width: 5;");
         	//Friends List
         	ScrollPane friend_list = new ScrollPane();
-        	friend_list.setPrefHeight(500);
-        	friend_list.setPrefWidth(350);
-        	friend_list.setLayoutX(350);
-        	friend_list.setLayoutY(30);
+        	getButton(friend_list, 350, 500, 350, 30);
         	friend_list.setHbarPolicy(ScrollBarPolicy.NEVER);
         	friend_list.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         	friend_list.setStyle("-fx-border-color:#DEB887;"
@@ -243,42 +235,22 @@ public class homepageController {
             	//set up invite button
             	Button b1 = new Button("Invite");
             	b1.setFocusTraversable(false);
-            	b1.setStyle("-fx-background-radius: 20;"
-            			+ "-fx-border-radius: 20;"
-            			+ "-fx-border-color: black;");
+            	ButtonStyle(b1);
             	GridPane.setHalignment(b1, HPos.LEFT);
             	friend_grid.add(b1, 1, i);
         	}
         	//Confirmed button
         	Button confirm_button = new Button("Confirm");
-        	confirm_button.setPrefHeight(30);
-        	confirm_button.setPrefWidth(100);
-        	confirm_button.setLayoutX(300);
-        	confirm_button.setLayoutY(550);
-        	confirm_button.setFocusTraversable(false);
-        	confirm_button.setStyle("-fx-background-radius: 20;"
-        						+ "-fx-border-radius:20;" 
-        						+ "-fx-border-color: black;");
+        	getButton(confirm_button, 100, 30, 300, 550);
+        	ButtonStyle(confirm_button);
         	friend_list.setContent(friend_grid);
         	pane.getChildren().addAll(group_title, group_description, friend_list, confirm_button);
         	
         	Scene thirdScene = new Scene(pane, 700, 600);
             // New window (Stage)
             Stage newWindow_2 = new Stage();
-            newWindow_2.setTitle("Informations");
-            newWindow_2.setScene(thirdScene);
-            newWindow_2.setResizable(false);
-            
-            // Specifies the modality for new window.
-            newWindow_2.initModality(Modality.WINDOW_MODAL);
-
-            // Specifies the owner Window (parent) for new window
-            newWindow_2.initOwner(newWindow);
-            
-            //Set the window default position
-            newWindow_2.setX(screen.getWidth()/2);
-            newWindow_2.setY(screen.getHeight()/4);
-            newWindow_2.show();
+            // set new window
+            NewWindow(newWindow_2, thirdScene, newWindow, "Informations", screen.getWidth()/2, screen.getHeight()/4); 
             
             //Confirmed button click event
             confirm_button.setOnAction(c->{
@@ -311,8 +283,7 @@ public class homepageController {
         main_scene.setPadding(new Insets(3,3,3,3));
         //Email list
         ScrollPane email_list = new ScrollPane();
-        email_list.setPrefSize(default_w/4, default_h-70);
-        email_list.setLayoutY(80);
+        getButton(email_list, default_w/4, default_h-70, 0, 80);
     	email_list.setHbarPolicy(ScrollBarPolicy.NEVER);
     	email_list.setVbarPolicy(ScrollBarPolicy.NEVER);
     	email_list.setFitToHeight(true);
@@ -320,7 +291,6 @@ public class homepageController {
     	
     	//Grid Pane
     	GridPane emails = new GridPane();
-    	//ColumnConstraints column0 = new ColumnConstraints(30);
     	ColumnConstraints column1 = new ColumnConstraints(email_list.getPrefWidth()-5);
     	emails.getColumnConstraints().add(column1);
     	//Email content
@@ -331,18 +301,16 @@ public class homepageController {
     		content.setVisible(false);
     		//Create button
     		Button l1 = new Button("Unknown"+i);
-    		l1.setFocusTraversable(false);
+    		getButton(l1, email_list.getPrefWidth(), 50, 0, 0);
     		l1.setAlignment(Pos.CENTER);
         	l1.setFont(new Font(16));
-        	l1.setPrefSize(email_list.getPrefWidth(), 50);
         	l1.setStyle("-fx-background-color: white;"
     				+ "-fx-border-color: black;");
 
         	//Radio button
         	CheckBox delete_dot = new CheckBox("");
-        	delete_dot.setPrefSize(column1.getPercentWidth(), 50);
+        	getButton(delete_dot, column1.getPrefWidth(), 50, 0, 0);
         	delete_dot.setPadding(new Insets(4,4,4,4));
-        	delete_dot.setFocusTraversable(false);
         	delete_dot.setVisible(false);
         	
         	//Set text to text fields
@@ -377,31 +345,19 @@ public class homepageController {
     	}
     	//Search button
     	Button search_button = new Button("Go");
-    	search_button.setPrefSize(50, 40);
-    	search_button.setLayoutY(5);
-    	search_button.setFocusTraversable(false);
-    	search_button.setStyle("-fx-background-radius:20;"
-    			+ "-fx-border-radius:20;"
-    			+ "-fx-border-color: black;");
+    	getButton(search_button, 50, 40, 0, 5);
+    	ButtonStyle(search_button);
+    	
     	//Search field
     	TextField search = new TextField();
+    	getButton(search, default_w/4-50, 40, 50, 5);
     	search.setPromptText("Search");
-    	search.setPrefSize(default_w/4-50, 40);
-    	search.setLayoutY(5);
-    	search.setLayoutX(50);
-    	search.setFocusTraversable(false);
-    	search.setStyle("-fx-background-radius:20;"
-    			+ "-fx-border-radius:20;"
-    			+ "-fx-border-color: black;");
+    	ButtonStyle(search);
+    	
     	//Compose
     	Button compose = new Button("Compose");
-    	compose.setPrefSize(100, 40);
-    	compose.setLayoutY(5);
-    	compose.setLayoutX(default_w-100);
-    	compose.setFocusTraversable(false);
-    	compose.setStyle("-fx-background-radius:20;"
-    			+ "-fx-border-radius:20;"
-    			+ "-fx-border-color: black;");    	
+    	getButton(compose, 100, 40, default_w-100, 5);
+    	ButtonStyle(compose);  	
     	//Compose scene
     	compose.setOnAction(e->{
     		composeScene(default_w, default_h, mainScene);
@@ -411,28 +367,19 @@ public class homepageController {
 		//////////////////////////////////////////////////////////////////////////////////////////////
     	//Delete
     	Button delete = new Button("Delete");
-    	delete.setPrefSize(80, 30);
-    	delete.setLayoutY(47);
-    	delete.setFocusTraversable(false);
-    	delete.setStyle("-fx-background-radius: 20;"
-				+ "-fx-border-radius: 20;"
-				+ "-fx-border-color: black;");
+    	getButton(delete, 80, 30, 0, 47);
+    	ButtonStyle(delete);
 
     	// Confirm
     	Button okay = new Button("Ok");
-    	okay.setPrefSize(80, 30);
-    	okay.setLayoutY(47);
-    	okay.setFocusTraversable(false);
+    	getButton(okay, 80, 30, 0, 47);
     	okay.setVisible(false);
     	okay.setStyle("-fx-background-radius: 20;"
     					+ "-fx-border-radius: 20;"
     					+ "-fx-border-color: #DC143C;");
 		//Cancel
 		Button cancel = new Button("Cancel");
-		cancel.setPrefSize(80, 30);
-		cancel.setLayoutY(47);
-		cancel.setLayoutX(160);
-		cancel.setFocusTraversable(false);
+		getButton(cancel, 80, 30, 160, 47);
 		cancel.setVisible(false);
 		cancel.setStyle("-fx-background-radius: 20;"
 				+ "-fx-border-radius: 20;"
@@ -542,80 +489,84 @@ public class homepageController {
         Scene secondScene = new Scene(main_scene, default_w, default_h);
         // New window (Stage)
         Stage newWindow = new Stage();
-        newWindow.setTitle("Email");
-        newWindow.setScene(secondScene);
-        newWindow.setResizable(false);
-        
-        // Specifies the modality for new window.
-        newWindow.initModality(Modality.WINDOW_MODAL);
-
-        // Specifies the owner Window (parent) for new window
-        newWindow.initOwner(mainScene);
-        
-        //Set the window default position
-        newWindow.setX(screen.getWidth()/4);
-        newWindow.setY(screen.getHeight()/4);
-        newWindow.show();
+        // set new window
+        NewWindow(newWindow, secondScene, mainScene, "Email", screen.getWidth()/4, screen.getHeight()/4); 
 }
- 
+
+    @FXML
+    void Message_Click(ActionEvent event) {   
+    	//Get the screen size
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
+        //Get the main scene size
+        Stage mainScene = (Stage) Profile.getScene().getWindow();
+        //Create chat list
+        Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2);
+        //create scene
+        Scene secondScene = new Scene(chatList,screen.getWidth()/5, screen.getHeight()/2);
+        //Create message chat
+        Pane messageChat = messageChat(screen.getWidth()/5, screen.getHeight()/2);
+        GridPane dummy = (GridPane) ((ScrollPane) chatList.getChildren().get(0)).getContent();
+        for (int i = 0 ; i < messageNum; ++i) {
+        	((Button) dummy.getChildren().get(i*2)).setOnAction(e->{
+        		((Label) messageChat.getChildren().get(0)).setText("Qichen");
+        		secondScene.setRoot(messageChat);
+        	});
+        }
+        ((Button) messageChat.getChildren().get(5)).setOnAction(r->{
+        	secondScene.setRoot(chatList);
+        });  
+        
+        //Create new window
+        Stage newWindow = new Stage();
+        //Set new window
+        NewWindow(newWindow, secondScene, mainScene, "Message", screen.getWidth()/1.3, screen.getHeight()/2.5);
+    }
+    
 	//Email contents
     Pane emailContent(double w, double h) {
     	Pane content = new Pane();
-    	content.setPrefSize(w - w/4+10, h-70);
-    	content.setLayoutX(w/4);
-    	content.setLayoutY(80);
+    	getButton(content, w-w/4+10, h-70, w/4, 80);
     	content.setStyle("-fx-background-color:white;"
     					+ "-fx-border-color: black;");
     	
     	//Sender label
     	Label sender = new Label("Sender");
-    	sender.setPrefSize(100, 30);
+    	getButton(sender, 100, 30, 0, 0);
     	sender.setPadding(new Insets(23,20,20,20));
     	
     	//Sender text field
     	TextField senderField = new TextField();
-    	senderField.setPrefSize(content.getPrefWidth()-200, 30);
-    	senderField.setLayoutY(17);
-    	senderField.setLayoutX(100);
-    	senderField.setFocusTraversable(false);
+    	getButton(senderField, content.getPrefWidth()-200, 30, 100, 17);
     	senderField.setEditable(false);
     	
     	//subject label
     	Label subject = new Label("Subject");
-    	subject.setPrefSize(100, 30);
+    	getButton(subject, 100, 30, 0, 80);
     	subject.setPadding(new Insets(23,20,20,20));
-    	subject.setLayoutY(80);
+
     	//subject text field
     	TextField subjectField = new TextField();
-    	subjectField.setPrefSize(content.getPrefWidth()-200, 30);
-    	subjectField.setLayoutX(100);
-    	subjectField.setLayoutY(100);
-    	subjectField.setFocusTraversable(false);
+    	getButton(subjectField, content.getPrefWidth()-200, 30, 100, 100);
     	subjectField.setEditable(false);
+    	
     	//content field
     	TextArea contentArea = new TextArea();
-    	contentArea.setPrefSize(content.getPrefWidth()-50, content.getPrefHeight()/1.5);
-    	contentArea.setLayoutY(160);
-    	contentArea.setLayoutX(20);
+    	getButton(contentArea, content.getPrefWidth()-50, content.getPrefHeight()/1.5, 20, 160);
     	contentArea.setPadding(new Insets(20,20,20,20));
-    	contentArea.setFocusTraversable(false);
     	contentArea.setEditable(false);
+    	
     	//Reply
     	Button reply = new Button("Reply");
-    	reply.setPrefSize(80, 30);
-    	reply.setFocusTraversable(false);
-    	reply.setLayoutX(content.getPrefWidth()-110);
-    	reply.setLayoutY(content.getPrefHeight()-40);
+    	getButton(reply, 80, 30, content.getPrefWidth()-110, content.getPrefHeight()-40);
     	
     	content.getChildren().addAll(sender, senderField, subject, subjectField, contentArea, reply);
     	return content;
     }
 
-    //Compose scene
+    //Email compose scene
     void composeScene(double w, double h, Stage s) {
     	Pane scene = emailContent(w,h);
-    	scene.setLayoutX(0);
-    	scene.setLayoutY(0);
+    	getButton(scene, w, h, 0, 0);
     	scene.setStyle(null);
     	//Adjustments
     	((TextField)scene.getChildren().get(1)).setEditable(true);
@@ -628,69 +579,42 @@ public class homepageController {
     	Scene secondScene = new Scene(scene,w - w/4+10, h-70);
         // New window (Stage)
         Stage newWindow = new Stage();
-        newWindow.setTitle("Compose");
-        newWindow.setScene(secondScene);
-        newWindow.setResizable(false);
-        
-        // Specifies the modality for new window.
-        newWindow.initModality(Modality.WINDOW_MODAL);
-
-        // Specifies the owner Window (parent) for new window
-        newWindow.initOwner(s);
-        
-        //Set the window default position
-        newWindow.setX(w-400);
-        newWindow.setY(h-400);
-        newWindow.show();
-        
+        //Set newWindow
+        NewWindow(newWindow, secondScene, s, "Compose", w-400, h-400);    
         //Send button event
         emailSent(send, w, h, newWindow);
     }
     
-    //Reply
+    //Email reply scene
     void emailReply(double w, double h, Stage s) {
     	Pane scene = new Pane();
     	
+    	//Object
     	Label object = new Label("To unknown");
+    	getButton(object, w/4, 40, 0, 0);
     	object.setPadding(new Insets(20,20,20,20));
-    	object.setPrefSize(w/4,40);
     	
+    	//Reply content
     	TextArea content = new TextArea();
-    	content.setPrefSize(w - w/4,h/2);
-    	content.setFocusTraversable(false);
-    	content.setLayoutY(80);
-    	content.setLayoutX(10);
+    	getButton(content, w-w/4, h/2, 10, 80);
     	
+    	//send
     	Button send = new Button("Send");
-    	send.setPrefSize(80, 30);
-    	send.setFocusTraversable(false);
-    	send.setLayoutY(content.getPrefHeight()+90);
-    	send.setLayoutX(content.getPrefWidth()/2-40);
-    	
+    	getButton(send, 80, 30, content.getPrefWidth()/2-40, content.getPrefHeight()+90);
+
+    	//Set children
     	scene.getChildren().addAll(object, content, send);
     	//Set new window
     	Scene secondScene = new Scene(scene,w - w/4+10, h-70);
         // New window (Stage)
         Stage newWindow = new Stage();
-        newWindow.setTitle("Reply");
-        newWindow.setScene(secondScene);
-        newWindow.setResizable(false);
-        
-        // Specifies the modality for new window.
-        newWindow.initModality(Modality.WINDOW_MODAL);
-
-        // Specifies the owner Window (parent) for new window
-        newWindow.initOwner(s);
-        
-        //Set the window default position
-        newWindow.setX(w-400);
-        newWindow.setY(h-400);
-        newWindow.show();
-        
+        // set new window
+        NewWindow(newWindow, secondScene, s, "Reply", w-400, h-400); 
+        //Send event
         emailSent(send, w, h, newWindow);
     }
     
-    //Send Event 
+    //Emial send event 
     void emailSent(Button b, double w, double h, Stage newWindow) {
     	 //Send button event
     	b.setOnAction(e->{
@@ -708,52 +632,7 @@ public class homepageController {
     	});
     }
     
-    //Create new window
-    void NewWindow(String title, double w, double h) {
-    }
-    
-    @FXML
-    void initialize() throws IOException, InterruptedException {
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
-    	//Resize the background image
-        Background.setLayoutX(screen.getWidth());
-        Background.setLayoutY(screen.getHeight()); 
-        //--------------------------------------------     
-        Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
-        //--------------------------------------------
-        Images_Animation();
-    }
-    
-    
-    @FXML
-    void Message_Click(ActionEvent event) {   
-    	//Get the screen size
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
-        //Get the main scene size
-        Stage mainScene = (Stage) Profile.getScene().getWindow();
-        //Create new stage
-        Pane chatBorder = messageChat(screen.getWidth()/5, screen.getHeight()/2);
-        
-        
-        Scene secondScene = new Scene(chatBorder, screen.getWidth()/5, screen.getHeight()/2);
-        // New window (Stage)
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Message");
-        newWindow.setScene(secondScene);
-        newWindow.setResizable(false);
-        
-        // Specifies the modality for new window.
-        newWindow.initModality(Modality.WINDOW_MODAL);
-
-        // Specifies the owner Window (parent) for new window
-        newWindow.initOwner(mainScene);
-        
-        //Set the window default position
-        newWindow.setX(screen.getWidth()/1.3);
-        newWindow.setY(screen.getHeight()/2.5);
-        newWindow.show();
-    }
-    
+    //Conversation scene
     Pane messageChat(double w, double h) {
     	Pane result = new Pane();
     	ScrollPane chat = new ScrollPane();
@@ -790,6 +669,11 @@ public class homepageController {
     	delete.setLayoutY(h-120);
     	delete.setPadding(new Insets(3,3,3,3));
    
+    	//back
+    	Button back = new Button("Back");
+    	getButton(back, 60, 25, 0, 0);
+    	back.setFont(Font.font(11));
+    	
     	//Grid pane
     	GridPane messages = new GridPane();
     	messages.setVgap(10);
@@ -836,10 +720,11 @@ public class homepageController {
     	});
     	
     	chat.setContent(messages);
-    	result.getChildren().addAll(chat, text, send, object, delete);
+    	result.getChildren().addAll(object, chat, text, send, delete, back);
     	return result;
     }
     
+    //A list of contacted people
     @FXML
     void Logout(ActionEvent event)throws IOException {
     	Parent login_page = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
@@ -850,6 +735,217 @@ public class homepageController {
         login_scene.show();
     }
     
+    Pane messageList(double w, double h) {
+    	Pane result = new Pane();
+    	ScrollPane list = new ScrollPane();
+    	getButton(list, w, h-50, 5, 50);
+    	list.setVbarPolicy(ScrollBarPolicy.NEVER);
+    	list.setHbarPolicy(ScrollBarPolicy.NEVER);
+    	
+    	//Delete
+    	Button delete = new Button("Delete");
+    	getButton(delete, 60, 30, 0, 10);
+    	delete.setFont(Font.font(10));
+    	ButtonStyle(delete);
+    	
+    	//okay
+    	Button okay = new Button("Ok");
+    	getButton(okay, 60, 30, 0, 10);
+    	okay.setFont(Font.font(10));
+    	ButtonStyle(okay);
+    	okay.setVisible(false);
+    	
+    	//Text
+    	Button text = new Button("Text");
+    	getButton(text, 60, 30, 65, 10);
+    	text.setFont(Font.font(10));
+    	ButtonStyle(text);
+    	
+    	//cancel
+    	Button cancel = new Button("Cancel");
+    	getButton(cancel, 60, 30, 65, 10);
+    	cancel.setFont(Font.font(10));
+    	ButtonStyle(cancel);
+    	okay.setVisible(false);
+    	
+    	//Grid pane
+    	GridPane contacter = new GridPane();
+    	ColumnConstraints column = new ColumnConstraints(w);
+    	contacter.getColumnConstraints().add(column);
+        
+    	for(int i = 0; i < messageNum; ++i) {
+    		//Create button
+    		Button l1 = new Button("Unknown"+i);
+    		getButton(l1, w, 50, 0, 0);
+    		l1.setAlignment(Pos.CENTER);
+        	l1.setFont(new Font(16));
+        	l1.setStyle("-fx-background-color: white;"
+    				+ "-fx-border-color: black;");
+
+        	//Radio button
+        	CheckBox delete_dot = new CheckBox("");
+        	getButton(delete_dot, column.getPrefWidth(), 50, 0, 0);
+        	delete_dot.setPadding(new Insets(10,10,10,10));
+        	delete_dot.setVisible(false);
+            
+        	//Hover effects
+        	l1.setOnMouseEntered(e->{
+        		l1.setStyle("-fx-background-color:#00CED1;"
+        				+ "-fx-border-color:black;");
+        	});
+        	l1.setOnMouseExited(c->{
+            	l1.setStyle("-fx-background-color: white;"
+        				+ "-fx-border-color: black;");
+        	});
+        	     	
+    		GridPane.setHalignment(l1, HPos.LEFT);
+        	RowConstraints row1 = new RowConstraints(50);
+        	contacter.getRowConstraints().add(row1);
+        	contacter.add(l1, 0, i);
+        	contacter.add(delete_dot, 0, i);      	
+    	}
+    	
+    	delete.setOnAction(e->{
+    		ArrayList<Integer> selectedNum = new ArrayList<Integer>();
+    		delete.setVisible(false);
+    		okay.setVisible(true);
+    		okay.setDisable(true);
+    		text.setVisible(false);
+    		cancel.setVisible(true);
+    		
+    		for (Node node : contacter.getChildren()) {
+    			if (node instanceof CheckBox) {
+    				node.setVisible(true);
+    				((CheckBox) node).setSelected(false);
+    				//If no emails has been selected disable okay button, otherwise.
+    				((CheckBox) node).setOnMouseClicked(c->{
+    					if(((CheckBox) node).isSelected()) {
+    						selectedNum.add(GridPane.getRowIndex(node));
+    						okay.setDisable(false);		
+    					}
+    					else if (!((CheckBox) node).isSelected()){
+    						selectedNum.remove(GridPane.getRowIndex(node));
+    						if(selectedNum.size() == 0)
+    							okay.setDisable(true);
+    					}	
+    				});
+    			}
+    		}
+    		//Cancel deletion
+    		cancel.setOnAction(c->{
+    			//Hide all radio button
+        		for (Node node : contacter.getChildren()) {
+        			if (node instanceof CheckBox)
+        				node.setVisible(false);
+        		}
+        		delete.setVisible(true);
+        		okay.setVisible(false);
+        		text.setVisible(true);
+        		cancel.setVisible(false);
+    		});
+    		
+    		okay.setOnAction(q->{
+    			//Warning alart for deletion
+    			Alert alert = new Alert(AlertType.WARNING, 
+    									"Delete all selected messages?",
+    									ButtonType.NO,
+    									ButtonType.YES);
+    			alert.setTitle("Confirmation");
+    			alert.setHeaderText(null);
+    			alert.setX(w*3);
+    			alert.setY(h);
+    			alert.showAndWait();
+    			
+    			if(alert.getResult() == ButtonType.YES) {
+    				ObservableList<Node> children = contacter.getChildren();	
+    				//Remove deleted emails
+    				int index = 0;
+    				for(int i = 0; i < messageNum; ++i) {
+    					if(!selectedNum.contains(i)) 
+    						index += 2;
+    					else {
+    						contacter.getChildren().remove(index, index+2);
+    					}
+    				}
+    				int current = 0;
+    				int rowIndex = 0;
+    				//Sort emails
+    				for(int i = 0; i < selectedNum.size(); ++i) {
+    					while(!selectedNum.contains(rowIndex) && current/2 == rowIndex) {
+    						++rowIndex;
+    						current += 2;
+    					}
+    					if(selectedNum.contains(rowIndex)) 
+    						++rowIndex;
+    					while(!selectedNum.contains(rowIndex) && current/2 != rowIndex && rowIndex < messageNum) {
+    						GridPane.setRowIndex(children.get(current), current/2);
+    						GridPane.setRowIndex(children.get(current+1), current/2);
+    						++rowIndex;
+    						current += 2;
+    					}
+    				}			
+        			//Hide all radio button
+            		for (Node node : contacter.getChildren()) {
+            			if (node instanceof CheckBox) 
+            				node.setVisible(false);
+            		}
+        			okay.setVisible(false);
+        			cancel.setVisible(false);
+        			delete.setVisible(true);
+        			text.setVisible(true);
+    			}
+    			//Update existing messages
+    			messageNum -= selectedNum.size();
+    		});
+    	});
+    	list.setContent(contacter);
+    	result.getChildren().addAll(list,delete,text, okay, cancel);
+    	return result;
+    }
+    
+    //Find the member and message him at the first time
+    void firstTimeText(Button b, double w, double h) {
+    	
+    }
+    //General button style
+    void ButtonStyle(Node b) {
+    	b.setStyle("-fx-background-radius: 20;"
+				+ "-fx-border-radius: 20;"
+				+ "-fx-border-color: black;");
+    }
+    
+    //Get a button,textfield, label, pane and etc...
+    //Paraeters: n : the name of conponent
+    //			 w : width, h : height, x : x-axis, y : y-axis
+    void getButton(Node n, double w, double h, double x, double y) {
+    	((Region) n).setPrefSize(w,h);
+    	n.setLayoutX(x);
+    	n.setLayoutY(y);
+    	n.setFocusTraversable(false);
+    }
+    
+    //Create new window
+    //Parameters, newWindow: the target window
+    //			  scene: the scene in the newWindow
+    //			  mainStage: the parent window of newWindow
+    //			  title: the name of newWindow
+    //			  x : x-axis, y : y-axis
+    void NewWindow(Stage newWindow, Scene scene, Stage mainStage, String title, double x, double y) {
+        newWindow.setTitle(title);
+        newWindow.setScene(scene);
+        newWindow.setResizable(false);
+        
+        // Specifies the modality for new window.
+        newWindow.initModality(Modality.WINDOW_MODAL);
+
+        // Specifies the owner Window (parent) for new window
+        newWindow.initOwner(mainStage);
+        
+        //Set the window default position
+        newWindow.setX(x);
+        newWindow.setY(y);
+        newWindow.show();
+    }
     
     void Images_Animation() throws InterruptedException {
         ArrayList<File> image_files = new ArrayList<File>(6);
