@@ -106,32 +106,34 @@ public class AccountPageController {
         //Profile 
         Pane profile = new Pane();
         getProfilePane(profile, width, height);
-        profile.setVisible(false);
+        profile.setOpacity(0);
         
         //Status
         Pane status = new Pane();
         getStatusPane(status, width, height);
-        status.setVisible(false);
+        status.setOpacity(0);
         
         //Friend
         SplitPane friend = new SplitPane(new Pane(), new Pane());
         getFriendPane(friend, width, height);
+        friend.setOpacity(0);
         
         Anchor_Pane_2.getChildren().addAll(profile, status, friend);
+        
         Profile.setOnAction(e-> {
-        	profile.setVisible(true);
-        	status.setVisible(false);
-        	friend.setVisible(false);
+        	profile.setOpacity(1);
+        	status.setOpacity(0);
+        	friend.setOpacity(0);
         });
         Status.setOnAction(e-> {
-        	profile.setVisible(false);
-        	friend.setVisible(false);
-        	status.setVisible(true);
+        	profile.setOpacity(0);
+        	friend.setOpacity(0);
+        	status.setOpacity(1);
         });
         Friend.setOnAction(e->{
-        	friend.setVisible(true);
-        	profile.setVisible(false);
-        	status.setVisible(false);
+        	friend.setOpacity(1);
+        	profile.setOpacity(0);
+        	status.setOpacity(0);
         });
     }
     
