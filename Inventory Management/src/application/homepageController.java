@@ -23,11 +23,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -178,7 +176,7 @@ public class homepageController {
         Button createButton = new Button();
         createButton.setText("Create");
         createButton.setFocusTraversable(false);
-        ButtonStyle(createButton);
+        getStyle(createButton);
         
         //set the position
         StackPane.setAlignment(createButton, Pos.BOTTOM_RIGHT);
@@ -198,21 +196,21 @@ public class homepageController {
         	Pane pane = new Pane();
         	//Group title
         	TextField group_title =  new TextField();
-        	getButton(group_title, 300, 0, 30, 30);
+        	getSetting(group_title, 300, 0, 30, 30);
         	group_title.setPadding(new Insets(10,10,10,10));
         	group_title.setPromptText("Group name");
         	group_title.setStyle("-fx-border-color:#DEB887;"
         						+ "-fx-border-width: 5;");
         	//Group description
         	TextField group_description =  new TextField();
-        	getButton(group_description, 300, 0, 30, 100);
+        	getSetting(group_description, 300, 0, 30, 100);
         	group_description.setPadding(new Insets(10,10,300,10));
         	group_description.setPromptText("Group Description");
         	group_description.setStyle("-fx-border-color:#DEB887;"      						
         							+ "-fx-border-width: 5;");
         	//Friends List
         	ScrollPane friend_list = new ScrollPane();
-        	getButton(friend_list, 350, 500, 350, 30);
+        	getSetting(friend_list, 350, 500, 350, 30);
         	friend_list.setHbarPolicy(ScrollBarPolicy.NEVER);
         	friend_list.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
         	friend_list.setStyle("-fx-border-color:#DEB887;"
@@ -235,14 +233,14 @@ public class homepageController {
             	//set up invite button
             	Button b1 = new Button("Invite");
             	b1.setFocusTraversable(false);
-            	ButtonStyle(b1);
+            	getStyle(b1);
             	GridPane.setHalignment(b1, HPos.LEFT);
             	friend_grid.add(b1, 1, i);
         	}
         	//Confirmed button
         	Button confirm_button = new Button("Confirm");
-        	getButton(confirm_button, 100, 30, 300, 550);
-        	ButtonStyle(confirm_button);
+        	getSetting(confirm_button, 100, 30, 300, 550);
+        	getStyle(confirm_button);
         	friend_list.setContent(friend_grid);
         	pane.getChildren().addAll(group_title, group_description, friend_list, confirm_button);
         	
@@ -283,7 +281,7 @@ public class homepageController {
         main_scene.setPadding(new Insets(3,3,3,3));
         //Email list
         ScrollPane email_list = new ScrollPane();
-        getButton(email_list, default_w/4, default_h-70, 0, 80);
+        getSetting(email_list, default_w/4, default_h-70, 0, 80);
     	email_list.setHbarPolicy(ScrollBarPolicy.NEVER);
     	email_list.setVbarPolicy(ScrollBarPolicy.NEVER);
     	email_list.setFitToHeight(true);
@@ -301,7 +299,7 @@ public class homepageController {
     		content.setVisible(false);
     		//Create button
     		Button l1 = new Button("Unknown"+i);
-    		getButton(l1, email_list.getPrefWidth(), 50, 0, 0);
+    		getSetting(l1, email_list.getPrefWidth(), 50, 0, 0);
     		l1.setAlignment(Pos.CENTER);
         	l1.setFont(new Font(16));
         	l1.setStyle("-fx-background-color: white;"
@@ -309,7 +307,7 @@ public class homepageController {
 
         	//Radio button
         	CheckBox delete_dot = new CheckBox("");
-        	getButton(delete_dot, column1.getPrefWidth(), 50, 0, 0);
+        	getSetting(delete_dot, column1.getPrefWidth(), 50, 0, 0);
         	delete_dot.setPadding(new Insets(4,4,4,4));
         	delete_dot.setVisible(false);
         	
@@ -345,19 +343,19 @@ public class homepageController {
     	}
     	//Search button
     	Button search_button = new Button("Go");
-    	getButton(search_button, 50, 40, 0, 5);
-    	ButtonStyle(search_button);
+    	getSetting(search_button, 50, 40, 0, 5);
+    	getStyle(search_button);
     	
     	//Search field
     	TextField search = new TextField();
-    	getButton(search, default_w/4-50, 40, 50, 5);
+    	getSetting(search, default_w/4-50, 40, 50, 5);
     	search.setPromptText("Search");
-    	ButtonStyle(search);
+    	getStyle(search);
     	
     	//Compose
     	Button compose = new Button("Compose");
-    	getButton(compose, 100, 40, default_w-100, 5);
-    	ButtonStyle(compose);  	
+    	getSetting(compose, 100, 40, default_w-100, 5);
+    	getStyle(compose);  	
     	//Compose scene
     	compose.setOnAction(e->{
     		composeScene(default_w, default_h, mainScene);
@@ -367,19 +365,19 @@ public class homepageController {
 		//////////////////////////////////////////////////////////////////////////////////////////////
     	//Delete
     	Button delete = new Button("Delete");
-    	getButton(delete, 80, 30, 0, 47);
-    	ButtonStyle(delete);
+    	getSetting(delete, 80, 30, 0, 47);
+    	getStyle(delete);
 
     	// Confirm
     	Button okay = new Button("Ok");
-    	getButton(okay, 80, 30, 0, 47);
+    	getSetting(okay, 80, 30, 0, 47);
     	okay.setVisible(false);
     	okay.setStyle("-fx-background-radius: 20;"
     					+ "-fx-border-radius: 20;"
     					+ "-fx-border-color: #DC143C;");
 		//Cancel
 		Button cancel = new Button("Cancel");
-		getButton(cancel, 80, 30, 160, 47);
+		getSetting(cancel, 80, 30, 160, 47);
 		cancel.setVisible(false);
 		cancel.setStyle("-fx-background-radius: 20;"
 				+ "-fx-border-radius: 20;"
@@ -525,39 +523,39 @@ public class homepageController {
 	//Email contents
     Pane emailContent(double w, double h) {
     	Pane content = new Pane();
-    	getButton(content, w-w/4+10, h-70, w/4, 80);
+    	getSetting(content, w-w/4+10, h-70, w/4, 80);
     	content.setStyle("-fx-background-color:white;"
     					+ "-fx-border-color: black;");
     	
     	//Sender label
     	Label sender = new Label("Sender");
-    	getButton(sender, 100, 30, 0, 0);
+    	getSetting(sender, 100, 30, 0, 0);
     	sender.setPadding(new Insets(23,20,20,20));
     	
     	//Sender text field
     	TextField senderField = new TextField();
-    	getButton(senderField, content.getPrefWidth()-200, 30, 100, 17);
+    	getSetting(senderField, content.getPrefWidth()-200, 30, 100, 17);
     	senderField.setEditable(false);
     	
     	//subject label
     	Label subject = new Label("Subject");
-    	getButton(subject, 100, 30, 0, 80);
+    	getSetting(subject, 100, 30, 0, 80);
     	subject.setPadding(new Insets(23,20,20,20));
 
     	//subject text field
     	TextField subjectField = new TextField();
-    	getButton(subjectField, content.getPrefWidth()-200, 30, 100, 100);
+    	getSetting(subjectField, content.getPrefWidth()-200, 30, 100, 100);
     	subjectField.setEditable(false);
     	
     	//content field
     	TextArea contentArea = new TextArea();
-    	getButton(contentArea, content.getPrefWidth()-50, content.getPrefHeight()/1.5, 20, 160);
+    	getSetting(contentArea, content.getPrefWidth()-50, content.getPrefHeight()/1.5, 20, 160);
     	contentArea.setPadding(new Insets(20,20,20,20));
     	contentArea.setEditable(false);
     	
     	//Reply
     	Button reply = new Button("Reply");
-    	getButton(reply, 80, 30, content.getPrefWidth()-110, content.getPrefHeight()-40);
+    	getSetting(reply, 80, 30, content.getPrefWidth()-110, content.getPrefHeight()-40);
     	
     	content.getChildren().addAll(sender, senderField, subject, subjectField, contentArea, reply);
     	return content;
@@ -566,7 +564,7 @@ public class homepageController {
     //Email compose scene
     void composeScene(double w, double h, Stage s) {
     	Pane scene = emailContent(w,h);
-    	getButton(scene, w, h, 0, 0);
+    	getSetting(scene, w, h, 0, 0);
     	scene.setStyle(null);
     	//Adjustments
     	((TextField)scene.getChildren().get(1)).setEditable(true);
@@ -591,16 +589,16 @@ public class homepageController {
     	
     	//Object
     	Label object = new Label("To unknown");
-    	getButton(object, w/4, 40, 0, 0);
+    	getSetting(object, w/4, 40, 0, 0);
     	object.setPadding(new Insets(20,20,20,20));
     	
     	//Reply content
     	TextArea content = new TextArea();
-    	getButton(content, w-w/4, h/2, 10, 80);
+    	getSetting(content, w-w/4, h/2, 10, 80);
     	
     	//send
     	Button send = new Button("Send");
-    	getButton(send, 80, 30, content.getPrefWidth()/2-40, content.getPrefHeight()+90);
+    	getSetting(send, 80, 30, content.getPrefWidth()/2-40, content.getPrefHeight()+90);
 
     	//Set children
     	scene.getChildren().addAll(object, content, send);
@@ -643,17 +641,12 @@ public class homepageController {
     	
     	//Text 
     	TextField text = new TextField();
-    	text.setPrefSize(w-70, 127);
-    	text.setLayoutY(h-120);
+    	getSetting(text, w-70, 127, 0, h-120);
     	text.setAlignment(Pos.TOP_LEFT);
-    	text.setFocusTraversable(false);
         	
     	//Send
     	Button send = new Button("Send");
-    	send.setFocusTraversable(false);
-    	send.setPrefSize(60, 25);
-    	send.setLayoutX(w-60);
-    	send.setLayoutY(h-20);
+    	getSetting(send, 60, 25, 2-60, h-20);
     	send.setPadding(new Insets(3,3,3,3));
     	
     	//Object
@@ -663,15 +656,12 @@ public class homepageController {
     	
     	//Delete all content
     	Button delete = new Button("Delete");
-    	delete.setFocusTraversable(false);
-    	delete.setPrefSize(60, 25);
-    	delete.setLayoutX(w-60);
-    	delete.setLayoutY(h-120);
+    	getSetting(delete, 60, 25, w-60, h-120);
     	delete.setPadding(new Insets(3,3,3,3));
    
     	//back
     	Button back = new Button("Back");
-    	getButton(back, 60, 25, 0, 0);
+    	getSetting(back, 60, 25, 0, 0);
     	back.setFont(Font.font(11));
     	
     	//Grid pane
@@ -738,35 +728,35 @@ public class homepageController {
     Pane messageList(double w, double h) {
     	Pane result = new Pane();
     	ScrollPane list = new ScrollPane();
-    	getButton(list, w, h-50, 5, 50);
+    	getSetting(list, w, h-50, 5, 50);
     	list.setVbarPolicy(ScrollBarPolicy.NEVER);
     	list.setHbarPolicy(ScrollBarPolicy.NEVER);
     	
     	//Delete
     	Button delete = new Button("Delete");
-    	getButton(delete, 60, 30, 0, 10);
+    	getSetting(delete, 60, 30, 0, 10);
     	delete.setFont(Font.font(10));
-    	ButtonStyle(delete);
+    	getStyle(delete);
     	
     	//okay
     	Button okay = new Button("Ok");
-    	getButton(okay, 60, 30, 0, 10);
+    	getSetting(okay, 60, 30, 0, 10);
     	okay.setFont(Font.font(10));
-    	ButtonStyle(okay);
+    	getStyle(okay);
     	okay.setVisible(false);
     	
     	//Text
     	Button text = new Button("Text");
-    	getButton(text, 60, 30, 65, 10);
+    	getSetting(text, 60, 30, 65, 10);
     	text.setFont(Font.font(10));
-    	ButtonStyle(text);
+    	getStyle(text);
     	
     	//cancel
     	Button cancel = new Button("Cancel");
-    	getButton(cancel, 60, 30, 65, 10);
+    	getSetting(cancel, 60, 30, 65, 10);
     	cancel.setFont(Font.font(10));
-    	ButtonStyle(cancel);
-    	okay.setVisible(false);
+    	getStyle(cancel);
+    	cancel.setVisible(false);
     	
     	//Grid pane
     	GridPane contacter = new GridPane();
@@ -776,7 +766,7 @@ public class homepageController {
     	for(int i = 0; i < messageNum; ++i) {
     		//Create button
     		Button l1 = new Button("Unknown"+i);
-    		getButton(l1, w, 50, 0, 0);
+    		getSetting(l1, w, 50, 0, 0);
     		l1.setAlignment(Pos.CENTER);
         	l1.setFont(new Font(16));
         	l1.setStyle("-fx-background-color: white;"
@@ -784,7 +774,7 @@ public class homepageController {
 
         	//Radio button
         	CheckBox delete_dot = new CheckBox("");
-        	getButton(delete_dot, column.getPrefWidth(), 50, 0, 0);
+        	getSetting(delete_dot, column.getPrefWidth(), 50, 0, 0);
         	delete_dot.setPadding(new Insets(10,10,10,10));
         	delete_dot.setVisible(false);
             
@@ -907,8 +897,8 @@ public class homepageController {
     void firstTimeText(Button b, double w, double h) {
     	
     }
-    //General button style
-    void ButtonStyle(Node b) {
+    //General style
+    void getStyle(Node b) {
     	b.setStyle("-fx-background-radius: 20;"
 				+ "-fx-border-radius: 20;"
 				+ "-fx-border-color: black;");
@@ -917,7 +907,7 @@ public class homepageController {
     //Get a button,textfield, label, pane and etc...
     //Paraeters: n : the name of conponent
     //			 w : width, h : height, x : x-axis, y : y-axis
-    void getButton(Node n, double w, double h, double x, double y) {
+    void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);
     	n.setLayoutY(y);

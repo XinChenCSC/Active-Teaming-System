@@ -90,3 +90,16 @@
 	-fx-background-color: #FFFFE0;
 }
 
+.Button {
+	-fx-background-radius: 20;
+	-fx-border-radius:20;
+	-fx-background-color: #87CEFA;
+    -fx-border-color: #48D1CC;
+}
+
+.Button:hover{
+	-fx-border-color: #48D1CC;
+	-fx-background-color: #00BFFF;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
