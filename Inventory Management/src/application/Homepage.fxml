@@ -74,7 +74,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#Group_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Group" />
                 <MenuItem mnemonicParsing="false" onAction="#Message_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Message" />
                 <MenuItem mnemonicParsing="false" onAction="#Email_Click" style="-fx-padding: 7;&#10;-fx-pref-height:40;" text="Email" />
-                <MenuItem mnemonicParsing="false" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Account" />
+                <MenuItem mnemonicParsing="false" onAction="#moveToAccount" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Account" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#Logout" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Logout" />
               </items>

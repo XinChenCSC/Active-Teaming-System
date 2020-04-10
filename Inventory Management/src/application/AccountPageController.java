@@ -10,12 +10,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -37,6 +41,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -59,7 +65,7 @@ public class AccountPageController {
     private Button Friend;
 
     @FXML
-    private Button Group;
+    private Button Remainder;
 
     @FXML
     private ImageView Image_View;
@@ -108,6 +114,10 @@ public class AccountPageController {
         getProfilePane(profile, width, height);
         profile.setOpacity(0);
         
+        //Remainder
+        Pane remainder = new Pane();
+        getRemainderPane(remainder, width, height);
+        remainder.setOpacity(0);
         //Status
         Pane status = new Pane();
         getStatusPane(status, width, height);
@@ -118,23 +128,48 @@ public class AccountPageController {
         getFriendPane(friend, width, height);
         friend.setOpacity(0);
         
-        Anchor_Pane_2.getChildren().addAll(profile, status, friend);
+        Anchor_Pane_2.getChildren().addAll(profile, remainder, status, friend);
         
         Profile.setOnAction(e-> {
         	profile.setOpacity(1);
         	status.setOpacity(0);
         	friend.setOpacity(0);
+        	remainder.setOpacity(0);
+        });
+        Remainder.setOnAction(e-> {
+        	remainder.setOpacity(1);
+        	profile.setOpacity(0);
+        	status.setOpacity(0);
+        	friend.setOpacity(0);
         });
         Status.setOnAction(e-> {
+        	status.setOpacity(1);
         	profile.setOpacity(0);
         	friend.setOpacity(0);
-        	status.setOpacity(1);
+        	remainder.setOpacity(0);
         });
         Friend.setOnAction(e->{
         	friend.setOpacity(1);
         	profile.setOpacity(0);
         	status.setOpacity(0);
+        	remainder.setOpacity(0);
         });
+    }
+    
+    @FXML
+    void homePage(ActionEvent event) throws IOException {
+    	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+        Stage home_scene = (Stage) Profile.getScene().getWindow();
+    
+        home_scene.setScene(new Scene(home_page));
+        home_scene.setTitle("Homepage");
+        home_scene.show();
+    }
+
+    //Create remainder contents
+    void getRemainderPane(Pane remainder, double width, double height) {
+    	contentPane(remainder, width, height);
+    	
     }
     
     //Create friend contents
@@ -171,10 +206,9 @@ public class AccountPageController {
     	gridPane.setGridLinesVisible(false);
     	gridPane.setStyle("-fx-background-color: #f8f8ff;");
     	gridPane.getColumnConstraints().add(new ColumnConstraints(width/2-10));
-    	
-    	for(int i = 0; i < 15; ++i) {
+    	for(int i = 0; i < 4; ++i) {
     		//MenuButton for each friend
-    		Label friendName = new Label("Unknown");
+    		Label friendName = new Label("Unknown" + i);
     		friendName.setAlignment(Pos.CENTER);
     		getSetting(friendName, width/2, 40, 0, 0);
     		
@@ -186,7 +220,7 @@ public class AccountPageController {
     				new MenuItem("BlackList"),
     				new MenuItem("Delete"));
     		friendName.setContextMenu(contentMenu);
-    		
+    
     		//Mouse enter and exit
     		friendName.setOnMouseEntered(e->friendName.setStyle("-fx-background-color: #00bfff;"));	
     		friendName.setOnMouseExited(e-> friendName.setStyle("-fx-background-color: #f8f8ff;"));
@@ -194,12 +228,17 @@ public class AccountPageController {
     		//Set to each column
     		GridPane.setHalignment(friendName, HPos.CENTER);
     		gridPane.add(friendName, 0, i);
+    		
+    		//Delete event
+    		contentMenu.getItems().get(4).setOnAction(e-> gridPane.getChildren().remove(friendName));
     	}
     	
     	//Add button
     	Button add = new Button("Add");
     	getSetting(add, 80, 30, 10, height-50);
-    	getStyle(add);
+    	getStyle(add,"-fx-border-color:#000000;");
+    	//Add button event
+    	add.setOnAction(e-> addFriend());
     	
     	//Blacklist
     	ScrollPane scrollPane_2 = new ScrollPane();
@@ -211,8 +250,8 @@ public class AccountPageController {
     	gridPane_2.setVgap(10);
     	gridPane_2.setStyle("-fx-background-color: #f8f8ff;");
     	gridPane_2.getColumnConstraints().add(new ColumnConstraints(width/2-10));
-    	
-    	for(int i = 0; i < 5; ++i) {
+
+    	for(int j = 0; j < 5; ++j) {
     		//MenuButton for each friend
     		Label blacklister = new Label("Unknown");
     		blacklister.setAlignment(Pos.CENTER);
@@ -229,7 +268,10 @@ public class AccountPageController {
     		
     		//Set to each column
     		GridPane.setHalignment(blacklister, HPos.CENTER);
-    		gridPane_2.add(blacklister, 0, i);
+    		gridPane_2.add(blacklister, 0, j);
+    		
+    		//Remove event
+    		contentMenu.getItems().get(0).setOnAction(e-> gridPane_2.getChildren().remove(blacklister));
     	}
     	
     	scrollPane.setContent(gridPane);
@@ -294,7 +336,7 @@ public class AccountPageController {
     	//Change protrait
     	Button protrait = new Button("Edit protrait");
     	getSetting(protrait, width/3, 30, 20, 370);
-    	getStyle(protrait);
+    	getStyle(protrait,"-fx-border-color:#000000;");
     	
     	//Edit protrait button event
     	protrait.setOnAction(e-> {
@@ -329,7 +371,7 @@ public class AccountPageController {
     	//Button for change password
     	Button changePassword = new Button("Reset password");
     	getSetting(changePassword, 200, 30, 0, 0);
-    	getStyle(changePassword);
+    	getStyle(changePassword,"-fx-border-color:#000000;");
     	GridPane.setHalignment(changePassword, HPos.CENTER);
     	Grid_Pane.add(changePassword, 0, 5);
     	
@@ -366,7 +408,7 @@ public class AccountPageController {
     			//create confirm button
     			Button confirm = new Button("Confirm");
     			getSetting(confirm, 100, 30, 0 ,0);
-    			getStyle(confirm);
+    			getStyle(confirm,"-fx-border-color:#000000;");
     			GridPane.setHalignment(confirm, HPos.CENTER);
     			gridpane.add(confirm, 0, i+3);
     		}
@@ -381,7 +423,7 @@ public class AccountPageController {
     			//Textfield
     			PasswordField field = new PasswordField();
     			getSetting(field, 300, 30, 0, 0);
-    			getStyle(field);
+    			getStyle(field,"-fx-border-color:#000000;");
     			GridPane.setHalignment(field, HPos.RIGHT);
     			gridpane.add(field, 0, i);
     		}
@@ -401,7 +443,7 @@ public class AccountPageController {
     			check = false;
     		}
     		else
-    			getStyle(((TextField) gridpane.getChildren().get(1)));
+    			getStyle(((TextField) gridpane.getChildren().get(1)),"-fx-border-color:#000000;");
     		//Check new password and repeated password
     		if(((TextField) gridpane.getChildren().get(3)).getText().compareTo(((TextField) gridpane.getChildren().get(5)).getText()) != 0 && 
     				((TextField) gridpane.getChildren().get(3)).getText().isEmpty() || ((TextField) gridpane.getChildren().get(5)).getText().isEmpty()) {
@@ -409,7 +451,7 @@ public class AccountPageController {
     			check = false;
     		}
     		else
-    			getStyle(((TextField) gridpane.getChildren().get(5)));
+    			getStyle(((TextField) gridpane.getChildren().get(5)),"-fx-border-color:#000000;");
     		
     		if(check) {
     			getAlert(newWindow);    		    			
@@ -441,6 +483,73 @@ public class AccountPageController {
     	 }
     }
     
+    //Add friend
+    void addFriend() {
+    	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
+    	Pane pane = new Pane();
+    	pane.setPrefSize(300,150);
+    	Scene scene = new Scene(pane, 300, 150);
+    	Stage newWindow = new Stage();
+    	
+    	GridPane gridPane = new GridPane();
+    	gridPane.setPadding(new Insets(5,5,5,5));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(80));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(200));
+    	gridPane.getRowConstraints().add(new RowConstraints(70));
+    	
+    	//Search button
+    	Button search = new Button("Search");
+    	getSetting(search, 80, 30, 0, 0);
+    	getStyle(search,"-fx-border-color:#000000;");
+    	gridPane.add(search, 0, 0);
+    	
+    	//Textfield
+    	TextField textField = new TextField();
+    	textField.setPromptText("ID");
+    	getSetting(textField, 200, 30, 0, 0);
+    	getStyle(textField, "-fx-border-color:#000000;");
+    	gridPane.add(textField, 1, 0);
+    	
+    	//Search result (Invalid ID)
+    	Label invalidId = new Label("Invalid ID");
+    	invalidId.setAlignment(Pos.CENTER);
+    	invalidId.setTextFill(Color.web("#dc143c"));
+    	getSetting(invalidId, 300, 30, 0, 60);
+    	invalidId.setVisible(false);
+    	
+    	//Search result Valid ID
+    	Button add = new Button("Add");
+    	getSetting(add, 80, 30, 0, 0);
+    	getStyle(add, "-fx-border-color:#000000;");
+    	gridPane.add(add, 0, 1);
+    	add.setVisible(false);
+    	
+    	Label name = new Label("Unknown");
+    	name.setAlignment(Pos.CENTER);
+    	getSetting(name, 200, 30, 0, 0);
+    	gridPane.add(name, 1, 1);
+    	name.setVisible(false);
+    	
+    	search.setOnAction(e->{
+    		if(textField.getText().compareTo("") == 0) {
+    			add.setVisible(true);
+    			name.setVisible(true);
+    			invalidId.setVisible(false);
+    			getStyle(add, "-fx-background-color:#7cfc00;");
+    			add.setOnAction(a->{
+    				getStyle(add, "-fx-background-color:#dcdcdc;");
+    			});
+    		}
+    		else {
+    			add.setVisible(false);
+    			name.setVisible(false);
+    			invalidId.setVisible(true);
+    		}
+    	});
+    	pane.getChildren().addAll(gridPane, invalidId);
+    	NewWindow(newWindow, scene, mainScene, "Search", width/2, height/3);
+    }
+        
     //Create alert
     void getAlert(Stage stage) {
     	Alert alert = new Alert(AlertType.CONFIRMATION, "New password created.", ButtonType.OK);
@@ -485,10 +594,10 @@ public class AccountPageController {
     }
     
     //Set up general style
-    void getStyle(Node n) {
+    void getStyle(Node n, String str) {
     	n.setStyle("-fx-background-radius: 20;"
     				+ "-fx-border-radius:20;"
-    				+ "-fx-border-color:#000000;");
+    				+ str);
     }
     
     //Set up error style

@@ -725,6 +725,16 @@ public class homepageController {
         login_scene.show();
     }
     
+    @FXML
+    void moveToAccount(ActionEvent event) throws IOException {
+    	Parent account_page = FXMLLoader.load(getClass().getResource("AccountPage.fxml"));
+        Stage account_scene = (Stage) Profile.getScene().getWindow();
+    
+        account_scene.setScene(new Scene(account_page));
+        account_scene.setTitle("Account page");
+        account_scene.show();
+    }
+    
     Pane messageList(double w, double h) {
     	Pane result = new Pane();
     	ScrollPane list = new ScrollPane();
