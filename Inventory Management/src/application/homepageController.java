@@ -117,10 +117,11 @@ public class homepageController {
 	int emailNum = 5;
 	// Number of existing messages
 	int messageNum = 5;
-    
+    //Window size
+    Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
+
     @FXML
     void initialize() throws IOException, InterruptedException {
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
@@ -252,17 +253,15 @@ public class homepageController {
             
             //Confirmed button click event
             confirm_button.setOnAction(c->{
-            	Alert alert = new Alert(AlertType.INFORMATION);
-            	alert.setTitle("Group confirmation");
-            	alert.setHeaderText(null);
-            	alert.setContentText("Please wait for the final decision.");
-            	alert.setX(newWindow_2.getX()+150);
-            	alert.setY(newWindow_2.getY()+150);
-            	alert.showAndWait();
-            	
-            	if (alert.getResult() == ButtonType.OK) {
-                	newWindow_2.close();
-            	}	
+            	if(group_title.getText().isEmpty() || group_description.getText().isEmpty()) {
+            		@SuppressWarnings("unused")
+					Alert warning = getAlert(AlertType.WARNING, "Wrong inputs existed.", ButtonType.OK, "Caution!", newWindow_2);
+            	}
+            	else {
+                	Alert alert = getAlert(AlertType.INFORMATION, "Please wait for the final decision", ButtonType.OK, "Grouop confirmation", newWindow_2);
+                	if (alert.getResult() == ButtonType.OK)
+                    	newWindow_2.close();
+            	}
             });
         });
         //-----------------------------------------------------------------
@@ -475,9 +474,9 @@ public class homepageController {
         			okay.setVisible(false);
         			cancel.setVisible(false);
         			delete.setVisible(true);
+        			//Update existing emails
+        			emailNum -= selectedNum.size();
     			}
-    			//Update existing emails
-    			emailNum -= selectedNum.size();
     		});
     	});
     	
@@ -496,13 +495,15 @@ public class homepageController {
     	//Get the screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
         //Get the main scene size
-        Stage mainScene = (Stage) Profile.getScene().getWindow();
+        Stage mainScene = (Stage) Profile.getScene().getWindow();     
+        //Create new window
+        Stage newWindow = new Stage();  
         //Create chat list
-        Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2);
+        Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2, newWindow);
         //create scene
         Scene secondScene = new Scene(chatList,screen.getWidth()/5, screen.getHeight()/2);
         //Create message chat
-        Pane messageChat = messageChat(screen.getWidth()/5, screen.getHeight()/2);
+        Pane messageChat = messageChat(screen.getWidth()/5, screen.getHeight()/2, newWindow);
         GridPane dummy = (GridPane) ((ScrollPane) chatList.getChildren().get(0)).getContent();
         for (int i = 0 ; i < messageNum; ++i) {
         	((Button) dummy.getChildren().get(i*2)).setOnAction(e->{
@@ -513,11 +514,8 @@ public class homepageController {
         ((Button) messageChat.getChildren().get(5)).setOnAction(r->{
         	secondScene.setRoot(chatList);
         });  
-        
-        //Create new window
-        Stage newWindow = new Stage();
         //Set new window
-        NewWindow(newWindow, secondScene, mainScene, "Message", screen.getWidth()/1.3, screen.getHeight()/2.5);
+        NewWindow(newWindow, secondScene, mainScene, "Message", screen.getWidth()/1.5, screen.getHeight()/2.5);
     }
     
 	//Email contents
@@ -617,21 +615,14 @@ public class homepageController {
     	 //Send button event
     	b.setOnAction(e->{
    			//Confirmation
-			Alert alert = new Alert(AlertType.INFORMATION, 
-									"Email has been sent!");
-			alert.setTitle("Confirmation");
-			alert.setHeaderText(null);
-			alert.setX(w-150);
-			alert.setY(h-150);
-			alert.showAndWait();
-			
+    		Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton", newWindow);			
 			if(alert.getResult() == ButtonType.OK)
 				newWindow.close();
     	});
     }
     
     //Conversation scene
-    Pane messageChat(double w, double h) {
+    Pane messageChat(double w, double h, Stage stage) {
     	Pane result = new Pane();
     	ScrollPane chat = new ScrollPane();
     	chat.setPrefSize(w+12, h-160);
@@ -646,7 +637,7 @@ public class homepageController {
         	
     	//Send
     	Button send = new Button("Send");
-    	getSetting(send, 60, 25, 2-60, h-20);
+    	getSetting(send, 60, 25, w-60, h-20);
     	send.setPadding(new Insets(3,3,3,3));
     	
     	//Object
@@ -677,7 +668,6 @@ public class homepageController {
         	t.setWrapText(true);
     		t.setEllipsisString(null);
     		t.setPrefWidth(w/1.5);
-        	t.setWrapText(true);
         	t.setAlignment(Pos.CENTER_RIGHT);
         	//Get the widthe of string
         	Font font = text.getFont();
@@ -694,16 +684,7 @@ public class homepageController {
     	
     	//Delete event
     	delete.setOnAction(e->{
-    		Alert alert = new Alert(AlertType.WARNING,
-    							"All content will be deleted.",
-    							ButtonType.YES,
-    							ButtonType.NO);
-    		alert.setTitle("Confirmation");
-    		alert.setHeaderText(null);
-    		alert.setX(w*3);
-    		alert.setY(h);
-    		alert.showAndWait();
-    		
+    		Alert alert = getAlert(AlertType.WARNING, "All contents will be deleted.", ButtonType.YES, "Caution!", stage);
     		if(alert.getResult() == ButtonType.YES) {
     			messages.getChildren().clear();
     		}
@@ -729,13 +710,12 @@ public class homepageController {
     void moveToAccount(ActionEvent event) throws IOException {
     	Parent account_page = FXMLLoader.load(getClass().getResource("AccountPage.fxml"));
         Stage account_scene = (Stage) Profile.getScene().getWindow();
-    
         account_scene.setScene(new Scene(account_page));
         account_scene.setTitle("Account page");
         account_scene.show();
     }
     
-    Pane messageList(double w, double h) {
+    Pane messageList(double w, double h, Stage stage) {
     	Pane result = new Pane();
     	ScrollPane list = new ScrollPane();
     	getSetting(list, w, h-50, 5, 50);
@@ -845,17 +825,7 @@ public class homepageController {
     		});
     		
     		okay.setOnAction(q->{
-    			//Warning alart for deletion
-    			Alert alert = new Alert(AlertType.WARNING, 
-    									"Delete all selected messages?",
-    									ButtonType.NO,
-    									ButtonType.YES);
-    			alert.setTitle("Confirmation");
-    			alert.setHeaderText(null);
-    			alert.setX(w*3);
-    			alert.setY(h);
-    			alert.showAndWait();
-    			
+    			Alert alert = getAlert(AlertType.WARNING, "Delete all selected messages?", ButtonType.YES, "Caution!", stage);   			
     			if(alert.getResult() == ButtonType.YES) {
     				ObservableList<Node> children = contacter.getChildren();	
     				//Remove deleted emails
@@ -893,9 +863,9 @@ public class homepageController {
         			cancel.setVisible(false);
         			delete.setVisible(true);
         			text.setVisible(true);
+        			//Update existing messages
+        			messageNum -= selectedNum.size();
     			}
-    			//Update existing messages
-    			messageNum -= selectedNum.size();
     		});
     	});
     	list.setContent(contacter);
@@ -945,6 +915,17 @@ public class homepageController {
         newWindow.setX(x);
         newWindow.setY(y);
         newWindow.show();
+    }
+    
+    //Get alert
+    Alert getAlert(AlertType at, String content, ButtonType bt, String title, Stage stage) {
+    	Alert alert = new Alert(at, content, bt);
+    	alert.setTitle(title);
+    	alert.setHeaderText(null);
+    	alert.setX(stage.getX()+150);
+    	alert.setY(stage.getY()+150);
+    	alert.showAndWait();    	
+    	return alert;
     }
     
     void Images_Animation() throws InterruptedException {

@@ -31,6 +31,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -112,47 +113,49 @@ public class AccountPageController {
         //Profile 
         Pane profile = new Pane();
         getProfilePane(profile, width, height);
-        profile.setOpacity(0);
         
         //Remainder
         Pane remainder = new Pane();
         getRemainderPane(remainder, width, height);
-        remainder.setOpacity(0);
+        
         //Status
         Pane status = new Pane();
         getStatusPane(status, width, height);
-        status.setOpacity(0);
         
         //Friend
         SplitPane friend = new SplitPane(new Pane(), new Pane());
         getFriendPane(friend, width, height);
-        friend.setOpacity(0);
         
-        Anchor_Pane_2.getChildren().addAll(profile, remainder, status, friend);
+        //History
+        Pane history = new Pane();
+        getHistoryPane(history, width, height);
         
+        
+        //Change output pane
         Profile.setOnAction(e-> {
-        	profile.setOpacity(1);
-        	status.setOpacity(0);
-        	friend.setOpacity(0);
-        	remainder.setOpacity(0);
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(profile);
         });
-        Remainder.setOnAction(e-> {
-        	remainder.setOpacity(1);
-        	profile.setOpacity(0);
-        	status.setOpacity(0);
-        	friend.setOpacity(0);
+        Remainder.setOnAction(e-> {      	
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(remainder);
         });
         Status.setOnAction(e-> {
-        	status.setOpacity(1);
-        	profile.setOpacity(0);
-        	friend.setOpacity(0);
-        	remainder.setOpacity(0);
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(status);
         });
         Friend.setOnAction(e->{
-        	friend.setOpacity(1);
-        	profile.setOpacity(0);
-        	status.setOpacity(0);
-        	remainder.setOpacity(0);
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(friend);
+        });
+        History.setOnAction(e->{
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(history);
         });
     }
     
@@ -160,7 +163,6 @@ public class AccountPageController {
     void homePage(ActionEvent event) throws IOException {
     	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) Profile.getScene().getWindow();
-    
         home_scene.setScene(new Scene(home_page));
         home_scene.setTitle("Homepage");
         home_scene.show();
@@ -170,6 +172,48 @@ public class AccountPageController {
     void getRemainderPane(Pane remainder, double width, double height) {
     	contentPane(remainder, width, height);
     	
+    	//Create scroll pane
+    	ScrollPane scrollPane = new ScrollPane();
+    	getSetting(scrollPane, width, height-160, 0, 160);
+    	scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+    	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+    	
+    	//Create GridPane
+    	GridPane gridPane = new GridPane();
+    	gridPane.setVgap(20);
+    	gridPane.setPadding(new Insets(10,10,10,10));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width));
+    	
+    	//Create title
+    	Label title = new Label("Scheduled Appointments");
+    	getSetting(title, width, 150, 0, 0);
+    	title.setAlignment(Pos.CENTER);
+    	title.setFont(Font.font(30));
+    	
+    	//List all avaliable appointments
+    	for(int i = 0; i < 10; ++i) {
+    		//Labels of appointments
+    		Label appointments = new Label("Meeting time\nXXXX/XX/XX");
+    		getSetting(appointments, 400, 60, 0, 0);
+    		appointments.setAlignment(Pos.CENTER);
+    		GridPane.setHalignment(appointments, HPos.CENTER);
+    		gridPane.add(appointments, 0, i);
+    		
+    		//separator
+        	Separator appSeparator = new Separator();
+        	appSeparator.setMaxWidth(width/2);
+        	GridPane.setValignment(appSeparator, VPos.BOTTOM);
+        	GridPane.setHalignment(appSeparator, HPos.CENTER);
+        	gridPane.add(appSeparator, 0, i);
+    	}
+    	
+    	scrollPane.setContent(gridPane);
+    	remainder.getChildren().addAll(scrollPane, title);
+    }
+    
+    //Create history contents
+    void getHistoryPane(Pane history, double width, double height) {
+    	contentPane(history, width, height);
     }
     
     //Create friend contents
@@ -182,7 +226,7 @@ public class AccountPageController {
     	pane_2.setMinSize(width/2, height);
     	
     	//Titles
-    	Label tag_1 = new Label("Friend");
+    	Label tag_1 = new Label("WhiteBox");
     	tag_1.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
     	tag_1.setStyle("-fx-background-color: #00ff00;");
     	tag_1.setAlignment(Pos.CENTER);
@@ -215,8 +259,6 @@ public class AccountPageController {
     		//Create context menu
     		ContextMenu contentMenu = new ContextMenu();
     		contentMenu.getItems().addAll(new MenuItem("Inspect"),
-    				new MenuItem("Message"),
-    				new MenuItem("Email"),
     				new MenuItem("BlackList"),
     				new MenuItem("Delete"));
     		friendName.setContextMenu(contentMenu);
@@ -230,7 +272,7 @@ public class AccountPageController {
     		gridPane.add(friendName, 0, i);
     		
     		//Delete event
-    		contentMenu.getItems().get(4).setOnAction(e-> gridPane.getChildren().remove(friendName));
+    		contentMenu.getItems().get(2).setOnAction(e-> gridPane.getChildren().remove(friendName));
     	}
     	
     	//Add button

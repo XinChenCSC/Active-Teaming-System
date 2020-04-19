@@ -25,7 +25,10 @@
 .menu-item{
 	-fx-background-color: linear-gradient(transparent, #6495ED);
 	-fx-border-color: #7CFC00;
-	-fx-pref-height: 50;
+	-fx-pref-height: 40;
+	-fx-pref-width: 148;
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
 	-fx-padding: 5px;
 }
 

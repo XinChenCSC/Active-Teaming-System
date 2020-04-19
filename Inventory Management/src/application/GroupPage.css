@@ -1,0 +1,21 @@
+/*TextArea styles */
+
+.text-area {
+    -fx-background-color: transparent;
+    -fx-border-color: #000000;
+}
+
+.text-area .scroll-pane{
+    -fx-background-color: transparent;
+    -fx-hbar-policy: NEVER;
+    -fx-vbar-policy: NEVER;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}

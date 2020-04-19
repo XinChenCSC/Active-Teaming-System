@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="Anchor_Pane" prefHeight="800.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.GroupPageController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane fx:id="Scroll_Pane" hbarPolicy="NEVER" prefHeight="800.0" prefWidth="1400.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <AnchorPane id="Content" minHeight="1000.0" minWidth="1920.0" prefHeight="1000.0" prefWidth="1920.0">
+          <children>
+            <ImageView fx:id="Background" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <image>
+                <Image url="@../../Images/GroupPageImage.jpg" />
+              </image>
+            </ImageView>
+            <Label layoutX="101.0" layoutY="49.0" prefHeight="150.0" prefWidth="1000.0" text="Welcome">
+              <font>
+                <Font name="Algerian" size="90.0" />
+              </font>
+            </Label>
+            <MenuButton id="Project" fx:id="Members" alignment="CENTER" contentDisplay="RIGHT" layoutX="674.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Members">
+              <font>
+                <Font name="Arial" size="15.0" fx:id="x1" />
+              </font>
+              <items>
+                <MenuItem mnemonicParsing="false" text="Unknown" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+                <URL value="@GroupPage.css" />
+              </stylesheets>
+            </MenuButton>
+            <MenuButton id="Project" fx:id="Vote" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="822.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Vote">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Votes" />
+                <MenuItem mnemonicParsing="false" text="Meeting" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+            <TextArea fx:id="ProjectName" editable="false" focusTraversable="false" layoutX="101.0" layoutY="230.0" prefHeight="150.0" prefWidth="400.0" text="&#10;" wrapText="true">
+              <stylesheets>
+                <URL value="@GroupPage.css" />
+              </stylesheets>
+            </TextArea>
+            <TextArea fx:id="ProjectDescription" editable="false" layoutX="101.0" layoutY="380.0" prefHeight="350.0" prefWidth="400.0" wrapText="true">
+              <stylesheets>
+                <URL value="@GroupPage.css" />
+              </stylesheets>
+            </TextArea>
+            <MenuButton id="Project" fx:id="Personal" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="970.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" style="&#10;" text="Personal" textFill="BLACK">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Status" />
+                <MenuItem mnemonicParsing="false" text="Poll status" />
+                <MenuItem mnemonicParsing="false" onAction="#moveToHomepage" text="Homepage" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+          </children>
+        </AnchorPane>
+      </content>
+    </ScrollPane>
+  </children>
+</AnchorPane>

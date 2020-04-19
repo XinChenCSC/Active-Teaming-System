@@ -37,7 +37,7 @@
                 <URL value="@application.css" />
               </stylesheets>
             </MenuButton>
-            <MenuButton fx:id="News" alignment="CENTER" focusTraversable="false" layoutX="72.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="150.0" styleClass="arrow-button, container" text="News">
+            <MenuButton fx:id="News" alignment="CENTER" focusTraversable="false" layoutX="72.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button, container" text="News">
               <items>
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
@@ -70,7 +70,6 @@
             </MenuButton>
             <MenuButton fx:id="Profile" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="1278.0" layoutY="0.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #48D1CC;&#10;" text="Profile">
               <items>
-                <MenuItem id="profile_menus" mnemonicParsing="false" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Status" />
                 <MenuItem mnemonicParsing="false" onAction="#Group_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Group" />
                 <MenuItem mnemonicParsing="false" onAction="#Message_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Message" />
                 <MenuItem mnemonicParsing="false" onAction="#Email_Click" style="-fx-padding: 7;&#10;-fx-pref-height:40;" text="Email" />
