@@ -13,7 +13,7 @@
   <children>
     <ScrollPane fx:id="Scroll_Pane" hbarPolicy="NEVER" prefHeight="800.0" prefWidth="1400.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <content>
-        <AnchorPane id="Content" minHeight="1000.0" minWidth="1920.0" prefHeight="1000.0" prefWidth="1920.0">
+        <AnchorPane id="Content" fx:id="Scroll_Anchor" minHeight="1000.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1920.0">
           <children>
             <ImageView fx:id="Background" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <image>
@@ -56,16 +56,22 @@
                 <URL value="@GroupPage.css" />
               </stylesheets>
             </TextArea>
-            <MenuButton id="Project" fx:id="Personal" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="970.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" style="&#10;" text="Personal" textFill="BLACK">
+            <MenuButton fx:id="Group" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="970.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" style="&#10;" text="Group" textFill="BLACK">
               <items>
                 <MenuItem mnemonicParsing="false" text="Status" />
                 <MenuItem mnemonicParsing="false" text="Poll status" />
                 <MenuItem mnemonicParsing="false" onAction="#moveToHomepage" text="Homepage" />
+                <MenuItem mnemonicParsing="false" text="Activities" />
               </items>
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>
             </MenuButton>
+            <Button fx:id="Edit" layoutX="1321.0" layoutY="750.0" mnemonicParsing="false" styleClass="Button" text="Edit">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Button>
           </children>
         </AnchorPane>
       </content>

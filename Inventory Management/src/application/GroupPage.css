@@ -19,3 +19,8 @@
 .text-area .scroll-pane .content{
     -fx-background-color: transparent;
 }
+
+#AgreeVotes {
+  -fx-text-box-border: forestgreen;
+  -fx-accent: #90EE90;
+}

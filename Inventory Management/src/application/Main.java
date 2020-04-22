@@ -15,7 +15,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			
-			FXMLLoader firstLoader = new FXMLLoader(getClass().getResource("GroupPage.fxml"));
+			FXMLLoader firstLoader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
             Parent first_pane = firstLoader.load();
 	        Scene fir_scene = new Scene(first_pane);
 	        primaryStage.setScene(fir_scene);

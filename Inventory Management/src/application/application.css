@@ -11,11 +11,24 @@
 	-fx-focus-color: black;
 }
 
-.menu-button > .arrow-button > .arrow {
+/* Menu button styles */
+#News > .arrow-button > .arrow {
     -fx-padding: 0;
 }
 
-.menu-button {
+#Events > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Projects > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Members > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#News, #Events, #Projects, #Members {
 	-fx-border-color: #48D1CC;
 	-fx-background-color: #00BFFF;
 	-fx-border-radius: 20;
@@ -26,31 +39,23 @@
 	-fx-background-color: linear-gradient(transparent, #6495ED);
 	-fx-border-color: #7CFC00;
 	-fx-pref-height: 40;
-	-fx-pref-width: 148;
+	-fx-pref-width: 140;
 	-fx-background-radius: 20;
 	-fx-border-radius: 20;
 	-fx-padding: 5px;
-}
-
-.menu-item.label{
-	-fx-text-alignment: center;
 }
 
 .menu-item:hover, .menu-item:focused{
 	-fx-background-color: #00FFFF;
 }
 
-.menu-button:hover{
+#News:hover, #Events:hover, #Projects:hover, #Members:hover{
     -fx-background-color: #87CEFA;
     -fx-border-color: #48D1CC;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-rotate: 5;
 }
-
-#more{
-	-fx-content-display: right;
-}
+/*--------------------------------------------------------------------------- */
 
 #search_button, #filter_button{
 	-fx-background-color: #F5FFFA;
@@ -105,4 +110,25 @@
 	-fx-background-color: #00BFFF;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
+}
+
+#notification:hover {
+	-fx-border-color: #00FA9A;
+}
+
+#edit:hover {
+	-fx-border-color: #00FA9A;
+}
+
+#profile:hover {
+	-fx-border-color: #00FA9A;
+}
+
+/*Notification pane settings */
+#back_pane:hover{
+	-fx-border-color: #00FFFF;
+}
+
+#unread {
+	-fx-text-fill: #C71585;
 }

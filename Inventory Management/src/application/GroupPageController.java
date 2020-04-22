@@ -5,7 +5,6 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -22,13 +21,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
@@ -70,25 +70,34 @@ public class GroupPageController {
     private TextArea ProjectName;
 
     @FXML
-    private MenuButton Personal;
+    private MenuButton Group;
     
     @FXML
     private ScrollPane Scroll_Pane;
 
     @FXML
     private MenuButton Vote;
+
+    @FXML
+    private Button Edit;
+
+    @FXML
+    private AnchorPane Scroll_Anchor;
     
     
     //window size
     Rectangle2D screen = Screen.getPrimary().getVisualBounds(); 
     //Vote types
-    final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit"};
+    final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit", "Schedule"};
     
     @FXML
     void initialize()throws IOException {
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
+        //Set edit button position
+        Edit.setLayoutX(Scroll_Anchor.getPrefWidth()-100);
+        Edit.setLayoutY(Scroll_Anchor.getPrefHeight()-70);
         
         //Text Area 
         ProjectName.setPadding(new Insets(45,45,45,45));
@@ -102,13 +111,15 @@ public class GroupPageController {
         //Member inforamtion
     	Members.getItems().get(0).setOnAction(e-> infoDisplay());
         //Personal status
-        Personal.getItems().get(0).setOnAction(e-> statusDisplay());
+        Group.getItems().get(0).setOnAction(e-> statusDisplay());
         //Schedule a meeting
         Vote.getItems().get(1).setOnAction(e-> scheduleAMeeting());
         //---------------------------Vote List--------------------------------------
         Vote.getItems().get(0).setOnAction(e-> VotingPane());
         //Poll status
-        pollStatus();
+        Group.getItems().get(1).setOnAction(e-> pollStatus());
+        //SU only
+        Edit.setOnAction(e-> groupEdit());
     }
  
     //Back to homepage
@@ -121,9 +132,144 @@ public class GroupPageController {
         home_scene.show();
     }
     
+    //Group internal operations
+    void groupEdit() {
+    	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
+    	Pane pane = new Pane();
+    	//GridPane
+    	GridPane gridPane = new GridPane();
+    	getSetting(gridPane, 400, 450, 0, 0);
+        gridPane.getColumnConstraints().add(new ColumnConstraints(200));
+        gridPane.getColumnConstraints().add(new ColumnConstraints(197));
+        gridPane.setVgap(10);
+    	//tags
+        String[] tags = {"Scores reduction", "Expel from the group", "Expel from the system", "Revise a member"};
+        for(int i = 0; i < tags.length; ++i) {
+        	//Subject
+            Label subject = new Label(tags[i]);
+            getSetting(subject, 200, 30, 0, 0);
+            subject.setPadding(new Insets(5,5,5,5));
+            subject.setAlignment(Pos.CENTER_LEFT);
+            subject.setStyle("-fx-background-color:#DAA520;");
+         	gridPane.getRowConstraints().add(new RowConstraints(40));
+         	gridPane.add(subject, 0, i*2);
+         	//Scores reduction
+         	ComboBox<String> validMembers = new ComboBox<>();
+         	validMembers.setPromptText("Names");
+         	getSetting(validMembers, 180, 30, 0, 0);
+     		//Scores comboBox
+     		ComboBox<Integer> score = new ComboBox<>();
+         	//Confirm button
+         	Button confirm = new Button("Confirm");
+         	getSetting(confirm, 80, 30, 0, 0);
+         	confirm.setPadding(new Insets(5,5,5,5));
+     		GridPane.setHalignment(confirm, HPos.RIGHT);
+     		gridPane.getRowConstraints().add(new RowConstraints(40));
+     		gridPane.add(confirm, 1, i*2+1);
+         	//set up combobox
+     		for(int j = 0; j < 5; ++j)
+         		validMembers.getItems().add("Unknown" + j);
+         	GridPane.setHalignment(validMembers, HPos.CENTER);
+         	gridPane.add(validMembers, 0, i*2+1);
+         	//set confirm Button
+         	if(i == 0) {
+         		//set up scores comboBox
+         		score.setPromptText("Scores");
+             	getSetting(score, 100, 30, 0, 0);
+         		score.getItems().addAll(1,2,3,4,5,6,7,8,9,10);
+         		GridPane.setHalignment(score, HPos.LEFT);
+         		gridPane.add(score, 1, i*2+1);
+         	}
+         	confirm.setOnAction(e->{
+         		if(validMembers.getSelectionModel().getSelectedItem() == null)
+         			getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
+         		else {
+         			if(subject.getText().compareTo(tags[0]) == 0) {
+         				if(score.getSelectionModel().getSelectedItem() == null)
+         					getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
+         				else
+         					getConfirmationAlert("Are you sure to take " + score.getSelectionModel().getSelectedItem() + 
+         							" scores off from " + validMembers.getSelectionModel().getSelectedItem() + "?",
+         							"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
+         			}
+         			else if(subject.getText().compareTo(tags[1]) == 0) {
+         				getConfirmationAlert("Are you sure to expel " + validMembers.getSelectionModel().getSelectedItem() + " from the group?",
+         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
+         			}
+         			else if(subject.getText().compareTo(tags[2]) == 0) {
+         				getConfirmationAlert("Are you sure to expel " + validMembers.getSelectionModel().getSelectedItem() + " from the SYSTEM?",
+         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
+         			}
+         			else{
+         				getConfirmationAlert("Are you sure to revise " + validMembers.getSelectionModel().getSelectedItem() + " back to the group?",
+         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
+         			}
+         		}
+         	});
+        }
+        pane.getChildren().add(gridPane);
+    	Dialog<ButtonType> dialog = new Dialog<>();
+    	getDialog(dialog, pane, "Editing", "", ok);
+    }
+
     //display poll status
     void pollStatus() {
-    	
+    	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
+    	Pane pane = new Pane();
+    	//Scroll Pane
+    	ScrollPane scrollPane = new ScrollPane();
+    	getSetting(scrollPane, 400, 450, 0, 0);
+    	scrollPane.setFitToWidth(true);
+    	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+    	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+    	//GridPane
+    	GridPane gridPane = new GridPane();
+        gridPane.getColumnConstraints().add(new ColumnConstraints(150));
+        gridPane.getColumnConstraints().add(new ColumnConstraints(247));
+        gridPane.setVgap(10);
+        for(int i = 0; i < voting_tags.length; ++i) {
+            //Vote type
+            Label voteType = new Label("Type: " + voting_tags[i]);
+            getSetting(voteType, 150, 30, 0, 0);
+            voteType.setPadding(new Insets(10,10,10,10));
+            voteType.setAlignment(Pos.CENTER_LEFT);
+            voteType.setStyle("-fx-background-color:#DAA520;");
+            voteType.setDisable(true);
+         	gridPane.getRowConstraints().add(new RowConstraints(40));
+         	gridPane.add(voteType, 0, i*2);
+         	//Target
+         	Label target = new Label("Target: UNKNOWN");
+         	if(i == 3 || i == 5) 
+         		target.setText("");
+         	getSetting(target, 250, 30, 0, 0);
+            target.setPadding(new Insets(10,10,10,10));
+            target.setAlignment(Pos.CENTER_LEFT);
+            target.setStyle("-fx-background-color:#DAA520;");
+            target.setDisable(true);
+            gridPane.add(target, 1, i*2);
+            //Indicator
+            Label agreedVotes = new Label("Agrees");
+            agreedVotes.setPadding(new Insets(0, 0, 0, 10));
+            agreedVotes.setDisable(true);
+            GridPane.setHalignment(agreedVotes, HPos.CENTER);
+            gridPane.getRowConstraints().add(new RowConstraints(40));
+            gridPane.add(agreedVotes, 0, i*2+1);
+        	//Progress bar
+            ProgressBar progress = new ProgressBar();
+            progress.setProgress(0);
+            progress.setPrefWidth(250);
+            progress.setPadding(new Insets(0,40,0,0));
+            progress.setId("AgreeVotes");
+            progress.setDisable(true);
+            GridPane.setHalignment(progress, HPos.CENTER);
+            gridPane.add(progress, 1, i*2+1);
+        }
+        
+        gridPane.getStylesheets().add(getClass().getResource("GroupPage.css").toExternalForm());
+        scrollPane.setContent(gridPane);
+        pane.getChildren().add(scrollPane);
+    	Dialog<ButtonType> dialog = new Dialog<>();
+    	getDialog(dialog, pane, "Poll Status", "", ok);
     }
     
     //Vote for dismissal
@@ -211,15 +357,20 @@ public class GroupPageController {
      			getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
      		else {
      			if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[0]) == 0)
-     				getConfirmationAlert("Are you sure to dismiss UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow());
+     				getConfirmationAlert("Are you sure to dismiss UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     						"Wait for the responds from other group members.");
      			else if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[1]) == 0)
-     				getConfirmationAlert("Are you sure to issue a warning to UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow());
+     				getConfirmationAlert("Are you sure to issue a warning to UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     						"Wait for the responds from other group members.");
      			else if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[2]) == 0)
-     				getConfirmationAlert("Are you sure to give UNKNOWN a pat on the back?", "Confirm", (Stage) gridPane.getScene().getWindow());
+     				getConfirmationAlert("Are you sure to give UNKNOWN a pat on the back?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     						"Wait for the responds from other group members.");
      			else if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[3]) == 0)
-     				getConfirmationAlert("Are you sure to close the group?", "Confirm", (Stage) gridPane.getScene().getWindow());
+     				getConfirmationAlert("Are you sure to close the group?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     						"Wait for the responds from other group members.");
      			else 
-     				getConfirmationAlert("Are you sure to exit UNKNOWN's evaluation?", "Confirm", (Stage) gridPane.getScene().getWindow());
+     				getConfirmationAlert("Are you sure to exit UNKNOWN's evaluation?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     						"Wait for the responds from other group members.");
      		}
      	});
      	GridPane.setHalignment(submit, HPos.CENTER);
@@ -255,7 +406,7 @@ public class GroupPageController {
     		 gridPane.add(value, 1, i);
     	 }
     	 //Evaluation
-    	 Label evaluation = new Label("Evaluation");
+    	 Label evaluation = new Label("Evaluation: ");
     	 getSetting(evaluation, 100, 30, 0, 0);
     	 evaluation.setAlignment(Pos.CENTER);
     	 gridPane.getRowConstraints().add(new RowConstraints(200));
@@ -264,6 +415,7 @@ public class GroupPageController {
     	 //Evaluation contents
     	 TextArea textArea = new TextArea("Unknown");
     	 textArea.setPadding(new Insets(10,10,10,10));
+    	 textArea.setMaxSize(250, 150);
     	 textArea.setEditable(false);
     	 GridPane.setHalignment(textArea, HPos.CENTER);
     	 GridPane.setValignment(textArea, VPos.CENTER);
@@ -402,7 +554,8 @@ public class GroupPageController {
       			String confirmedTime = "Date: At " + startingTime.getSelectionModel().getSelectedItem() + 
       							" " + DatePicker.getValue().toString() + 
       							"\nDuration: " + durationTime.getSelectionModel().getSelectedItem() + " hours" ;
-      			getConfirmationAlert(confirmedTime, "Scheduled Time",(Stage) pane.getScene().getWindow());
+      			getConfirmationAlert(confirmedTime, "Scheduled Time",(Stage) pane.getScene().getWindow(),
+      					"Wait for the responds from other group members.");
       		 }
       	 });
       	 //Set children
@@ -424,7 +577,7 @@ public class GroupPageController {
     }
     
     //Confirmation alert for schedule
-    void getConfirmationAlert(String content, String title, Stage stage) {
+    void getConfirmationAlert(String content, String title, Stage stage, String result) {
     	Alert alert = new Alert(AlertType.CONFIRMATION, content, ButtonType.YES, ButtonType.NO);
     	alert.setTitle(title);
     	alert.setHeaderText(null);
@@ -434,7 +587,7 @@ public class GroupPageController {
     	
     	//Call for the ending alert
     	if(alert.getResult() == ButtonType.YES) {
-    		Alert endingAlert = new Alert(AlertType.CONFIRMATION, "Wait for the responds from other group members.", ButtonType.OK);
+    		Alert endingAlert = new Alert(AlertType.CONFIRMATION, result, ButtonType.OK);
     		endingAlert.setTitle("Congratulation!");
     		endingAlert.setHeaderText(null);
     		endingAlert.showAndWait();

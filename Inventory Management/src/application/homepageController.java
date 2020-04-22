@@ -8,7 +8,11 @@ import javafx.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -17,16 +21,21 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -113,21 +122,44 @@ public class homepageController {
     @FXML
     private RadioButton R5;
     
+    @FXML
+    private Button Notification;
+    
+    @FXML
+    private Button Edit;
+    
+    @FXML
+    private Pane NotificationPane;
+    
 	// Number of existing emails.
 	int emailNum = 5;
 	// Number of existing messages
 	int messageNum = 5;
     //Window size
-    Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
+    final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 
     @FXML
     void initialize() throws IOException, InterruptedException {
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
-        //--------------------------------------------     
+        //--------------------------------------------    
+        //Adjust layout positions
         Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
-        //--------------------------------------------
+        Profile.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        Profile.setId("profile");
+        //Notificatino button
+        Notification.setLayoutX(anchorPane_child.getPrefWidth()-260);
+        Notification.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        Notification.setId("notification");
+        //Notification pane
+    	NotificationPane.setLayoutX(Notification.getLayoutX()-150);
+    	NotificationPane.setStyle("-fx-background-color: #00FFFF;");
+    	//Edit button
+        Edit.setLayoutX(anchorPane_child.getPrefWidth()-400);
+        Edit.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        Edit.setId("edit");
+        //Image animation
         Images_Animation();
     }
     
@@ -499,14 +531,21 @@ public class homepageController {
         //Create new window
         Stage newWindow = new Stage();  
         //Create chat list
-        Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2, newWindow);
+        Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2);
         //create scene
         Scene secondScene = new Scene(chatList,screen.getWidth()/5, screen.getHeight()/2);
         //Create message chat
         Pane messageChat = messageChat(screen.getWidth()/5, screen.getHeight()/2, newWindow);
-        GridPane dummy = (GridPane) ((ScrollPane) chatList.getChildren().get(0)).getContent();
+        GridPane gridPane = (GridPane) ((ScrollPane) chatList.getChildren().get(0)).getContent();
+        //Show original list
+        getChatList(gridPane, 5, 0);
+        //first time message with sb
+        ((ButtonBase) chatList.getChildren().get(2)).setOnAction(e-> firstMessage((TextField) chatList.getChildren().get(5), gridPane, newWindow));
+        //Delete messages
+        deleteMessage(chatList, gridPane, newWindow);
+        //Change to the content scene
         for (int i = 0 ; i < messageNum; ++i) {
-        	((Button) dummy.getChildren().get(i*2)).setOnAction(e->{
+        	((Button) gridPane.getChildren().get(i*2)).setOnAction(e->{
         		((Label) messageChat.getChildren().get(0)).setText("Qichen");
         		secondScene.setRoot(messageChat);
         	});
@@ -516,6 +555,20 @@ public class homepageController {
         });  
         //Set new window
         NewWindow(newWindow, secondScene, mainScene, "Message", screen.getWidth()/1.5, screen.getHeight()/2.5);
+    }
+    
+    @FXML
+    void Notification_Click(ActionEvent event) {
+    	getNotificationPane();
+    	if(NotificationPane.isVisible()) 
+    		NotificationPane.setVisible(false);
+    	else
+    		NotificationPane.setVisible(true);    		
+    }
+    
+    @FXML
+    void Edit_Click(ActionEvent event) {
+    	
     }
     
 	//Email contents
@@ -632,7 +685,7 @@ public class homepageController {
     	
     	//Text 
     	TextField text = new TextField();
-    	getSetting(text, w-70, 127, 0, h-120);
+    	getSetting(text, w-100, 127, 15, h-120);
     	text.setAlignment(Pos.TOP_LEFT);
         	
     	//Send
@@ -652,7 +705,7 @@ public class homepageController {
    
     	//back
     	Button back = new Button("Back");
-    	getSetting(back, 60, 25, 0, 0);
+    	getSetting(back, 60, 25, 0, 2);
     	back.setFont(Font.font(11));
     	
     	//Grid pane
@@ -695,6 +748,66 @@ public class homepageController {
     	return result;
     }
     
+    //set up Notification pane
+    void getNotificationPane() {
+    	GridPane gridPane = new GridPane();
+    	getSetting(gridPane, NotificationPane.getPrefWidth()-15, NotificationPane.getPrefHeight(),
+    			0, NotificationPane.getLayoutY());
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(285));
+    	gridPane.setPadding(new Insets(5,5,5,5));
+    	gridPane.setGridLinesVisible(true);
+    	gridPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+    	//Set up each row
+    	for(int i = 0; i < 5; ++i) {
+    		//Unread notification
+    		Label unread = new Label("New");
+    		unread.setId("unread");
+    		unread.setPadding(new Insets(5,5,5,5));
+    		GridPane.setHalignment(unread, HPos.LEFT);
+    		GridPane.setValignment(unread, VPos.TOP);
+    		gridPane.add(unread, 0, i);
+    		//Content label
+    		Label content = new Label("~~~~~~~~~~~~~~~~~~~" + i);
+    		content.setPadding(new Insets(5,5,5,5));
+    		GridPane.setHalignment(content, HPos.CENTER);
+    		GridPane.setValignment(content, VPos.CENTER);
+    		gridPane.add(content, 0, i);
+    		//Time 
+    		String currentTime = getCurrentTime();
+    		Label time = new Label(currentTime);
+    		time.setPadding(new Insets(5,5,5,5));
+    		GridPane.setHalignment(time, HPos.RIGHT);
+    		GridPane.setValignment(time, VPos.BOTTOM);
+    		gridPane.add(time, 0, i);
+    		ContextMenu menu = new ContextMenu();
+    		menu.getItems().addAll(new MenuItem("Delete"));
+    		//Back pane
+    		Pane pane = new Pane();
+    		getSetting(pane, 285, 70, 0, 0);
+    		pane.setId("back_pane");
+    		gridPane.add(pane, 0, i);
+    		pane.setOnMouseClicked(e->{
+    			//Set up alert
+    			ButtonType delete = new ButtonType("Delete", ButtonData.OK_DONE);
+    			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+    			Alert alert = new Alert(AlertType.INFORMATION,
+    			        content.getText(),
+    			        delete,
+    			        cancel);
+
+    			alert.setTitle("Important");
+    			alert.setHeaderText(null);
+    			alert.setX(screen.getWidth()/2);
+    			alert.setY(100);
+    			Optional<ButtonType> result = alert.showAndWait();
+    			if (result.orElse(cancel) == delete)
+    				gridPane.getChildren().removeAll(unread, content, time, pane);
+    		});
+    	}
+    	
+    	((ScrollPane) NotificationPane.getChildren().get(1)).setContent(gridPane);
+    }
+  
     //A list of contacted people
     @FXML
     void Logout(ActionEvent event)throws IOException {
@@ -715,7 +828,8 @@ public class homepageController {
         account_scene.show();
     }
     
-    Pane messageList(double w, double h, Stage stage) {
+    //Set up all essential components
+    Pane messageList(double w, double h) {
     	Pane result = new Pane();
     	ScrollPane list = new ScrollPane();
     	getSetting(list, w, h-50, 5, 50);
@@ -724,7 +838,7 @@ public class homepageController {
     	
     	//Delete
     	Button delete = new Button("Delete");
-    	getSetting(delete, 60, 30, 0, 10);
+    	getSetting(delete, 60, 30, 5, 10);
     	delete.setFont(Font.font(10));
     	getStyle(delete);
     	
@@ -741,6 +855,13 @@ public class homepageController {
     	text.setFont(Font.font(10));
     	getStyle(text);
     	
+    	//Search bar
+    	TextField search = new TextField();
+    	getSetting(search, w-125, 30, 125, 10);
+    	search.setFont(Font.font(10));
+    	getStyle(search);
+    	
+    	
     	//cancel
     	Button cancel = new Button("Cancel");
     	getSetting(cancel, 60, 30, 65, 10);
@@ -750,50 +871,36 @@ public class homepageController {
     	
     	//Grid pane
     	GridPane contacter = new GridPane();
-    	ColumnConstraints column = new ColumnConstraints(w);
+    	ColumnConstraints column = new ColumnConstraints(w-2);
     	contacter.getColumnConstraints().add(column);
-        
-    	for(int i = 0; i < messageNum; ++i) {
-    		//Create button
-    		Button l1 = new Button("Unknown"+i);
-    		getSetting(l1, w, 50, 0, 0);
-    		l1.setAlignment(Pos.CENTER);
-        	l1.setFont(new Font(16));
-        	l1.setStyle("-fx-background-color: white;"
-    				+ "-fx-border-color: black;");
-
-        	//Radio button
-        	CheckBox delete_dot = new CheckBox("");
-        	getSetting(delete_dot, column.getPrefWidth(), 50, 0, 0);
-        	delete_dot.setPadding(new Insets(10,10,10,10));
-        	delete_dot.setVisible(false);
-            
-        	//Hover effects
-        	l1.setOnMouseEntered(e->{
-        		l1.setStyle("-fx-background-color:#00CED1;"
-        				+ "-fx-border-color:black;");
-        	});
-        	l1.setOnMouseExited(c->{
-            	l1.setStyle("-fx-background-color: white;"
-        				+ "-fx-border-color: black;");
-        	});
-        	     	
-    		GridPane.setHalignment(l1, HPos.LEFT);
-        	RowConstraints row1 = new RowConstraints(50);
-        	contacter.getRowConstraints().add(row1);
-        	contacter.add(l1, 0, i);
-        	contacter.add(delete_dot, 0, i);      	
-    	}
     	
-    	delete.setOnAction(e->{
+    	list.setContent(contacter);
+    	result.getChildren().addAll(list,delete,text, okay, cancel, search);
+    	return result;
+    }
+    
+    //Find the member and message to 
+    void firstMessage(TextField search, GridPane gridPane, Stage stage) {
+    	if(!search.getText().isEmpty())
+    		getAlert(AlertType.WARNING, "Wrong input.", ButtonType.OK, "Caution!", stage);
+    	else {
+    		messageNum += 1;
+    		getChatList(gridPane, messageNum, messageNum-1);
+    		messageMoveUp(gridPane);
+    	}
+    }
+  
+    //Delete Events
+    void deleteMessage(Pane Chat, GridPane gridPane, Stage stage) {
+    	((Button) Chat.getChildren().get(1)).setOnAction(e->{
     		ArrayList<Integer> selectedNum = new ArrayList<Integer>();
-    		delete.setVisible(false);
-    		okay.setVisible(true);
-    		okay.setDisable(true);
-    		text.setVisible(false);
-    		cancel.setVisible(true);
+    		((Button) Chat.getChildren().get(1)).setVisible(false); //delete button
+    		((Button) Chat.getChildren().get(2)).setVisible(false); //text button
+    		((Button) Chat.getChildren().get(3)).setVisible(true);  //okay button
+    		((Button) Chat.getChildren().get(3)).setDisable(true);  //okay button
+    		((Button) Chat.getChildren().get(4)).setVisible(true);  //cancel button
     		
-    		for (Node node : contacter.getChildren()) {
+    		for (Node node : gridPane.getChildren()) {
     			if (node instanceof CheckBox) {
     				node.setVisible(true);
     				((CheckBox) node).setSelected(false);
@@ -801,40 +908,40 @@ public class homepageController {
     				((CheckBox) node).setOnMouseClicked(c->{
     					if(((CheckBox) node).isSelected()) {
     						selectedNum.add(GridPane.getRowIndex(node));
-    						okay.setDisable(false);		
+    						((Button) Chat.getChildren().get(3)).setDisable(false);		
     					}
     					else if (!((CheckBox) node).isSelected()){
     						selectedNum.remove(GridPane.getRowIndex(node));
     						if(selectedNum.size() == 0)
-    							okay.setDisable(true);
+    							((Button) Chat.getChildren().get(3)).setDisable(true);
     					}	
     				});
     			}
     		}
     		//Cancel deletion
-    		cancel.setOnAction(c->{
+    		((Button) Chat.getChildren().get(4)).setOnAction(c->{
     			//Hide all radio button
-        		for (Node node : contacter.getChildren()) {
+        		for (Node node : gridPane.getChildren()) {
         			if (node instanceof CheckBox)
         				node.setVisible(false);
         		}
-        		delete.setVisible(true);
-        		okay.setVisible(false);
-        		text.setVisible(true);
-        		cancel.setVisible(false);
+        		((Button) Chat.getChildren().get(1)).setVisible(true);
+        		((Button) Chat.getChildren().get(2)).setVisible(true);
+        		((Button) Chat.getChildren().get(3)).setVisible(false);
+        		((Button) Chat.getChildren().get(4)).setVisible(false);
     		});
     		
-    		okay.setOnAction(q->{
+    		((Button) Chat.getChildren().get(3)).setOnAction(q->{
     			Alert alert = getAlert(AlertType.WARNING, "Delete all selected messages?", ButtonType.YES, "Caution!", stage);   			
     			if(alert.getResult() == ButtonType.YES) {
-    				ObservableList<Node> children = contacter.getChildren();	
+    				ObservableList<Node> children = gridPane.getChildren();	
     				//Remove deleted emails
     				int index = 0;
     				for(int i = 0; i < messageNum; ++i) {
     					if(!selectedNum.contains(i)) 
     						index += 2;
     					else {
-    						contacter.getChildren().remove(index, index+2);
+    						gridPane.getChildren().remove(index, index+2);
     					}
     				}
     				int current = 0;
@@ -855,28 +962,72 @@ public class homepageController {
     					}
     				}			
         			//Hide all radio button
-            		for (Node node : contacter.getChildren()) {
+            		for (Node node : gridPane.getChildren()) {
             			if (node instanceof CheckBox) 
             				node.setVisible(false);
             		}
-        			okay.setVisible(false);
-        			cancel.setVisible(false);
-        			delete.setVisible(true);
-        			text.setVisible(true);
+            		((Button) Chat.getChildren().get(1)).setVisible(true);
+            		((Button) Chat.getChildren().get(2)).setVisible(true);
+            		((Button) Chat.getChildren().get(3)).setVisible(false);
+            		((Button) Chat.getChildren().get(4)).setVisible(false);
         			//Update existing messages
         			messageNum -= selectedNum.size();
     			}
     		});
     	});
-    	list.setContent(contacter);
-    	result.getChildren().addAll(list,delete,text, okay, cancel);
-    	return result;
     }
     
-    //Find the member and message him at the first time
-    void firstTimeText(Button b, double w, double h) {
-    	
+    //Create each row information of chat list
+    void getChatList(GridPane gridPane, int size, int start) {
+    	for(int i = start; i < size; ++i) {
+    		//Create button
+    		Button label = new Button("Unknown"+i);
+    		getSetting(label, screen.getWidth()/5, 50, 0, 0);
+    		label.setAlignment(Pos.CENTER);
+        	label.setFont(new Font(16));
+        	label.setStyle("-fx-background-color: white;"
+    				+ "-fx-border-color: black;");
+
+        	//Radio button
+        	CheckBox delete_dot = new CheckBox("");
+        	getSetting(delete_dot, screen.getWidth()/5, 50, 0, 0);
+        	delete_dot.setPadding(new Insets(10,10,10,10));
+        	delete_dot.setVisible(false);
+            
+        	//Hover effects
+        	label.setOnMouseEntered(e->{
+        		label.setStyle("-fx-background-color:#00CED1;"
+        				+ "-fx-border-color:black;");
+        	});
+        	label.setOnMouseExited(c->{
+            	label.setStyle("-fx-background-color: white;"
+        				+ "-fx-border-color: black;");
+        	});
+        	     	
+    		GridPane.setHalignment(label, HPos.LEFT);
+        	gridPane.add(label, 0, i);
+        	gridPane.add(delete_dot, 0, i);  
+    	}
     }
+    
+    //Set lastest massage row to the top
+    void messageMoveUp(GridPane gridPane) {
+    	ArrayList<Node> list = new ArrayList<>();
+    	for(int i = 0; i <gridPane.getChildren().size(); i+=2) {
+    		list.add(gridPane.getChildren().get(i));
+    		list.add(gridPane.getChildren().get(i+1));
+    	}
+    	//Clear gridPane
+    	gridPane.getChildren().clear();
+    	//Sort
+    	gridPane.add(list.get(list.size()-2), 0, 0);
+    	gridPane.add(list.get(list.size()-1), 0, 0);
+    	for(int i = 1; i < list.size()/2; ++i) {
+    		gridPane.add(list.get(i*2-2), 0, i);
+    		gridPane.add(list.get(i*2-1), 0, i);
+    	}
+    }
+    
     //General style
     void getStyle(Node b) {
     	b.setStyle("-fx-background-radius: 20;"
@@ -922,12 +1073,21 @@ public class homepageController {
     	Alert alert = new Alert(at, content, bt);
     	alert.setTitle(title);
     	alert.setHeaderText(null);
-    	alert.setX(stage.getX()+150);
-    	alert.setY(stage.getY()+150);
+    	alert.setX(stage.getX()+100);
+    	alert.setY(stage.getY()+100);
     	alert.showAndWait();    	
     	return alert;
     }
     
+    //Get the current time
+    String getCurrentTime() {
+    	DateFormat dateFormat =  new SimpleDateFormat("dd-M-yyyy hh:mm");
+  		Calendar cal = Calendar.getInstance();
+  		String currentDate = dateFormat.format(cal.getTime()).toString();
+  		return currentDate;
+    }
+    
+    //Image animation
     void Images_Animation() throws InterruptedException {
         ArrayList<File> image_files = new ArrayList<File>(6);
         ArrayList<Image> images = new ArrayList<Image>(6);
@@ -1011,4 +1171,5 @@ public class homepageController {
         };
         animation.play();   
     }
+
 }

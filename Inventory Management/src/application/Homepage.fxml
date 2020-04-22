@@ -68,7 +68,7 @@
                 <URL value="@application.css" />
               </stylesheets>
             </MenuButton>
-            <MenuButton fx:id="Profile" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="1278.0" layoutY="0.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #48D1CC;&#10;" text="Profile">
+            <MenuButton fx:id="Profile" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="1278.0" layoutY="0.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;&#10;" text="Profile">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#Group_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Group" />
                 <MenuItem mnemonicParsing="false" onAction="#Message_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Message" />
@@ -93,7 +93,7 @@
                 <URL value="@application.css" />
               </stylesheets>
             </TextField>
-            <Pane id="Flipping_Pane" fx:id="Slipping_Pane" layoutX="72.0" layoutY="408.0" prefHeight="360.0" prefWidth="640.0" style="-fx-background-color: white;&#10;-fx-border-color: linear-gradient(transparent, black);&#10;-fx-border-width: 10;&#10;&#10;">
+            <Pane id="Flipping_Pane" fx:id="Slipping_Pane" layoutX="72.0" layoutY="408.0" prefHeight="360.0" prefWidth="640.0" style="-fx-background-color: white;&#10;-fx-border-color: linear-gradient(transparent, black);&#10;-fx-border-width: 10;&#10;&#10;" visible="true">
               <children>
                 <ImageView id="Flip" fx:id="Slipping_Image" fitHeight="352.6875" fitWidth="627.0" layoutX="7.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" scaleX="1.0" style="&#10;&#10;" visible="true">
                   <image>
@@ -179,6 +179,29 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
+            <Button fx:id="Notification" alignment="CENTER" layoutX="1158.0" layoutY="0.0" mnemonicParsing="false" onAction="#Notification_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color:#F0F8FF;&#10;" text="Notice">
+              <graphic>
+                <ImageView fitHeight="25.0" fitWidth="30.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" x="10.0" y="0.0">
+                  <image>
+                    <Image url="@../../Images/notification.png" />
+                  </image>
+                  <rotationAxis>
+                    <Point3D z="1.0" />
+                  </rotationAxis>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Pane fx:id="NotificationPane" disable="false" layoutX="1068.0" layoutY="80.0" prefHeight="450.0" prefWidth="300.0" visible="false">
+              <children>
+                <Label layoutX="103.0" layoutY="14.0" text="Notification">
+                  <font>
+                    <Font size="18.0" />
+                  </font>
+                </Label>
+                <ScrollPane content="$null" hbarPolicy="NEVER" layoutX="0.0" layoutY="50.0" prefHeight="400.0" prefWidth="300.0" vbarPolicy="NEVER" />
+              </children>
+            </Pane>
+            <Button fx:id="Edit" layoutX="1038.0" layoutY="0.0" mnemonicParsing="false" onAction="#Edit_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Edit" />
           </children>
         </AnchorPane>
       </content>

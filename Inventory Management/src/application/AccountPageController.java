@@ -246,7 +246,6 @@ public class AccountPageController {
     	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
     	//Grid pane for saving each friends
     	GridPane gridPane = new GridPane();
-    	gridPane.setVgap(10);
     	gridPane.setGridLinesVisible(false);
     	gridPane.setStyle("-fx-background-color: #f8f8ff;");
     	gridPane.getColumnConstraints().add(new ColumnConstraints(width/2-10));
@@ -289,7 +288,6 @@ public class AccountPageController {
     	scrollPane_2.setHbarPolicy(ScrollBarPolicy.NEVER);
     	//Grid pane for saving each friends
     	GridPane gridPane_2 = new GridPane();
-    	gridPane_2.setVgap(10);
     	gridPane_2.setStyle("-fx-background-color: #f8f8ff;");
     	gridPane_2.getColumnConstraints().add(new ColumnConstraints(width/2-10));
 
@@ -573,7 +571,7 @@ public class AccountPageController {
     	name.setVisible(false);
     	
     	search.setOnAction(e->{
-    		if(textField.getText().compareTo("") == 0) {
+    		if(textField.getText().isEmpty()) {
     			add.setVisible(true);
     			name.setVisible(true);
     			invalidId.setVisible(false);
