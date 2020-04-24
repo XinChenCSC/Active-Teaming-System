@@ -100,8 +100,8 @@ public class AccountPageController {
     Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 
     //Pane size
-	double width = screen.getWidth()/2.5;
-	double height = screen.getHeight()/1.5;
+	final double width = screen.getWidth()/2.5;
+	final double height = screen.getHeight()/1.5;
 	
     @FXML
     void initialize() {
@@ -109,6 +109,8 @@ public class AccountPageController {
         Image_View.setLayoutX(screen.getWidth());
         Image_View.setLayoutY(screen.getHeight()); 
         
+        //Import css file
+        Anchor_Pane_2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         
         //Profile 
         Pane profile = new Pane();
@@ -159,8 +161,9 @@ public class AccountPageController {
         });
     }
     
+    //Return to the homepage
     @FXML
-    void homePage(ActionEvent event) throws IOException {
+    private void homePage(ActionEvent event) throws IOException {
     	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) Profile.getScene().getWindow();
         home_scene.setScene(new Scene(home_page));
@@ -169,12 +172,12 @@ public class AccountPageController {
     }
 
     //Create remainder contents
-    void getRemainderPane(Pane remainder, double width, double height) {
+    private void getRemainderPane(Pane remainder, double width, double height) {
     	contentPane(remainder, width, height);
     	
     	//Create scroll pane
     	ScrollPane scrollPane = new ScrollPane();
-    	getSetting(scrollPane, width, height-160, 0, 160);
+    	getSetting(scrollPane, width, height*0.85, 0, height*0.15);
     	scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
     	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
     	
@@ -186,7 +189,7 @@ public class AccountPageController {
     	
     	//Create title
     	Label title = new Label("Scheduled Appointments");
-    	getSetting(title, width, 150, 0, 0);
+    	getSetting(title, width, height*0.15, 0, 0);
     	title.setAlignment(Pos.CENTER);
     	title.setFont(Font.font(30));
     	
@@ -194,7 +197,7 @@ public class AccountPageController {
     	for(int i = 0; i < 10; ++i) {
     		//Labels of appointments
     		Label appointments = new Label("Meeting time\nXXXX/XX/XX");
-    		getSetting(appointments, 400, 60, 0, 0);
+    		getSetting(appointments, width, height*0.1, 0, 0);
     		appointments.setAlignment(Pos.CENTER);
     		GridPane.setHalignment(appointments, HPos.CENTER);
     		gridPane.add(appointments, 0, i);
@@ -212,12 +215,12 @@ public class AccountPageController {
     }
     
     //Create history contents
-    void getHistoryPane(Pane history, double width, double height) {
+    private void getHistoryPane(Pane history, double width, double height) {
     	contentPane(history, width, height);
     }
     
     //Create friend contents
-    void getFriendPane(SplitPane friend, double width, double height) {
+    private void getFriendPane(SplitPane friend, double width, double height) {
     	contentPane(friend, width, height);
     	Pane pane_1 = (Pane) friend.getItems().get(0);
     	Pane pane_2 = (Pane) friend.getItems().get(1);
@@ -241,15 +244,14 @@ public class AccountPageController {
     	
     	//Friend list
     	ScrollPane scrollPane = new ScrollPane();
-    	getSetting(scrollPane, width/2, height-140, 0, 75);
+    	getSetting(scrollPane, width*0.5, height*0.8, 0, 75);
     	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
     	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
     	//Grid pane for saving each friends
     	GridPane gridPane = new GridPane();
-    	gridPane.setGridLinesVisible(false);
     	gridPane.setStyle("-fx-background-color: #f8f8ff;");
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(width/2-10));
-    	for(int i = 0; i < 4; ++i) {
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
+    	for(int i = 0; i < 5; ++i) {
     		//MenuButton for each friend
     		Label friendName = new Label("Unknown" + i);
     		friendName.setAlignment(Pos.CENTER);
@@ -276,26 +278,26 @@ public class AccountPageController {
     	
     	//Add button
     	Button add = new Button("Add");
-    	getSetting(add, 80, 30, 10, height-50);
+    	getSetting(add, width*0.1, 30, 10, height-50);
     	getStyle(add,"-fx-border-color:#000000;");
     	//Add button event
     	add.setOnAction(e-> addFriend());
     	
     	//Blacklist
     	ScrollPane scrollPane_2 = new ScrollPane();
-    	getSetting(scrollPane_2, width/2, height-140, 0, 75);
+    	getSetting(scrollPane_2, width*0.5, height*0.8, 0, 75);
     	scrollPane_2.setVbarPolicy(ScrollBarPolicy.NEVER);
     	scrollPane_2.setHbarPolicy(ScrollBarPolicy.NEVER);
     	//Grid pane for saving each friends
     	GridPane gridPane_2 = new GridPane();
     	gridPane_2.setStyle("-fx-background-color: #f8f8ff;");
-    	gridPane_2.getColumnConstraints().add(new ColumnConstraints(width/2-10));
+    	gridPane_2.getColumnConstraints().add(new ColumnConstraints(width*0.5));
 
     	for(int j = 0; j < 5; ++j) {
     		//MenuButton for each friend
     		Label blacklister = new Label("Unknown");
     		blacklister.setAlignment(Pos.CENTER);
-    		getSetting(blacklister, width/2, 40, 0, 0);
+    		getSetting(blacklister, width*0.5, 40, 0, 0);
     		
     		//Create context menu
     		ContextMenu contentMenu = new ContextMenu();
@@ -321,45 +323,42 @@ public class AccountPageController {
     }
     
     //Create status contents
-    void getStatusPane(Pane status, double width, double height) {
+    private void getStatusPane(Pane status, double width, double height) {
     	contentPane(status, width, height);
     	GridPane gridPane = new GridPane();
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(200));
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(300));
-    	gridPane.setPadding(new Insets(100,200,100,200));
-    	gridPane.setVgap(20);
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.3));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.3));
+    	gridPane.setPadding(new Insets(height*0.1,width*0.2,height*0.1,width*0.2));
     	
     	String[] tags = {"Project completed: ", "Group engaged: ", "Penalty received: ", "Reputation scores: ",
     			"Status: ", "Evaluation: ", "Date of join: "};
     	for(int i = 0; i < 7; ++i) {
+    		gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
     		//Create tags
     		Label tag = new Label(tags[i]);
-    		getSetting(tag, 200, 40, 0, 0);
-    		tag.setAlignment(Pos.CENTER);
     		gridPane.add(tag, 0, i);
+    		GridPane.setHalignment(tag, HPos.LEFT);
     		//set numbers
     		Label number = new Label("null");
-    		getSetting(number, 200, 40, 0, 0);
     		number.setStyle("-fx-background-color: #00ffff;" 
     						+ "-fx-border-color: #00ffff;");
-    		number.setAlignment(Pos.CENTER);
+    		GridPane.setHalignment(number, HPos.CENTER);
     		gridPane.add(number, 1, i);
     	}
     	status.getChildren().add(gridPane);
     }
 
     //Create profile contents
-    void getProfilePane(Pane profile, double width, double height) {
+    private void getProfilePane(Pane profile, double width, double height) {
     	contentPane(profile, width, height);
-    	ColumnConstraints column = new ColumnConstraints(width/2.5);
+    	ColumnConstraints column = new ColumnConstraints(width*0.5);
     	GridPane Grid_Pane = new GridPane();
-    	Grid_Pane.setLayoutX(width-360);
+    	Grid_Pane.setLayoutX(width*0.45);
     	Grid_Pane.getColumnConstraints().add(column);
-    	Grid_Pane.setPadding(new Insets(50,10,10,10));
-    	Grid_Pane.setVgap(20);
+    	Grid_Pane.setPadding(new Insets(10,10,10,10));
     	
     	//Create the frame of image
-    	Rectangle rectangle = new Rectangle(0,0,width/3,250);
+    	Rectangle rectangle = new Rectangle(0,0,width*0.35,height*0.35);
     	rectangle.setArcWidth(50);
     	rectangle.setArcHeight(50);
     	//Get the image from the folder
@@ -367,15 +366,15 @@ public class AccountPageController {
         Image image = new Image(f.toURI().toString());
         //Set image to the imagview
     	ImageView Image_View = new ImageView(image);
-    	Image_View.setFitWidth(width/3);
-    	Image_View.setFitHeight(250);
+    	Image_View.setFitWidth(width*0.35);
+    	Image_View.setFitHeight(height*0.35);
     	Image_View.setClip(rectangle);
-    	Image_View.setLayoutX(20);
-    	Image_View.setLayoutY(100);
+    	Image_View.setLayoutX(width*0.05);
+    	Image_View.setLayoutY(height*0.2);
     	
     	//Change protrait
     	Button protrait = new Button("Edit protrait");
-    	getSetting(protrait, width/3, 30, 20, 370);
+    	getSetting(protrait, width*0.15, height*0.05, width*0.05+ width*0.35/2-width*0.075, height*0.56);
     	getStyle(protrait,"-fx-border-color:#000000;");
     	
     	//Edit protrait button event
@@ -393,25 +392,23 @@ public class AccountPageController {
     	String[] tags = {"Name :", "ID :", "Email :", "Position :", "Password :"};
     	for(int i = 0; i < 5; ++i) {
     		Label title = new Label(tags[i]);
-    		title.setAlignment(Pos.CENTER_RIGHT);
     		title.setStyle("-fx-border-color:#fffaf0");
-    		getSetting(title,width/7,50,0,0);
+    		Grid_Pane.getRowConstraints().add(new RowConstraints(height*0.1));
     		GridPane.setHalignment(title, HPos.LEFT);
     		Grid_Pane.add(title, 0, i);
     		
     		Label info = new Label("Unknown");
-    		info.setAlignment(Pos.CENTER);
     		info.setStyle("-fx-border-color:#fffaf0");
-    		getSetting(info,width/4,50,0,0);
-    		GridPane.setHalignment(info, HPos.RIGHT);
+    		GridPane.setHalignment(info, HPos.CENTER);
     		Grid_Pane.add(info, 0, i);
     	}
     	
     		
     	//Button for change password
     	Button changePassword = new Button("Reset password");
-    	getSetting(changePassword, 200, 30, 0, 0);
+    	getSetting(changePassword, width*0.25, height*0.05, 0, 0);
     	getStyle(changePassword,"-fx-border-color:#000000;");
+		Grid_Pane.getRowConstraints().add(new RowConstraints(height*0.1));
     	GridPane.setHalignment(changePassword, HPos.CENTER);
     	Grid_Pane.add(changePassword, 0, 5);
     	
@@ -421,15 +418,14 @@ public class AccountPageController {
     	
     	//Personal abstract field
     	TextArea personalAbstract = new TextArea();
-    	personalAbstract.setPadding(new Insets(5,5,5,5));
+    	personalAbstract.setMaxSize(width*0.5, height*0.3);
     	personalAbstract.setPromptText("Abstract");
     	Grid_Pane.add(personalAbstract, 0, 6);
-    	
     	profile.getChildren().addAll(Image_View, protrait, Grid_Pane);		
     }
     
     //New window for change password
-    void passwordChangeScene(Node n) {
+    private void passwordChangeScene(Node n) {
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
     	pane.setPrefSize(350, 200);
@@ -501,7 +497,7 @@ public class AccountPageController {
     }
     
 	//Edit protrait
-    void editProtrait(ImageView iv) throws IOException {
+    private void editProtrait(ImageView iv) throws IOException {
     	//Open file chooser
     	 FileChooser fileChooser = new FileChooser();
     	 fileChooser.setTitle("Open Resource File");
@@ -524,7 +520,7 @@ public class AccountPageController {
     }
     
     //Add friend
-    void addFriend() {
+    private void addFriend() {
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
     	pane.setPrefSize(300,150);
@@ -591,7 +587,7 @@ public class AccountPageController {
     }
         
     //Create alert
-    void getAlert(Stage stage) {
+    private void getAlert(Stage stage) {
     	Alert alert = new Alert(AlertType.CONFIRMATION, "New password created.", ButtonType.OK);
     	alert.setTitle("Confirmation");
     	alert.setHeaderText(null);
@@ -608,7 +604,7 @@ public class AccountPageController {
     //			  mainStage: the parent window of newWindow
     //			  title: the name of newWindow
     //			  x : x-axis, y : y-axis
-    void NewWindow(Stage newWindow, Scene scene, Stage mainStage, String title, double x, double y) {
+    private void NewWindow(Stage newWindow, Scene scene, Stage mainStage, String title, double x, double y) {
         newWindow.setTitle(title);
         newWindow.setScene(scene);
         newWindow.setResizable(false);
@@ -626,7 +622,7 @@ public class AccountPageController {
     }
     
     //Get the content pane
-    void contentPane(Node n, double w, double h) {
+    private void contentPane(Node n, double w, double h) {
     	((Region) n).setPrefSize(w, h);
     	n.setStyle("-fx-background-color: #fffaf0;");
     	n.setLayoutX(100);
@@ -634,21 +630,21 @@ public class AccountPageController {
     }
     
     //Set up general style
-    void getStyle(Node n, String str) {
+    private void getStyle(Node n, String str) {
     	n.setStyle("-fx-background-radius: 20;"
     				+ "-fx-border-radius:20;"
     				+ str);
     }
     
     //Set up error style
-    void getErrorStyle(Node n) {
+    private void getErrorStyle(Node n) {
     	n.setStyle("-fx-border-color: #dc143c;" 
 					+ "-fx-border-radius: 20;" 
 					+ "-fx-background-radius: 20;");
     }
     
     //Set up general setting of component
-    void getSetting(Node n, double w, double h, double x, double y) {
+    private void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);
     	n.setLayoutY(y);

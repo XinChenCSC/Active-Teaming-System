@@ -22,7 +22,7 @@
                     <URL value="@application.css" />
                   </stylesheets>
                 </Button>
-                <Button id="Group" fx:id="Remainder" focusTraversable="false" layoutX="215.0" layoutY="250.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Remainder" translateX="-200.0">
+                <Button id="" fx:id="Remainder" focusTraversable="false" layoutX="215.0" layoutY="250.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Remainder" translateX="-200.0">
                   <stylesheets>
                     <URL value="@application.css" />
                   </stylesheets>

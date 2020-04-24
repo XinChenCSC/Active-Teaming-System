@@ -68,6 +68,32 @@ public class LoginController {
     private String CB_username;
 
     @FXML
+    void initialize() throws IOException {
+    	//Resize the background image
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+        Background.setFitWidth(screen.getWidth());
+        Background.setFitHeight(screen.getHeight()*1.5);
+        //////////////////////////////////////////////////////////
+       
+    	wrong_info.setOpacity(0);
+
+    	//Get the current dir. path
+    	File currentDirectory = new File(new File(".").getAbsolutePath().concat("\\Datas"));
+    	
+    	//Specify the path
+    	File f = new File(currentDirectory.getCanonicalPath().concat("\\CheckBox_info.txt"));
+
+		//Check whether the save button has clicked?
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		// If yes, make the save button to be selected and display the username as well.
+		if((CB_username = br.readLine()) != null) {
+			SaveCheckBox.setSelected(true);
+			usernameF.setText(CB_username);
+		}
+		br.close(); 
+    }
+    
+    @FXML
     void Login_Click(ActionEvent event) throws IOException {	
     	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -120,34 +146,9 @@ public class LoginController {
         signup_scene.show();
     }
 
-    @FXML
-    void initialize() throws IOException {
-    	//Resize the background image
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-        Background.setFitWidth(screen.getWidth());
-        Background.setFitHeight(screen.getHeight()*1.5);
-        //////////////////////////////////////////////////////////
-       
-    	wrong_info.setOpacity(0);
-
-    	//Get the current dir. path
-    	File currentDirectory = new File(new File(".").getAbsolutePath().concat("\\Datas"));
-    	
-    	//Specify the path
-    	File f = new File(currentDirectory.getCanonicalPath().concat("\\CheckBox_info.txt"));
-
-		//Check whether the save button has clicked?
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		// If yes, make the save button to be selected and display the username as well.
-		if((CB_username = br.readLine()) != null) {
-			SaveCheckBox.setSelected(true);
-			usernameF.setText(CB_username);
-		}
-		br.close(); 
-    }
     
     @FXML
-    void Guest_Mode(ActionEvent event) throws IOException {
+    private void Guest_Mode(ActionEvent event) throws IOException {
     	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home_scene.setScene(new Scene(homepage));

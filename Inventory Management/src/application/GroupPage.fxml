@@ -25,7 +25,7 @@
                 <Font name="Algerian" size="90.0" />
               </font>
             </Label>
-            <MenuButton id="Project" fx:id="Members" alignment="CENTER" contentDisplay="RIGHT" layoutX="674.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Members">
+            <MenuButton fx:id="Members" alignment="CENTER" contentDisplay="RIGHT" layoutX="674.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Members">
               <font>
                 <Font name="Arial" size="15.0" fx:id="x1" />
               </font>
@@ -34,10 +34,9 @@
               </items>
               <stylesheets>
                 <URL value="@application.css" />
-                <URL value="@GroupPage.css" />
               </stylesheets>
             </MenuButton>
-            <MenuButton id="Project" fx:id="Vote" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="822.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Vote">
+            <MenuButton fx:id="Vote" alignment="CENTER" contentDisplay="RIGHT" font="$x1" layoutX="822.0" layoutY="204.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Vote">
               <items>
                 <MenuItem mnemonicParsing="false" text="Votes" />
                 <MenuItem mnemonicParsing="false" text="Meeting" />
@@ -77,4 +76,7 @@
       </content>
     </ScrollPane>
   </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
 </AnchorPane>

@@ -84,7 +84,6 @@ public class GroupPageController {
     @FXML
     private AnchorPane Scroll_Anchor;
     
-    
     //window size
     Rectangle2D screen = Screen.getPrimary().getVisualBounds(); 
     //Vote types
@@ -124,7 +123,7 @@ public class GroupPageController {
  
     //Back to homepage
     @FXML
-    void moveToHomepage(ActionEvent event) throws IOException {
+    private void moveToHomepage(ActionEvent event) throws IOException {
     	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) Anchor_Pane.getScene().getWindow();
         home_scene.setScene(new Scene(home_page));
@@ -133,7 +132,7 @@ public class GroupPageController {
     }
     
     //Group internal operations
-    void groupEdit() {
+    private void groupEdit() {
     	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
     	Pane pane = new Pane();
     	//GridPane
@@ -213,7 +212,7 @@ public class GroupPageController {
     }
 
     //display poll status
-    void pollStatus() {
+    private void pollStatus() {
     	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
     	Pane pane = new Pane();
     	//Scroll Pane
@@ -273,7 +272,7 @@ public class GroupPageController {
     }
     
     //Vote for dismissal
-    void VotingPane() {
+    private void VotingPane() {
     	ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
     	//GridPane
     	GridPane gridPane = new GridPane();
@@ -384,10 +383,12 @@ public class GroupPageController {
     }
     
     //Display member's info
-    void infoDisplay() {    
+    private void infoDisplay() {    
       	 ButtonType ok = new ButtonType("OK",ButtonData.OK_DONE);
     	 //GridPane
     	 GridPane gridPane = new GridPane();
+    	 //Import css file
+    	 gridPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     	 getSetting(gridPane, 400, 200, 0, 70);
     	 gridPane.getColumnConstraints().add(new ColumnConstraints(100));
     	 gridPane.getColumnConstraints().add(new ColumnConstraints(300));
@@ -414,7 +415,6 @@ public class GroupPageController {
     	 
     	 //Evaluation contents
     	 TextArea textArea = new TextArea("Unknown");
-    	 textArea.setPadding(new Insets(10,10,10,10));
     	 textArea.setMaxSize(250, 150);
     	 textArea.setEditable(false);
     	 GridPane.setHalignment(textArea, HPos.CENTER);
@@ -428,7 +428,7 @@ public class GroupPageController {
     }
         
     //Display personal status
-    void statusDisplay() {
+    private void statusDisplay() {
      ButtonType ok = new ButtonType("OK",ButtonData.OK_DONE);
    	 //GridPane
    	 GridPane gridPane = new GridPane();
@@ -474,7 +474,7 @@ public class GroupPageController {
     }
     
     //Schedule a meeting
-    void scheduleAMeeting() {
+    private void scheduleAMeeting() {
       	 ButtonType cancel = new ButtonType("Cancel",ButtonData.CANCEL_CLOSE);
       	 Pane pane = new Pane();
       	 //String 
@@ -567,7 +567,7 @@ public class GroupPageController {
     }
     
     //Warning alert for schedule
-    void getWarningAlert(AlertType at, String content, ButtonType bt, String title) {
+    private void getWarningAlert(AlertType at, String content, ButtonType bt, String title) {
     	Alert alert = new Alert(at, content, bt);
     	alert.setTitle(title);
     	alert.setHeaderText(null);
@@ -577,7 +577,7 @@ public class GroupPageController {
     }
     
     //Confirmation alert for schedule
-    void getConfirmationAlert(String content, String title, Stage stage, String result) {
+    private void getConfirmationAlert(String content, String title, Stage stage, String result) {
     	Alert alert = new Alert(AlertType.CONFIRMATION, content, ButtonType.YES, ButtonType.NO);
     	alert.setTitle(title);
     	alert.setHeaderText(null);
@@ -598,7 +598,7 @@ public class GroupPageController {
     }
     
     //Create a dialog
-    void getDialog(Dialog<ButtonType> dialog, Node n, String title, String header, ButtonType bt) {
+    private void getDialog(Dialog<ButtonType> dialog, Node n, String title, String header, ButtonType bt) {
    	 dialog.getDialogPane().setPrefSize(400, 500);
    	 dialog.getDialogPane().getButtonTypes().add(bt);
    	 dialog.setTitle(title);
@@ -608,7 +608,7 @@ public class GroupPageController {
     }
     
     //Set up general setting of component
-    void getSetting(Node n, double w, double h, double x, double y) {
+    private void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);
     	n.setLayoutY(y);
@@ -616,7 +616,7 @@ public class GroupPageController {
     }
     
     //Get the current time
-    String getCurrentDate() {
+    private String getCurrentDate() {
     	DateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd");
   		Calendar cal = Calendar.getInstance();
   		String currentDate = dateFormat.format(cal.getTime()).toString();
