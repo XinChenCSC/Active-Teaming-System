@@ -38,6 +38,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -113,23 +114,28 @@ public class AccountPageController {
         Anchor_Pane_2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         
         //Profile 
-        Pane profile = new Pane();
+        BorderPane profile = new BorderPane();
+        profile.setId("A_profile");
         getProfilePane(profile, width, height);
         
         //Remainder
-        Pane remainder = new Pane();
+        BorderPane remainder = new BorderPane();
+        remainder.setId("remainder");
         getRemainderPane(remainder, width, height);
         
         //Status
-        Pane status = new Pane();
+        BorderPane status = new BorderPane();
+        status.setId("status");
         getStatusPane(status, width, height);
         
         //Friend
         SplitPane friend = new SplitPane(new Pane(), new Pane());
+        friend.setId("friend");
         getFriendPane(friend, width, height);
         
         //History
         Pane history = new Pane();
+        history.setId("history");
         getHistoryPane(history, width, height);
         
         
@@ -172,13 +178,13 @@ public class AccountPageController {
     }
 
     //Create remainder contents
-    private void getRemainderPane(Pane remainder, double width, double height) {
+    private void getRemainderPane(BorderPane remainder, double width, double height) {
     	contentPane(remainder, width, height);
-    	
+    	remainder.setPadding(new Insets(10,10,10,10));
     	//Create scroll pane
     	ScrollPane scrollPane = new ScrollPane();
-    	getSetting(scrollPane, width, height*0.85, 0, height*0.15);
-    	scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+    	getSetting(scrollPane, width, height*0.82, 0, height*0.15);
+    	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
     	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
     	
     	//Create GridPane
@@ -191,7 +197,8 @@ public class AccountPageController {
     	Label title = new Label("Scheduled Appointments");
     	getSetting(title, width, height*0.15, 0, 0);
     	title.setAlignment(Pos.CENTER);
-    	title.setFont(Font.font(30));
+    	title.setFont(Font.font("Verdana",30));
+    	title.setStyle("-fx-background-color: #FFA07A;");
     	
     	//List all avaliable appointments
     	for(int i = 0; i < 10; ++i) {
@@ -211,7 +218,8 @@ public class AccountPageController {
     	}
     	
     	scrollPane.setContent(gridPane);
-    	remainder.getChildren().addAll(scrollPane, title);
+    	remainder.setTop(title);
+    	remainder.setCenter(scrollPane);
     }
     
     //Create history contents
@@ -222,6 +230,8 @@ public class AccountPageController {
     //Create friend contents
     private void getFriendPane(SplitPane friend, double width, double height) {
     	contentPane(friend, width, height);
+    	friend.setPadding(new Insets(10,10,10,10));
+    	//Create whitebox and blacklist
     	Pane pane_1 = (Pane) friend.getItems().get(0);
     	Pane pane_2 = (Pane) friend.getItems().get(1);
     	
@@ -323,44 +333,63 @@ public class AccountPageController {
     }
     
     //Create status contents
-    private void getStatusPane(Pane status, double width, double height) {
+    private void getStatusPane(BorderPane status, double width, double height) {
     	contentPane(status, width, height);
+    	status.setPadding(new Insets(10,10,10,10));
+    	//Title
+    	Label title = new Label("Status");
+    	title.setAlignment(Pos.CENTER);
+    	title.setFont(Font.font ("Verdana", 30));
+    	title.setPrefSize(width, height*0.15);
+    	
+    	title.setStyle("-fx-background-color: #FFA07A;");
+    	status.setTop(title);
+    	//Contents
     	GridPane gridPane = new GridPane();
     	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.3));
     	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.3));
-    	gridPane.setPadding(new Insets(height*0.1,width*0.2,height*0.1,width*0.2));
-    	
-    	String[] tags = {"Project completed: ", "Group engaged: ", "Penalty received: ", "Reputation scores: ",
+    	gridPane.setPadding(new Insets(height*0.05,0,0,width*0.2));
+    	final String[] tags = {"Project completed: ", "Group engaged: ", "Penalty received: ", "Reputation scores: ",
     			"Status: ", "Evaluation: ", "Date of join: "};
     	for(int i = 0; i < 7; ++i) {
     		gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
     		//Create tags
     		Label tag = new Label(tags[i]);
     		gridPane.add(tag, 0, i);
-    		GridPane.setHalignment(tag, HPos.LEFT);
+    		GridPane.setHalignment(tag, HPos.CENTER);
+    		//Separator
+    		Separator separator = new Separator();
+    		separator.setMinWidth(width*0.3);
+    		GridPane.setValignment(separator, VPos.BOTTOM);
+    		gridPane.add(separator, 1, i);
     		//set numbers
-    		Label number = new Label("null");
+    		Label number = new Label("Unknown" + i);
+    		number.setFont(Font.font(null, FontWeight.BOLD, 14));
+    		getSetting(number, width*0.1, height*0.05, 0, 0);
     		number.setStyle("-fx-background-color: #00ffff;" 
     						+ "-fx-border-color: #00ffff;");
     		GridPane.setHalignment(number, HPos.CENTER);
     		gridPane.add(number, 1, i);
     	}
-    	status.getChildren().add(gridPane);
+    	
+    	status.setCenter(gridPane);
     }
 
     //Create profile contents
-    private void getProfilePane(Pane profile, double width, double height) {
+    private void getProfilePane(BorderPane profile, double width, double height) {
     	contentPane(profile, width, height);
-    	ColumnConstraints column = new ColumnConstraints(width*0.5);
-    	GridPane Grid_Pane = new GridPane();
-    	Grid_Pane.setLayoutX(width*0.45);
-    	Grid_Pane.getColumnConstraints().add(column);
-    	Grid_Pane.setPadding(new Insets(10,10,10,10));
+    	profile.setPadding(new Insets(10,10,10,10));
+    	//Title
+    	Label title = new Label("Profile");
+    	getSetting(title, width, height*0.15, 0, 0);
+    	title.setAlignment(Pos.CENTER);
+    	title.setFont(Font.font("Verdana",30));
+    	title.setStyle("-fx-background-color: #FFA07A;");
     	
     	//Create the frame of image
     	Rectangle rectangle = new Rectangle(0,0,width*0.35,height*0.35);
-    	rectangle.setArcWidth(50);
-    	rectangle.setArcHeight(50);
+    	rectangle.setArcWidth(40);
+    	rectangle.setArcHeight(40);
     	//Get the image from the folder
     	File f = new File("@../../Images/Image_of_none.png");
         Image image = new Image(f.toURI().toString());
@@ -377,73 +406,93 @@ public class AccountPageController {
     	getSetting(protrait, width*0.15, height*0.05, width*0.05+ width*0.35/2-width*0.075, height*0.56);
     	getStyle(protrait,"-fx-border-color:#000000;");
     	
-    	//Edit protrait button event
-    	protrait.setOnAction(e-> {
-			try {
-				editProtrait(Image_View);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		});
+    	GridPane gridPane1 = new GridPane();
+    	gridPane1.setPadding(new Insets(width*0.1,0,0,0));
+    	gridPane1.setVgap(10);
+    	gridPane1.setLayoutX(width*0.45);
+    	gridPane1.getColumnConstraints().add(new ColumnConstraints(width*0.5));
     	
+    	//Set protrait button and image
+    	gridPane1.getRowConstraints().add(new RowConstraints());
+    	GridPane.setHalignment(Image_View, HPos.CENTER);
+    	GridPane.setHalignment(protrait, HPos.CENTER);
+    	gridPane1.add(Image_View, 0, 0);
+    	gridPane1.add(protrait, 0, 1);
     	
-    	//Set personal informations
-    	String[] tags = {"Name :", "ID :", "Email :", "Position :", "Password :"};
-    	for(int i = 0; i < 5; ++i) {
-    		Label title = new Label(tags[i]);
-    		title.setStyle("-fx-border-color:#fffaf0");
-    		Grid_Pane.getRowConstraints().add(new RowConstraints(height*0.1));
-    		GridPane.setHalignment(title, HPos.LEFT);
-    		Grid_Pane.add(title, 0, i);
-    		
-    		Label info = new Label("Unknown");
-    		info.setStyle("-fx-border-color:#fffaf0");
-    		GridPane.setHalignment(info, HPos.CENTER);
-    		Grid_Pane.add(info, 0, i);
-    	}
-    	
-    		
     	//Button for change password
     	Button changePassword = new Button("Reset password");
     	getSetting(changePassword, width*0.25, height*0.05, 0, 0);
     	getStyle(changePassword,"-fx-border-color:#000000;");
-		Grid_Pane.getRowConstraints().add(new RowConstraints(height*0.1));
+    	gridPane1.getRowConstraints().add(new RowConstraints(height*0.1));
     	GridPane.setHalignment(changePassword, HPos.CENTER);
-    	Grid_Pane.add(changePassword, 0, 5);
+    	gridPane1.add(changePassword, 0, 2);
+    	
+    	//Edit protrait button event
+    	protrait.setOnAction(e-> {
+			try {
+				editProtrait(Image_View);
+			} catch (IOException el) {
+				// TODO Auto-generated catch block
+				el.printStackTrace();
+			}
+		});
+    	
+    	GridPane gridPane2 = new GridPane();
+    	gridPane2.setPadding(new Insets(width*0.1,0,0,0));
+    	gridPane2.getColumnConstraints().add(new ColumnConstraints(width*0.25));
+    	gridPane2.getColumnConstraints().add(new ColumnConstraints(width*0.25));
+       	//Set personal informations
+    	final String[] tags = {"Name :", "ID :", "Email :", "Position :"};
+    	for(int i = 0; i < tags.length; ++i) {
+    		Label tag = new Label(tags[i]);
+    		tag.setStyle("-fx-border-color:#fffaf0");
+    		gridPane2.getRowConstraints().add(new RowConstraints(height*0.1));
+    		GridPane.setHalignment(tag, HPos.CENTER);
+    		gridPane2.add(tag, 0, i);
+    		
+    		Label val = new Label("Unknown");
+    		val.setStyle("-fx-border-color:#fffaf0");
+    		val.setFont(Font.font(null, FontWeight.BOLD, 14));
+    		val.setStyle("-fx-background-color: #00ffff;" 
+					+ "-fx-border-color: #00ffff;");
+    		GridPane.setHalignment(val, HPos.CENTER);
+    		gridPane2.add(val, 1, i);
+    		
+    		//separator
+        	Separator appSeparator = new Separator();
+        	appSeparator.setMaxWidth(width/2);
+        	GridPane.setValignment(appSeparator, VPos.BOTTOM);
+        	GridPane.setHalignment(appSeparator, HPos.CENTER);
+        	gridPane2.add(appSeparator, 1, i);
+    	}
     	
     	//Change password button event
-    	changePassword.setOnAction(e-> passwordChangeScene(Grid_Pane.getChildren().get(1)));
+    	changePassword.setOnAction(e-> passwordChangeScene(width*0.4, height*0.5));
     	
-    	
-    	//Personal abstract field
-    	TextArea personalAbstract = new TextArea();
-    	personalAbstract.setMaxSize(width*0.5, height*0.3);
-    	personalAbstract.setPromptText("Abstract");
-    	Grid_Pane.add(personalAbstract, 0, 6);
-    	profile.getChildren().addAll(Image_View, protrait, Grid_Pane);		
+    	profile.setLeft(gridPane1);
+    	profile.setCenter(gridPane2);
+    	profile.setTop(title);
     }
     
     //New window for change password
-    private void passwordChangeScene(Node n) {
+    private void passwordChangeScene(double w, double h) {
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
-    	pane.setPrefSize(350, 200);
-    	Scene secondScene = new Scene(pane, 350, 300);
+    	pane.setPrefSize(w, h);
+    	Scene secondScene = new Scene(pane, w, h);
     	Stage newWindow = new Stage();
     	
     	//Create gridpane 
     	GridPane gridpane = new GridPane();
-    	gridpane.setVgap(5);
-    	gridpane.getColumnConstraints().add(new ColumnConstraints(300));
-    	gridpane.setPadding(new Insets(10,20,10,20));
+    	gridpane.getColumnConstraints().add(new ColumnConstraints(w*0.8));
+    	gridpane.setPadding(new Insets(10,w*0.1,10,w*0.1));
     	
     	String[] tags = {"Old password", "New password", "Repeat password", "Confirm"};
     	for(int i = 0; i < 7; ++i) {
+    		gridpane.getRowConstraints().add(new RowConstraints(h*0.12));
     		if (i == 6) {
     			//create confirm button
     			Button confirm = new Button("Confirm");
-    			getSetting(confirm, 100, 30, 0 ,0);
     			getStyle(confirm,"-fx-border-color:#000000;");
     			GridPane.setHalignment(confirm, HPos.CENTER);
     			gridpane.add(confirm, 0, i+3);
@@ -451,16 +500,17 @@ public class AccountPageController {
     		else if(i%2 == 0) {
     			//create tag
     			Label tag = new Label(tags[i/2]);
-    			getSetting(tag,150,30,0,0);
+    			GridPane.setValignment(tag, VPos.BOTTOM);
     			GridPane.setHalignment(tag, HPos.LEFT);
     			gridpane.add(tag, 0, i);
     		}
     		else {
     			//Textfield
     			PasswordField field = new PasswordField();
-    			getSetting(field, 300, 30, 0, 0);
+    			field.setMaxWidth(w*0.8);
     			getStyle(field,"-fx-border-color:#000000;");
-    			GridPane.setHalignment(field, HPos.RIGHT);
+    			GridPane.setValignment(field, VPos.TOP);
+    			GridPane.setHalignment(field, HPos.LEFT);
     			gridpane.add(field, 0, i);
     		}
     	}
@@ -468,32 +518,7 @@ public class AccountPageController {
     	//set children
     	pane.getChildren().add(gridpane);
     	//Call new window
-    	NewWindow(newWindow, secondScene, mainScene, "Password change", screen.getWidth()/2, screen.getHeight()/3);
-    	
-    	//Confirm button event
-    	((Button) gridpane.getChildren().get(6)).setOnAction(e->{
-    		boolean check = true;
-    		//Check old password
-    		if(((TextField) gridpane.getChildren().get(1)).getText().compareTo(((Label) n).getText()) != 0) {
-    			getErrorStyle(((TextField) gridpane.getChildren().get(1)));
-    			check = false;
-    		}
-    		else
-    			getStyle(((TextField) gridpane.getChildren().get(1)),"-fx-border-color:#000000;");
-    		//Check new password and repeated password
-    		if(((TextField) gridpane.getChildren().get(3)).getText().compareTo(((TextField) gridpane.getChildren().get(5)).getText()) != 0 && 
-    				((TextField) gridpane.getChildren().get(3)).getText().isEmpty() || ((TextField) gridpane.getChildren().get(5)).getText().isEmpty()) {
-    			getErrorStyle(((TextField) gridpane.getChildren().get(5)));
-    			check = false;
-    		}
-    		else
-    			getStyle(((TextField) gridpane.getChildren().get(5)),"-fx-border-color:#000000;");
-    		
-    		if(check) {
-    			getAlert(newWindow);    		    			
-    		}
-    	});
-    	
+    	NewWindow(newWindow, secondScene, mainScene, "Password change", screen.getWidth()/2, screen.getHeight()/3);    	
     }
     
 	//Edit protrait
@@ -587,7 +612,7 @@ public class AccountPageController {
     }
         
     //Create alert
-    private void getAlert(Stage stage) {
+   /* private void getAlert(Stage stage) {
     	Alert alert = new Alert(AlertType.CONFIRMATION, "New password created.", ButtonType.OK);
     	alert.setTitle("Confirmation");
     	alert.setHeaderText(null);
@@ -595,7 +620,7 @@ public class AccountPageController {
     	alert.setX(screen.getWidth()/2);
     	alert.setY(screen.getHeight()/3);
     	stage.close();
-    }
+    }*/
     
     
     //Create new window
@@ -637,17 +662,17 @@ public class AccountPageController {
     }
     
     //Set up error style
-    private void getErrorStyle(Node n) {
+    /*private void getErrorStyle(Node n) {
     	n.setStyle("-fx-border-color: #dc143c;" 
 					+ "-fx-border-radius: 20;" 
 					+ "-fx-background-radius: 20;");
-    }
-    
+    }*/
+  
     //Set up general setting of component
     private void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);
     	n.setLayoutY(y);
     	n.setFocusTraversable(false);
-    }
+    }    
 }

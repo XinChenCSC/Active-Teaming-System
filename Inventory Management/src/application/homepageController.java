@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
@@ -146,7 +147,6 @@ public class homepageController {
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
         //--------------------------------------------
-        scrollPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         //Adjust layout positions
         Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
         Profile.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -157,7 +157,9 @@ public class homepageController {
         Notification.setId("notification");
         //Notification pane
     	NotificationPane.setLayoutX(Notification.getLayoutX()-150);
-    	NotificationPane.setStyle("-fx-background-color: #00FFFF;");
+    	NotificationPane.setStyle("-fx-background-color: #00FFFF;" +
+    					"-fx-background-radius: 20;" +
+    					"-fx-border-radius: 20;");
     	//Edit button
         Edit.setLayoutX(anchorPane_child.getPrefWidth()-360);
         Edit.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -326,7 +328,7 @@ public class homepageController {
     		composeScene(gridPane, content, w, h, newWindow);
     	});
         //Set email list
-    	getEmailList(w, h, gridPane, content, 0);
+    	getEmailList(w, h, newWindow, gridPane, content, 0);
         //Delete emails
         delete.setOnAction(e -> deleteEmail(emailPane, gridPane, content, newWindow));
         //set new window
@@ -355,14 +357,14 @@ public class homepageController {
         getChatList(MESSAGE_Scene, chatList, messageChat, gridPane, 0);
         //first time message with sb
         ((ButtonBase) chatList.getChildren().get(2)).setOnAction(e-> {
-        	((Label) messageBoard.getChildren().get(1)).setText("You");
+        	((Label) messageBoard.getChildren().get(0)).setText("You");
         	MESSAGE_Scene.setRoot(messageChat);
         	firstMessage(MESSAGE_Scene, chatList, messageChat, (TextField) chatList.getChildren().get(5), gridPane, newWindow);  
     	});
         //Delete messages
         ((Button) chatList.getChildren().get(1)).setOnAction(e-> deleteMessage(chatList, gridPane, newWindow));  
         //Set new window
-        NewWindow(newWindow, MESSAGE_Scene, mainStage, "Message", screen.getWidth()/1.5, screen.getHeight()/2.5);
+        NewWindow(newWindow, MESSAGE_Scene, mainStage, "Message", screen.getWidth()*0.5, screen.getHeight()*0.2);
     }
     
     @FXML
@@ -386,9 +388,10 @@ public class homepageController {
         Pane pane = new Pane();
         pane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         pane.setPadding(new Insets(5,5,5,5));
+        
         //Email list
         ScrollPane email_list = new ScrollPane();
-        getSetting(email_list, w*0.25+3, h*0.9, 0, h*0.1+15);
+        getSetting(email_list, w*0.25+3, h*0.9, 0, h*0.12+5);
     	email_list.setHbarPolicy(ScrollBarPolicy.NEVER);
     	email_list.setVbarPolicy(ScrollBarPolicy.NEVER);
     	
@@ -405,7 +408,7 @@ public class homepageController {
     	
     	//Search field
     	TextField search = new TextField();
-    	getSetting(search, w*0.5, h*0.06, w*0.1, 5);
+    	getSetting(search, w*0.8, h*0.05, w*0.1, 5);
     	search.setPromptText("Search");
     	getStyle(search);
     	
@@ -421,7 +424,7 @@ public class homepageController {
 
     	// Confirm
     	Button okay = new Button("Ok");
-    	getSetting(okay, w*0.1, h*0.05, 0, h*0.05+5);
+    	getSetting(okay, w*0.1, h*0.05, 0, h*0.05+10);
     	okay.setVisible(false);
     	okay.setStyle("-fx-background-radius: 20;"
     					+ "-fx-border-radius: 20;"
@@ -434,14 +437,23 @@ public class homepageController {
 				+ "-fx-border-radius: 20;"
 				+ "-fx-border-color: #DC143C;");
     	
+		//Vertical separator
+		Separator ver_separator = new Separator();
+		ver_separator.setOrientation(Orientation.VERTICAL);
+		ver_separator.setMinHeight(h*0.9);
+		ver_separator.setLayoutX(w*0.25);
+		ver_separator.setLayoutY(h*0.12);
+		ver_separator.setStyle("-fx-background-radius: 2;" +
+							"-fx-background-color: #778899;");
+		
     	//Set all children
     	email_list.setContent(emails);
-    	pane.getChildren().addAll(email_list, search, content, search_button, compose, delete, okay, cancel);
+    	pane.getChildren().addAll(email_list, search, content, search_button, compose, delete, okay, cancel, ver_separator);
     	return pane;
     }
     
-    //List all existed emails
-    private void getEmailList(double w, double h, GridPane gridPane, Pane content, int start) {
+    //List all existed emails and call email reply
+    private void getEmailList(double w, double h, Stage mainStage, GridPane gridPane, Pane content, int start) {
     	//List all existed emails
     	for(int i = start; i < emailNum; ++i) {
     		//Hide content area
@@ -471,7 +483,7 @@ public class homepageController {
         	
         	//Reply
         	((Button)children.get(5)).setOnAction(e->{
-        		emailReply(screen.getWidth()/2, screen.getHeight()/1.5, (Stage) Profile.getScene().getWindow());
+        		emailReply(w*0.8, h*0.7, mainStage);
         	});
         	
         	//Hover effects
@@ -581,7 +593,7 @@ public class homepageController {
     //Email contents
     private Pane emailContent(double w, double h) {
     	Pane content = new Pane();
-    	getSetting(content, w*0.74, h*0.88, w*0.25+10, h*0.12);
+    	getSetting(content, w*0.74, h*0.88, w*0.25+10, h*0.12+5);
     	content.setStyle("-fx-background-color:white;"
     					+ "-fx-border-color: black;");
     	
@@ -599,7 +611,7 @@ public class homepageController {
     	TextField senderField = new TextField();
     	senderField.setStyle("-fx-background-color: #48D1CC;");
     	senderField.setAlignment(Pos.CENTER);
-    	senderField.setMaxWidth(w*0.5);
+    	senderField.setMaxWidth(w*.5);
     	senderField.setEditable(false);
     	senderField.setFocusTraversable(false);
     	GridPane.setHalignment(senderField, HPos.CENTER);
@@ -659,7 +671,7 @@ public class homepageController {
 					((Stage) scene.getScene().getWindow()).close(); 
 					 //Add new email to the email list
 		            ++emailNum;
-		            getEmailList(w, h, gridPane, content, emailNum-1);
+		            getEmailList(w, h, s,gridPane, content, emailNum-1);
 		            //set email to the top
 		            emailMoveUp(gridPane);					
 				}
@@ -669,7 +681,7 @@ public class homepageController {
         // New window (Stage)
         Stage newWindow = new Stage();
         //Set newWindow
-        NewWindow(newWindow, secondScene, s, "Compose", w-400, h-400);    
+        NewWindow(newWindow, secondScene, s, "Compose", screen.getWidth()/4, screen.getHeight()/4);    
     }
 
     //Set the new email to the top
@@ -696,25 +708,25 @@ public class homepageController {
     	
     	//Object
     	Label object = new Label("To unknown");
-    	getSetting(object, w/4, 40, 0, 0);
-    	object.setPadding(new Insets(20,20,20,20));
+    	getSetting(object, w*0.3, h*0.1,  w*0.1, 0);
+    	object.setPadding(new Insets(20,20,20,0));
     	
     	//Reply content
     	TextArea content = new TextArea();
-    	getSetting(content, w-w/4, h/2, 10, 80);
+    	getSetting(content, w*0.8, h*0.8, w*0.1, h*0.11);
     	
     	//send
     	Button send = new Button("Send");
-    	getSetting(send, 80, 30, content.getPrefWidth()/2-40, content.getPrefHeight()+90);
+    	getSetting(send, w*0.1, h*0.075, w*0.5-w*0.05, h*0.93);
 
     	//Set children
     	scene.getChildren().addAll(object, content, send);
     	//Set new window
-    	Scene secondScene = new Scene(scene,w - w/4+10, h-70);
+    	Scene secondScene = new Scene(scene,w, h);
         // New window (Stage)
         Stage newWindow = new Stage();
         // set new window
-        NewWindow(newWindow, secondScene, s, "Reply", w-400, h-400); 
+        NewWindow(newWindow, secondScene, s, "Reply", screen.getWidth()/4, screen.getHeight()/4); 
         //Send event
         emailSent(send, w, h, newWindow);
     }
@@ -751,7 +763,7 @@ public class homepageController {
     		GridPane.setValignment(unread, VPos.TOP);
     		gridPane.add(unread, 0, i);
     		//Content label
-    		Label content = new Label("~~~~~~~~~~~~~~~~~~~" + i);
+    		Label content = new Label("Notification " + i);
     		content.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(content, HPos.CENTER);
     		GridPane.setValignment(content, VPos.CENTER);
@@ -781,8 +793,8 @@ public class homepageController {
 
     			alert.setTitle("Important");
     			alert.setHeaderText(null);
-    			alert.setX(screen.getWidth()/2);
-    			alert.setY(100);
+    			alert.setX(screen.getWidth()*0.7);
+    			alert.setY(screen.getHeight()*0.2);
     			Optional<ButtonType> result = alert.showAndWait();
     			if (result.orElse(cancel) == delete)
     				gridPane.getChildren().removeAll(unread, content, time, pane);
@@ -808,7 +820,10 @@ public class homepageController {
     //Move to the account page
     @FXML
     private void moveToAccount(ActionEvent event) throws IOException {
-    	Parent account_page = FXMLLoader.load(getClass().getResource("AccountPage.fxml"));
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("AccountPage.fxml"));
+    	Parent account_page = loader.load();
+    	
+    	//AccountPageController account = loader.getController();
         Stage account_scene = (Stage) Profile.getScene().getWindow();
         account_scene.setScene(new Scene(account_page));
         account_scene.setTitle("Account page");
@@ -824,33 +839,24 @@ public class homepageController {
     	//Import css file 
     	result.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     	GridPane gridPane = new GridPane();
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(w+12));
-    	
-    	//Back Button
-    	Button back = new Button("Back");
-    	back.setFocusTraversable(false);
-    	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
-    	GridPane.setHalignment(back, HPos.LEFT);
-    	GridPane.setValignment(back, VPos.CENTER);
-    	gridPane.add(back, 0, 0);
+    	gridPane.setPadding(new Insets(0,15,0,15));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w-15));
     	
     	//Object
     	Label object = new Label("Unknown");
+    	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
     	GridPane.setHalignment(object, HPos.CENTER);
     	GridPane.setValignment(object, VPos.CENTER);
     	gridPane.add(object, 0, 0);
     	
     	//Separator
     	Separator separator = new Separator();
-    	separator.setMinWidth(screen.getWidth());
-    	GridPane.setHalignment(separator, HPos.CENTER);
+    	separator.setMinWidth(w-15);
     	GridPane.setValignment(separator, VPos.BOTTOM);
     	gridPane.add(separator, 0, 0);
     	
     	//Display board
     	ScrollPane chat = new ScrollPane();
-    	chat.setViewportBounds(null);
-    	chat.setLayoutY(40);
     	chat.setVbarPolicy(ScrollBarPolicy.NEVER);
     	chat.setHbarPolicy(ScrollBarPolicy.NEVER);
     	gridPane.getRowConstraints().add(new RowConstraints(h*0.6));
@@ -859,50 +865,65 @@ public class homepageController {
     	//Text area
     	TextField text = new TextField();
     	getSetting(text, w, 100, 0, 0);
-    	text.setMinWidth(w+12);
+    	text.setMinWidth(w-15);
     	text.setMinHeight(h*0.2);
     	text.setAlignment(Pos.TOP_LEFT);
     	GridPane.setValignment(text, VPos.TOP);
     	gridPane.getRowConstraints().add(new RowConstraints(h*0.2));
     	gridPane.add(text, 0, 2);
     	
+    	//Back Button
+    	Button back = new Button("Back");
+    	getSetting(back, w*0.2, h*0.05, 0, 0);
+    	getStyle(back);
+    	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
+    	GridPane.setHalignment(back, HPos.LEFT);
+    	GridPane.setValignment(back, VPos.CENTER);
+    	gridPane.add(back, 0, 3);
+    	
+    	//Send button
     	Button send = new Button("Send");
-    	send.setFocusTraversable(false);
+    	getStyle(send);
+    	getSetting(send, w*0.2, h*0.05, 0, 0);
     	GridPane.setHalignment(send, HPos.RIGHT);
     	GridPane.setValignment(send, VPos.CENTER);
-    	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
     	gridPane.add(send, 0, 3);
     	
+    	//Delete button
     	Button delete = new Button("Delete");
-    	delete.setFocusTraversable(false);
-    	GridPane.setHalignment(delete, HPos.LEFT);
+    	getStyle(delete);
+    	getSetting(delete, w*0.2, h*0.05, 0, 0);
+    	GridPane.setHalignment(delete, HPos.CENTER);
     	GridPane.setValignment(delete, VPos.CENTER);
     	gridPane.add(delete, 0, 3);
     	
     	//Grid pane
     	GridPane messages = new GridPane();
     	messages.setVgap(10);
-    	messages.getColumnConstraints().add(new ColumnConstraints(w));
+    	messages.getColumnConstraints().add(new ColumnConstraints(w-30));
+    	messages.setPadding(new Insets(0,15,0,0));
     	//Always at the bottom of the scroll pane
-    	chat.vvalueProperty().bind(messages.heightProperty());
+    	messages.heightProperty().addListener(observable -> chat.setVvalue(1D));
     	send.setOnAction(e->{
-    		text.getText().length();
-    		Label t = new Label(text.getText());
-        	t.setWrapText(true);
-    		t.setEllipsisString(null);
-    		t.setPrefWidth(w/1.5);
-        	t.setAlignment(Pos.CENTER_RIGHT);
-        	//Get the widthe of string
-        	Font font = text.getFont();
-        	double fontSize = font.getSize();
-        	int rowHeight = (int) (fontSize*text.getText().length()/(w/1.5));
-        	text.clear();
-        	//add row
-        	RowConstraints row = new RowConstraints(30+rowHeight*20);
-        	messages.getRowConstraints().add(row);
-        	//set label to the right
-        	GridPane.setHalignment(t, HPos.RIGHT);
-        	messages.add(t, 0, messages.getRowConstraints().size()-1);
+    		if(!text.getText().isEmpty()) {
+    			text.getText().length();
+        		Label t = new Label(text.getText());
+            	t.setWrapText(true);
+        		t.setEllipsisString(null);
+        		t.setPrefWidth(w/1.5);
+            	t.setAlignment(Pos.CENTER_RIGHT);
+            	//Get the widthe of string
+            	Font font = text.getFont();
+            	double fontSize = font.getSize();
+            	int rowHeight = (int) (fontSize*text.getText().length()/(w/1.5));
+            	text.clear();
+            	//add row
+            	RowConstraints row = new RowConstraints(30+rowHeight*20);
+            	messages.getRowConstraints().add(row);
+            	//set label to the right
+            	GridPane.setHalignment(t, HPos.RIGHT);
+            	messages.add(t, 0, messages.getRowConstraints().size()-1);
+    		}
     	});
     	
     	//Delete event
@@ -948,7 +969,7 @@ public class homepageController {
     	
     	//Search bar
     	TextField search = new TextField();
-    	getSetting(search, w*0.65, 30, w*0.3+5, 10);
+    	getSetting(search, w*0.70, 30, w*0.3+5, 10);
     	search.setFont(Font.font(10));
     	getStyle(search);
     	
@@ -1085,11 +1106,11 @@ public class homepageController {
             
             //Change to the content scene
             label.setOnAction(e->{
-            	((Label) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(1)).setText("You");
+            	((Label) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(0)).setText("You");
             	scene.setRoot(messageChat);
             });
             //Back to the messagelist if BACK button clicked.
-            ((Button) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(0)).setOnAction(e->scene.setRoot(chatList));
+            ((Button) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(4)).setOnAction(e->scene.setRoot(chatList));
             
         	//Hover effects
         	label.setOnMouseEntered(e->{
@@ -1166,7 +1187,7 @@ public class homepageController {
         newWindow.show();
     }
     
-    //Get alert
+    //Get confrimation alert
     private Alert getAlert(AlertType at, String content, ButtonType bt, String title, Stage stage) {
     	Alert alert = new Alert(at, content, bt);
     	alert.setTitle(title);
@@ -1179,7 +1200,7 @@ public class homepageController {
     
     //Get the current time
     private String getCurrentTime() {
-    	DateFormat dateFormat =  new SimpleDateFormat("dd-M-yyyy hh:mm");
+    	DateFormat dateFormat =  new SimpleDateFormat("dd-M-yyyy");
   		Calendar cal = Calendar.getInstance();
   		String currentDate = dateFormat.format(cal.getTime()).toString();
   		return currentDate;
