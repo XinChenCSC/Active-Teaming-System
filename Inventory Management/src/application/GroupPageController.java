@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
@@ -30,11 +32,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -44,6 +48,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class GroupPageController {
@@ -79,25 +84,23 @@ public class GroupPageController {
     private MenuButton Vote;
 
     @FXML
-    private Button Edit;
-
-    @FXML
     private AnchorPane Scroll_Anchor;
     
     //window size
-    Rectangle2D screen = Screen.getPrimary().getVisualBounds(); 
+    private Rectangle2D screen = Screen.getPrimary().getVisualBounds(); 
+    private final double width = screen.getWidth()*0.2;
+    private final double height = screen.getHeight()*0.5;
     //Vote types
-    final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit", "Schedule"};
+    private final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit", "Schedule"};
+    //Your vote
+    private boolean[] votingStatus = {true, true, true, true, true, true};
     
     @FXML
     void initialize()throws IOException {
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
-        //Set edit button position
-        Edit.setLayoutX(Scroll_Anchor.getPrefWidth()-100);
-        Edit.setLayoutY(Scroll_Anchor.getPrefHeight()-70);
-        
+
         //Text Area 
         ProjectName.setPadding(new Insets(45,45,45,45));
         ProjectName.setFont(Font.font(null, FontWeight.BOLD, 20));
@@ -117,161 +120,83 @@ public class GroupPageController {
         Vote.getItems().get(0).setOnAction(e-> VotingPane());
         //Poll status
         Group.getItems().get(1).setOnAction(e-> pollStatus());
-        //SU only
-        Edit.setOnAction(e-> groupEdit());
     }
  
     //Back to homepage
     @FXML
     private void moveToHomepage(ActionEvent event) throws IOException {
-    	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-        Stage home_scene = (Stage) Anchor_Pane.getScene().getWindow();
-        home_scene.setScene(new Scene(home_page));
-        home_scene.setTitle("Homepage");
-        home_scene.show();
-    }
-    
-    //Group internal operations
-    private void groupEdit() {
-    	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
-    	Pane pane = new Pane();
-    	//GridPane
-    	GridPane gridPane = new GridPane();
-    	getSetting(gridPane, 400, 450, 0, 0);
-        gridPane.getColumnConstraints().add(new ColumnConstraints(200));
-        gridPane.getColumnConstraints().add(new ColumnConstraints(197));
-        gridPane.setVgap(10);
-    	//tags
-        String[] tags = {"Scores reduction", "Expel from the group", "Expel from the system", "Revise a member"};
-        for(int i = 0; i < tags.length; ++i) {
-        	//Subject
-            Label subject = new Label(tags[i]);
-            getSetting(subject, 200, 30, 0, 0);
-            subject.setPadding(new Insets(5,5,5,5));
-            subject.setAlignment(Pos.CENTER_LEFT);
-            subject.setStyle("-fx-background-color:#DAA520;");
-         	gridPane.getRowConstraints().add(new RowConstraints(40));
-         	gridPane.add(subject, 0, i*2);
-         	//Scores reduction
-         	ComboBox<String> validMembers = new ComboBox<>();
-         	validMembers.setPromptText("Names");
-         	getSetting(validMembers, 180, 30, 0, 0);
-     		//Scores comboBox
-     		ComboBox<Integer> score = new ComboBox<>();
-         	//Confirm button
-         	Button confirm = new Button("Confirm");
-         	getSetting(confirm, 80, 30, 0, 0);
-         	confirm.setPadding(new Insets(5,5,5,5));
-     		GridPane.setHalignment(confirm, HPos.RIGHT);
-     		gridPane.getRowConstraints().add(new RowConstraints(40));
-     		gridPane.add(confirm, 1, i*2+1);
-         	//set up combobox
-     		for(int j = 0; j < 5; ++j)
-         		validMembers.getItems().add("Unknown" + j);
-         	GridPane.setHalignment(validMembers, HPos.CENTER);
-         	gridPane.add(validMembers, 0, i*2+1);
-         	//set confirm Button
-         	if(i == 0) {
-         		//set up scores comboBox
-         		score.setPromptText("Scores");
-             	getSetting(score, 100, 30, 0, 0);
-         		score.getItems().addAll(1,2,3,4,5,6,7,8,9,10);
-         		GridPane.setHalignment(score, HPos.LEFT);
-         		gridPane.add(score, 1, i*2+1);
-         	}
-         	confirm.setOnAction(e->{
-         		if(validMembers.getSelectionModel().getSelectedItem() == null)
-         			getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
-         		else {
-         			if(subject.getText().compareTo(tags[0]) == 0) {
-         				if(score.getSelectionModel().getSelectedItem() == null)
-         					getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
-         				else
-         					getConfirmationAlert("Are you sure to take " + score.getSelectionModel().getSelectedItem() + 
-         							" scores off from " + validMembers.getSelectionModel().getSelectedItem() + "?",
-         							"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
-         			}
-         			else if(subject.getText().compareTo(tags[1]) == 0) {
-         				getConfirmationAlert("Are you sure to expel " + validMembers.getSelectionModel().getSelectedItem() + " from the group?",
-         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
-         			}
-         			else if(subject.getText().compareTo(tags[2]) == 0) {
-         				getConfirmationAlert("Are you sure to expel " + validMembers.getSelectionModel().getSelectedItem() + " from the SYSTEM?",
-         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
-         			}
-         			else{
-         				getConfirmationAlert("Are you sure to revise " + validMembers.getSelectionModel().getSelectedItem() + " back to the group?",
-         						"Confirm", (Stage) gridPane.getScene().getWindow(), "Action completed.");
-         			}
-         		}
-         	});
-        }
-        pane.getChildren().add(gridPane);
-    	Dialog<ButtonType> dialog = new Dialog<>();
-    	getDialog(dialog, pane, "Editing", "", ok);
+    	loadHomepage();
     }
 
     //display poll status
     private void pollStatus() {
     	ButtonType ok = new ButtonType("Ok", ButtonData.OK_DONE);
-    	Pane pane = new Pane();
+    	Dialog<ButtonType> dialog = new Dialog<>(); // New dialog
+    	Pane pane = new Pane();	// New pane
+    	//Title
+    	Label title = getHeaderText("Poll Status");
+    	title.setAlignment(Pos.CENTER);
     	//Scroll Pane
     	ScrollPane scrollPane = new ScrollPane();
-    	getSetting(scrollPane, 400, 450, 0, 0);
-    	scrollPane.setFitToWidth(true);
+    	getSetting(scrollPane, width, height*0.75, 0, height*0.1+20);
     	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
     	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
     	//GridPane
     	GridPane gridPane = new GridPane();
-        gridPane.getColumnConstraints().add(new ColumnConstraints(150));
-        gridPane.getColumnConstraints().add(new ColumnConstraints(247));
+    	gridPane.setPadding(new Insets(10,20,10,20));
+        gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.4-20));
+        gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.6-20));
         gridPane.setVgap(10);
         for(int i = 0; i < voting_tags.length; ++i) {
             //Vote type
             Label voteType = new Label("Type: " + voting_tags[i]);
-            getSetting(voteType, 150, 30, 0, 0);
-            voteType.setPadding(new Insets(10,10,10,10));
-            voteType.setAlignment(Pos.CENTER_LEFT);
             voteType.setStyle("-fx-background-color:#DAA520;");
-            voteType.setDisable(true);
-         	gridPane.getRowConstraints().add(new RowConstraints(40));
+            voteType.prefWidthProperty().bind(gridPane.getColumnConstraints().get(0).prefWidthProperty());
+            gridPane.getRowConstraints().add(new RowConstraints(height*0.07));
+            GridPane.setHalignment(voteType, HPos.CENTER);
          	gridPane.add(voteType, 0, i*2);
          	//Target
          	Label target = new Label("Target: UNKNOWN");
          	if(i == 3 || i == 5) 
          		target.setText("");
-         	getSetting(target, 250, 30, 0, 0);
-            target.setPadding(new Insets(10,10,10,10));
-            target.setAlignment(Pos.CENTER_LEFT);
+         	target.prefWidthProperty().bind(gridPane.getColumnConstraints().get(1).prefWidthProperty());
             target.setStyle("-fx-background-color:#DAA520;");
-            target.setDisable(true);
+            GridPane.setHalignment(target, HPos.CENTER);
             gridPane.add(target, 1, i*2);
-            //Indicator
-            Label agreedVotes = new Label("Agrees");
-            agreedVotes.setPadding(new Insets(0, 0, 0, 10));
-            agreedVotes.setDisable(true);
-            GridPane.setHalignment(agreedVotes, HPos.CENTER);
-            gridPane.getRowConstraints().add(new RowConstraints(40));
-            gridPane.add(agreedVotes, 0, i*2+1);
+            
         	//Progress bar
             ProgressBar progress = new ProgressBar();
             progress.setProgress(0);
-            progress.setPrefWidth(250);
+            progress.setPrefWidth(width*0.5);
             progress.setPadding(new Insets(0,40,0,0));
             progress.setId("AgreeVotes");
-            progress.setDisable(true);
             GridPane.setHalignment(progress, HPos.CENTER);
-            gridPane.add(progress, 1, i*2+1);
+            
+            //Indicator
+            Label agreedVotes = new Label("Click me");
+            agreedVotes.setDisable(true);
+            agreedVotes.setPadding(new Insets(0, 0, 0, 10));
+            GridPane.setHalignment(agreedVotes, HPos.CENTER);
+            gridPane.getRowConstraints().add(new RowConstraints(height*0.07));
+            //Call voting alert.
+            if(votingStatus[i]) {
+            	getVotingAlert(i, agreedVotes, progress, (Stage) dialog.getDialogPane().getScene().getWindow());
+            }
+            //Set children
+            gridPane.add(agreedVotes, 0, i*2+1);
+            gridPane.add(progress, 1, i*2+1);    
         }
-        
-        gridPane.getStylesheets().add(getClass().getResource("GroupPage.css").toExternalForm());
+        //Set children
         scrollPane.setContent(gridPane);
-        pane.getChildren().add(scrollPane);
-    	Dialog<ButtonType> dialog = new Dialog<>();
-    	getDialog(dialog, pane, "Poll Status", "", ok);
+        pane.getChildren().addAll(title, scrollPane);
+        //Import css file
+        pane.getStylesheets().add(getClass().getResource("GroupPage.css").toExternalForm());
+        //Create new window
+        @SuppressWarnings("unused")
+		Optional<ButtonType> result = getDialog(dialog, pane, "Poll Status", "", ok);
     }
-    
-    //Vote for dismissal
+
+    //Votes
     private void VotingPane() {
     	ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
     	//GridPane
@@ -353,7 +278,7 @@ public class GroupPageController {
      	submit.setOnAction(e->{
      		if(reasonArea.getText().isEmpty() || name.getSelectionModel().getSelectedItem() == null ||
      				vote.getSelectionModel().getSelectedItem() == null)
-     			getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
+     			getAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
      		else {
      			if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[0]) == 0)
      				getConfirmationAlert("Are you sure to dismiss UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow(),
@@ -378,20 +303,28 @@ public class GroupPageController {
      	
      	//Get dialog
       	Dialog<ButtonType> dialog = new Dialog<>();
-     	getDialog(dialog, gridPane, "Vote", "", cancel);
+      	@SuppressWarnings("unused")
+		Optional<ButtonType> result = getDialog(dialog, gridPane, "Vote", "", cancel);
 
     }
     
     //Display member's info
     private void infoDisplay() {    
       	 ButtonType ok = new ButtonType("OK",ButtonData.OK_DONE);
+      	 //BorderPane
+      	 BorderPane borderPane = new BorderPane();
+      	 //Title
+      	 Label title = getHeaderText("Information");
+      	 title.setAlignment(Pos.CENTER);
+      	 borderPane.setTop(title);
+      	 
     	 //GridPane
     	 GridPane gridPane = new GridPane();
+    	 gridPane.setPadding(new Insets(30,0,0,0));
     	 //Import css file
     	 gridPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    	 getSetting(gridPane, 400, 200, 0, 70);
-    	 gridPane.getColumnConstraints().add(new ColumnConstraints(100));
-    	 gridPane.getColumnConstraints().add(new ColumnConstraints(300));
+    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
+    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
     	 gridPane.setVgap(10);    	 
     	 
     	 String[] tags = {"Name:", "ID:", "Position:"};
@@ -399,7 +332,7 @@ public class GroupPageController {
     	 for(int i = 0; i < tags.length; ++i) {
     		 Label tag = new Label(tags[i]);
     		 GridPane.setHalignment(tag, HPos.CENTER);
-        	 gridPane.getRowConstraints().add(new RowConstraints(50));
+        	 gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
     		 gridPane.add(tag, 0, i);
     		 
     		 Label value = new Label("Unknown");
@@ -408,43 +341,48 @@ public class GroupPageController {
     	 }
     	 //Evaluation
     	 Label evaluation = new Label("Evaluation: ");
-    	 getSetting(evaluation, 100, 30, 0, 0);
-    	 evaluation.setAlignment(Pos.CENTER);
-    	 gridPane.getRowConstraints().add(new RowConstraints(200));
+    	 GridPane.setHalignment(evaluation, HPos.CENTER);
+    	 gridPane.getRowConstraints().add(new RowConstraints(height*0.2));
     	 gridPane.add(evaluation, 0, tags.length);
     	 
     	 //Evaluation contents
     	 TextArea textArea = new TextArea("Unknown");
-    	 textArea.setMaxSize(250, 150);
+    	 textArea.setMaxSize(width*0.5-20, height*0.2);
     	 textArea.setEditable(false);
     	 GridPane.setHalignment(textArea, HPos.CENTER);
     	 GridPane.setValignment(textArea, VPos.CENTER);
-    	 gridPane.getRowConstraints().add(new RowConstraints(200));
     	 gridPane.add(textArea, 1, tags.length);
     	 
+    	 //Set children
+    	 borderPane.setCenter(gridPane);
     	 //Call dialog
        	 Dialog<ButtonType> dialog = new Dialog<>();
-    	 getDialog(dialog, gridPane, "Information", "Information", ok);
+       	 @SuppressWarnings("unused")
+       	 Optional<ButtonType> result = getDialog(dialog, borderPane, "Information", "", ok);
     }
         
     //Display personal status
     private void statusDisplay() {
      ButtonType ok = new ButtonType("OK",ButtonData.OK_DONE);
+     BorderPane pane = new BorderPane();
    	 //GridPane
    	 GridPane gridPane = new GridPane();
-   	 getSetting(gridPane, 400, 200, 0, 70);
-   	 gridPane.getColumnConstraints().add(new ColumnConstraints(200));
-   	 gridPane.getColumnConstraints().add(new ColumnConstraints(200));
-   	 gridPane.setVgap(10);    	 
+   	 gridPane.setPadding(new Insets(30,10,10,10));
+   	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5-10));
+   	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5-10));
    	 
-   	 String[] tags = {"Attendances:", "Assignments:", "Warnings:", "Praises:", "Condition:", "Evaluation: "};
+   	 //Create title
+   	 Label title = getHeaderText("Status");
+   	 pane.setTop(title);
+ 	
+   	 final String[] tags = {"Attendances:", "Assignments:", "Warnings:", "Praises:", "Condition:", "Evaluation: "};
    	 //list member's informations
    	 for(int i = 0; i < tags.length; ++i) {
    		 Label tag = new Label(tags[i]);
    		 GridPane.setHalignment(tag, HPos.CENTER);
-       	 gridPane.getRowConstraints().add(new RowConstraints(50));
+       	 gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
    		 gridPane.add(tag, 0, i);
-   		 
+     	
    		 if(i == 5) {
    			 ToggleButton isOn = new ToggleButton("On");
    			 isOn.setStyle("-fx-background-radius: 20;" +
@@ -467,65 +405,71 @@ public class GroupPageController {
    	   		 gridPane.add(value, 1, i);
    		 }
    	 }
-   	 
+   	 pane.setCenter(gridPane);
    	 //Call dialog
    	 Dialog<ButtonType> dialog = new Dialog<>();
-   	 getDialog(dialog, gridPane, "Status", "Status", ok);
+   	 @SuppressWarnings("unused")
+   	 Optional<ButtonType> result = getDialog(dialog, pane, "Status", "", ok);
     }
     
     //Schedule a meeting
     private void scheduleAMeeting() {
       	 ButtonType cancel = new ButtonType("Cancel",ButtonData.CANCEL_CLOSE);
       	 Pane pane = new Pane();
+      	 //Title 
+      	 Label title = getHeaderText("Schedule");
+      	 title.setAlignment(Pos.CENTER);
+      	 getSetting(title, width, height*0.1, 0, 0);
       	 //String 
-      	 String str = "Select your meeting time and submit by click the submit button. "
+      	 final String str = "Select your meeting time and submit by click the submit button. "
       	 		+ "The meeting time will be approved when all group members are agreed. The date can't be the current day!";
       	 //Instruction
       	 Label instruction = new Label(str);
       	 instruction.setPadding(new Insets(10,10,10,10));
       	 instruction.setWrapText(true);
       	 instruction.setStyle("-fx-background-color:#DAA520;");
-      	 getSetting(instruction, 400, 110, 0, 50);
+      	 getSetting(instruction, width, height*0.25, 0, height*0.1);
       	 
       	 //Select meeting time  
          GridPane gridPane = new GridPane();
-         getSetting(gridPane, 400, 200, 0, 160);
-         gridPane.getColumnConstraints().add(new ColumnConstraints(400));
+         gridPane.setPadding(new Insets(20,0,0,0));
+         getSetting(gridPane, width, height*0.6, 0, height*0.35);
+         gridPane.getColumnConstraints().add(new ColumnConstraints(width));
          gridPane.setHgap(10);
          gridPane.setVgap(10);
          
          Label dataTitle = new Label("Choose the date");
-         gridPane.getRowConstraints().add(new RowConstraints(30));
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
          GridPane.setHalignment(dataTitle, HPos.CENTER);
          gridPane.add(dataTitle, 0, 0);
          
          DatePicker DatePicker = new DatePicker();
-         gridPane.getRowConstraints().add(new RowConstraints(30));
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
          GridPane.setHalignment(DatePicker, HPos.CENTER);
          gridPane.add(DatePicker, 0, 1);
          
          Label duration = new Label("Duration (Hours)");
-         gridPane.getRowConstraints().add(new RowConstraints(30));
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
          GridPane.setHalignment(duration, HPos.CENTER);
          gridPane.add(duration, 0, 2);
          
          //All hour options     
          ComboBox<String> durationTime = new ComboBox<String>();
-         getSetting(durationTime, 100, 30, 0, 0);
-         gridPane.getRowConstraints().add(new RowConstraints(30));
+         getSetting(durationTime, width*0.5, height*0.05, 0, 0);
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
          durationTime.getItems().addAll("1", "2", "3", "4", "5", "6");
          GridPane.setHalignment(durationTime, HPos.CENTER);
          gridPane.add(durationTime, 0, 3);
          
          //Starting time
          Label starting = new Label("Starting time");
-         gridPane.getRowConstraints().add(new RowConstraints(30));
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
          GridPane.setHalignment(starting, HPos.CENTER);
          gridPane.add(starting, 0, 4);
          
          ComboBox<String> startingTime = new ComboBox<String>();
-         gridPane.getRowConstraints().add(new RowConstraints(30));
-         getSetting(startingTime, 150, 30, 0, 0);
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.05));
+         getSetting(startingTime, width*0.5, height*0.05, 0, 0);
          startingTime.getItems().addAll("9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM",
         		 					"3:00 PM", "4:00 PM");
          GridPane.setHalignment(startingTime, HPos.CENTER);
@@ -533,10 +477,10 @@ public class GroupPageController {
          
          //Submit
          Button submit = new Button("Submit");
-         getSetting(submit, 80, 30, 0, 0);
+         getSetting(submit, width*0.2, height*0.05, 0, 0);
          GridPane.setHalignment(submit, HPos.CENTER);
          GridPane.setValignment(submit, VPos.BOTTOM);
-         gridPane.getRowConstraints().add(new RowConstraints(85));
+         gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
          gridPane.add(submit, 0, 6);
          
          //Submit Event
@@ -548,7 +492,7 @@ public class GroupPageController {
       				 startingTime.getSelectionModel().getSelectedItem() == null ||
       				 DatePicker.getValue() == null ||
       				 DatePicker.getValue().toString().compareTo(currentDate) < 0) 
-      			 getWarningAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
+      			 getAlert(AlertType.WARNING, "All inputs need to be valid.", ButtonType.OK, "Caution!");
       		 //If correct inputs
       		 else {
       			String confirmedTime = "Date: At " + startingTime.getSelectionModel().getSelectedItem() + 
@@ -559,15 +503,84 @@ public class GroupPageController {
       		 }
       	 });
       	 //Set children
-      	 pane.getChildren().addAll(instruction, gridPane);
+      	 pane.getChildren().addAll(title, instruction, gridPane);
       	 //Call dialog
        	 Dialog<ButtonType> dialog = new Dialog<>();
-      	 getDialog(dialog, pane, "Schedule a meeting", "Scheduling", cancel);
+       	 @SuppressWarnings("unused")
+       	 Optional<ButtonType> result =  getDialog(dialog, pane, "Schedule a meeting", "", cancel);
       	
     }
     
+    //Final window before close the group
+    private void finalWindow(Stage stage) throws IOException {
+    	ButtonType finish = new ButtonType("Finish", ButtonData.CANCEL_CLOSE);
+    	Pane pane = new Pane();
+    	//Set up components
+    	final String str = "Once you close the current window, the group will no longer exist and you will be " +
+    			"transferred to the homepage.(The bottom is optional)";
+    	//Instruction label
+    	Label instruction = new Label(str);
+    	getSetting(instruction, width, height*0.2, 0, 0);
+    	instruction.setPadding(new Insets(10,10,10,10));
+    	instruction.setWrapText(true);
+     	instruction.setStyle("-fx-background-color:#DAA520;");
+     	//Add to blacklist or to whitebox
+     	GridPane gridPane = new GridPane();
+     	getSetting(gridPane, width, height*0.7, 0, height*0.2);
+     	gridPane.setPadding(new Insets(10,0,0,0));
+     	gridPane.getColumnConstraints().add(new ColumnConstraints(width));
+     	//ComboBox for members
+     	ComboBox<String> members = new ComboBox<>();
+     	members.setPromptText("Members");
+     	//add item to the combobox
+     	for(int i = 0; i < 5; ++i)
+     		members.getItems().add("Unknown" + i);
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
+     	GridPane.setHalignment(members, HPos.CENTER);
+     	gridPane.add(members, 0, 0);
+     	//ComboBox for blacklist or whitebox
+     	ComboBox<String> field = new ComboBox<>();
+     	field.setPromptText("W/B");
+     	field.getItems().addAll("White box", "Blacklist");
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
+     	GridPane.setHalignment(field, HPos.CENTER);
+     	gridPane.add(field, 0, 1);
+     	//Textarea for reason
+     	TextArea reason = new TextArea();
+     	reason.setPromptText("Reason");
+     	reason.setMaxSize(width*0.7, height*0.25);
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.3));
+     	GridPane.setValignment(reason, VPos.BOTTOM);
+     	GridPane.setHalignment(reason, HPos.CENTER);
+     	gridPane.add(reason, 0, 2);
+     	//Submit button
+     	Button sumbit = new Button("Submit");
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.15));
+     	GridPane.setHalignment(sumbit, HPos.CENTER);
+     	gridPane.add(sumbit, 0, 3);
+     	
+     	//Submit event
+     	sumbit.setOnAction(e->{
+     		getAlert(AlertType.CONFIRMATION, "Submission completed", ButtonType.OK, "Result");
+     	});
+     	
+     	pane.getChildren().addAll(instruction, gridPane); // set children
+    	
+    	Dialog<ButtonType> dialog = new Dialog<>(); //Create new dialog
+    	dialog.initOwner(stage);	//Set poll status dialog as owner
+    	Optional<ButtonType> result = getDialog(dialog, pane, "Ending window", "", finish);
+    	
+    	//Close button event
+    	if(result.get() == finish) {
+    		//close poll status dialog
+    		stage.close();
+    		//Back to home page
+    		loadHomepage();
+    	}
+    }
+   
     //Warning alert for schedule
-    private void getWarningAlert(AlertType at, String content, ButtonType bt, String title) {
+    private void getAlert(AlertType at, String content, ButtonType bt, String title) {
     	Alert alert = new Alert(at, content, bt);
     	alert.setTitle(title);
     	alert.setHeaderText(null);
@@ -588,7 +601,7 @@ public class GroupPageController {
     	//Call for the ending alert
     	if(alert.getResult() == ButtonType.YES) {
     		Alert endingAlert = new Alert(AlertType.CONFIRMATION, result, ButtonType.OK);
-    		endingAlert.setTitle("Congratulation!");
+    		endingAlert.setTitle("Result");
     		endingAlert.setHeaderText(null);
     		endingAlert.showAndWait();
     		endingAlert.setX(screen.getWidth()/2);
@@ -597,14 +610,58 @@ public class GroupPageController {
     	}
     }
     
+    //Get voting alert
+    //If the value of progress bar is 1 and index is 3 then call the finalWindow method
+    private void getVotingAlert(int index, Label agreedVotes, ProgressBar progress, Stage stage) {
+    	agreedVotes.setDisable(false);
+    	votingStatus[index] = false;
+    	ButtonType reject = new ButtonType("Reject", ButtonData.FINISH);
+    	ButtonType agree = new ButtonType("Agree", ButtonData.OK_DONE);
+    	agreedVotes.setOnMouseClicked(e->{
+        	Alert alert = new Alert(AlertType.CONFIRMATION, 
+        			"Vote for agree or vote for rejection?", reject, agree);
+        	alert.setTitle("Confirmation");
+        	alert.setHeaderText(null);
+        	
+        	//check click button types
+        	Optional<ButtonType> result = alert.showAndWait();
+        	if(result.get() == reject) {
+        		getAlert(AlertType.CONFIRMATION, "The poll didn't pass because you reject to vote."
+        				, ButtonType.OK, "Result");
+            	//Rejust
+            	agreedVotes.setDisable(true);
+            	progress.setProgress(0);
+        	}
+        	else {
+        		progress.setProgress(1);
+        		agreedVotes.setDisable(true);
+        		if(progress.getProgress() == 1) {
+        			if(index == 3) {
+        				try {
+        					finalWindow(stage);
+        				} catch (IOException e1) {
+        					// TODO Auto-generated catch block
+        					e1.printStackTrace();}        				
+        			}
+        			else {
+                		getAlert(AlertType.CONFIRMATION, "Poll successfully passed!"
+                				, ButtonType.OK, "Result");
+                		progress.setProgress(0);
+                		}
+        		}
+        	}
+    	});
+    }
+
     //Create a dialog
-    private void getDialog(Dialog<ButtonType> dialog, Node n, String title, String header, ButtonType bt) {
-   	 dialog.getDialogPane().setPrefSize(400, 500);
+    private Optional<ButtonType> getDialog(Dialog<ButtonType> dialog, Node n, String title, String header, ButtonType bt) {
+   	 dialog.getDialogPane().setPrefSize(width, height);
    	 dialog.getDialogPane().getButtonTypes().add(bt);
    	 dialog.setTitle(title);
    	 dialog.setHeaderText(header);
    	 dialog.getDialogPane().getChildren().add(n);
-   	 dialog.showAndWait();
+   	 Optional<ButtonType> result = dialog.showAndWait();
+   	 return result;
     }
     
     //Set up general setting of component
@@ -615,6 +672,25 @@ public class GroupPageController {
     	n.setFocusTraversable(false);
     }
     
+    //Set header text
+    private Label getHeaderText(String str) {
+      	 Label title = new Label(str);
+       	 getSetting(title, width, height*0.15, 0, 0);
+       	 title.setAlignment(Pos.CENTER);
+       	 title.setFont(Font.font("Verdana",20));
+       	 title.setStyle("-fx-background-color: #00BFFF;");
+       	 return title;
+    }
+    
+    //Call homepage
+    private void loadHomepage() throws IOException{
+    	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+        Stage home_scene = (Stage) Anchor_Pane.getScene().getWindow();
+        home_scene.setScene(new Scene(home_page));
+        home_scene.setTitle("Homepage");
+        home_scene.show();
+    }
+   
     //Get the current time
     private String getCurrentDate() {
     	DateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd");

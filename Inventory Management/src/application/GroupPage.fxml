@@ -66,11 +66,6 @@
                 <URL value="@application.css" />
               </stylesheets>
             </MenuButton>
-            <Button fx:id="Edit" layoutX="1321.0" layoutY="750.0" mnemonicParsing="false" styleClass="Button" text="Edit">
-              <stylesheets>
-                <URL value="@application.css" />
-              </stylesheets>
-            </Button>
           </children>
         </AnchorPane>
       </content>

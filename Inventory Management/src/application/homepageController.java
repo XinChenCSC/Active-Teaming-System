@@ -35,6 +35,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
@@ -665,8 +666,11 @@ public class homepageController {
     	send.setText("Send");
    	 	//Send button event
     	send.setOnAction(e->{
-  				//Confirmation
-    		Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton", s);			
+  			//check whether object, subject, or content is empty.
+    		if(!((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).getText().isEmpty() &&
+    				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText().isEmpty() &&
+    				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).getText().isEmpty()) {
+    			Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton", s);			
 				if(alert.getResult() == ButtonType.OK) {
 					((Stage) scene.getScene().getWindow()).close(); 
 					 //Add new email to the email list
@@ -675,9 +679,14 @@ public class homepageController {
 		            //set email to the top
 		            emailMoveUp(gridPane);					
 				}
+    		}
+    		else {
+    			@SuppressWarnings("unused")
+				Alert alert = getAlert(AlertType.ERROR, "Content can't be empty!", ButtonType.OK, "Error", s);
+    		}
     	});
     	//Set new window
-    	Scene secondScene = new Scene(scene,w - w/4+10, h-70);
+    	Scene secondScene = new Scene(scene, w*0.74, h*0.85);
         // New window (Stage)
         Stage newWindow = new Stage();
         //Set newWindow
@@ -704,12 +713,11 @@ public class homepageController {
    
     //Email reply scene
     private void emailReply(double w, double h, Stage s) {
-    	Pane scene = new Pane();
+    	Pane pane = new Pane();
     	
     	//Object
     	Label object = new Label("To unknown");
     	getSetting(object, w*0.3, h*0.1,  w*0.1, 0);
-    	object.setPadding(new Insets(20,20,20,0));
     	
     	//Reply content
     	TextArea content = new TextArea();
@@ -720,25 +728,31 @@ public class homepageController {
     	getSetting(send, w*0.1, h*0.075, w*0.5-w*0.05, h*0.93);
 
     	//Set children
-    	scene.getChildren().addAll(object, content, send);
+    	pane.getChildren().addAll(object, content, send);
     	//Set new window
-    	Scene secondScene = new Scene(scene,w, h);
+    	Scene secondScene = new Scene(pane,w, h);
         // New window (Stage)
         Stage newWindow = new Stage();
         // set new window
         NewWindow(newWindow, secondScene, s, "Reply", screen.getWidth()/4, screen.getHeight()/4); 
         //Send event
-        emailSent(send, w, h, newWindow);
+        emailSent(pane, send, w, h, newWindow);
     }
     
     //Emial send event 
-    private void emailSent(Button b, double w, double h, Stage newWindow) {
+    private void emailSent(Pane pane, Button b, double w, double h, Stage newWindow) {
     	 //Send button event
     	b.setOnAction(e->{
-   			//Confirmation
-    		Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton", newWindow);			
-			if(alert.getResult() == ButtonType.OK)
-				newWindow.close();
+   			if(!((TextArea) pane.getChildren().get(1)).getText().isEmpty()) {
+   				//Confirmation
+   	    		Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton", newWindow);			
+   				if(alert.getResult() == ButtonType.OK)
+   					newWindow.close();
+   			}
+   			else {
+   				@SuppressWarnings("unused")
+				Alert alert = getAlert(AlertType.ERROR, "Content can't be empty!", ButtonType.OK, "Error", newWindow);	
+   			}
     	});
     }
     //**************************************************************************
@@ -800,7 +814,6 @@ public class homepageController {
     				gridPane.getChildren().removeAll(unread, content, time, pane);
     		});
     	}
-    	
     	((ScrollPane) NotificationPane.getChildren().get(1)).setContent(gridPane);
     }
     //**************************************************************************

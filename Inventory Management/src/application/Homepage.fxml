@@ -198,7 +198,7 @@
                     <Font size="18.0" />
                   </font>
                 </Label>
-                <ScrollPane content="$null" fitToHeight="false" fitToWidth="false" hbarPolicy="NEVER" layoutX="0.0" layoutY="50.0" prefHeight="400.0" prefWidth="300.0" vbarPolicy="NEVER" />
+                <ScrollPane content="$null" fitToHeight="false" fitToWidth="false" hbarPolicy="NEVER" layoutX="0.0" layoutY="50.0" prefHeight="370.0" prefWidth="300.0" vbarPolicy="NEVER" />
               </children>
             </Pane>
             <Button fx:id="Edit" layoutX="1038.0" layoutY="0.0" mnemonicParsing="false" onAction="#Edit_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Edit">

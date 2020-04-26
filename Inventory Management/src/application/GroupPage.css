@@ -24,3 +24,9 @@
   -fx-text-box-border: forestgreen;
   -fx-accent: #90EE90;
 }
+
+/*Remove the border color of scrollpane */
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}

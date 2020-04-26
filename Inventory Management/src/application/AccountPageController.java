@@ -107,8 +107,9 @@ public class AccountPageController {
     @FXML
     void initialize() {
     	//Resize the background image
-        Image_View.setLayoutX(screen.getWidth());
-        Image_View.setLayoutY(screen.getHeight()); 
+    	
+        Image_View.setLayoutX(screen.getMaxX());
+        Image_View.setLayoutY(screen.getMaxY()); 
         
         //Import css file
         Anchor_Pane_2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -211,7 +212,7 @@ public class AccountPageController {
     		
     		//separator
         	Separator appSeparator = new Separator();
-        	appSeparator.setMaxWidth(width/2);
+        	appSeparator.setMaxWidth(width*0.5);
         	GridPane.setValignment(appSeparator, VPos.BOTTOM);
         	GridPane.setHalignment(appSeparator, HPos.CENTER);
         	gridPane.add(appSeparator, 0, i);
