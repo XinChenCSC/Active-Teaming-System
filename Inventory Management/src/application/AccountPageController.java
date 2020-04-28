@@ -33,7 +33,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -103,6 +102,10 @@ public class AccountPageController {
     //Pane size
 	final double width = screen.getWidth()/2.5;
 	final double height = screen.getHeight()/1.5;
+	
+	//Blacklist size & whitebox size
+	int blackList = 5;
+	int whiteBox = 5;
 	
     @FXML
     void initialize() {
@@ -252,41 +255,6 @@ public class AccountPageController {
     	tag_2.setAlignment(Pos.CENTER);
     	getSetting(tag_2, width/2, 70, 0, 0);
     	
-    	
-    	//Friend list
-    	ScrollPane scrollPane = new ScrollPane();
-    	getSetting(scrollPane, width*0.5, height*0.8, 0, 75);
-    	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
-    	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
-    	//Grid pane for saving each friends
-    	GridPane gridPane = new GridPane();
-    	gridPane.setStyle("-fx-background-color: #f8f8ff;");
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
-    	for(int i = 0; i < 5; ++i) {
-    		//MenuButton for each friend
-    		Label friendName = new Label("Unknown" + i);
-    		friendName.setAlignment(Pos.CENTER);
-    		getSetting(friendName, width/2, 40, 0, 0);
-    		
-    		//Create context menu
-    		ContextMenu contentMenu = new ContextMenu();
-    		contentMenu.getItems().addAll(new MenuItem("Inspect"),
-    				new MenuItem("BlackList"),
-    				new MenuItem("Delete"));
-    		friendName.setContextMenu(contentMenu);
-    
-    		//Mouse enter and exit
-    		friendName.setOnMouseEntered(e->friendName.setStyle("-fx-background-color: #00bfff;"));	
-    		friendName.setOnMouseExited(e-> friendName.setStyle("-fx-background-color: #f8f8ff;"));
-    		
-    		//Set to each column
-    		GridPane.setHalignment(friendName, HPos.CENTER);
-    		gridPane.add(friendName, 0, i);
-    		
-    		//Delete event
-    		contentMenu.getItems().get(2).setOnAction(e-> gridPane.getChildren().remove(friendName));
-    	}
-    	
     	//Add button
     	Button add = new Button("Add");
     	getSetting(add, width*0.1, 30, 10, height-50);
@@ -294,37 +262,26 @@ public class AccountPageController {
     	//Add button event
     	add.setOnAction(e-> addFriend());
     	
+    	GridPane gridPane = new GridPane();	//Firend gridpane
+    	GridPane gridPane_2 = new GridPane(); //Blacklist gridpane
+    	
+    	//Friend list
+    	ScrollPane scrollPane = getScrollPane(gridPane, width, height);
     	//Blacklist
-    	ScrollPane scrollPane_2 = new ScrollPane();
-    	getSetting(scrollPane_2, width*0.5, height*0.8, 0, 75);
-    	scrollPane_2.setVbarPolicy(ScrollBarPolicy.NEVER);
-    	scrollPane_2.setHbarPolicy(ScrollBarPolicy.NEVER);
-    	//Grid pane for saving each friends
-    	GridPane gridPane_2 = new GridPane();
-    	gridPane_2.setStyle("-fx-background-color: #f8f8ff;");
-    	gridPane_2.getColumnConstraints().add(new ColumnConstraints(width*0.5));
-
-    	for(int j = 0; j < 5; ++j) {
-    		//MenuButton for each friend
-    		Label blacklister = new Label("Unknown");
-    		blacklister.setAlignment(Pos.CENTER);
-    		getSetting(blacklister, width*0.5, 40, 0, 0);
-    		
-    		//Create context menu
-    		ContextMenu contentMenu = new ContextMenu();
-    		contentMenu.getItems().addAll(new MenuItem("Remove"));
-    		blacklister.setContextMenu(contentMenu);
-    		
-    		//Mouse enter and exit
-    		blacklister.setOnMouseEntered(e-> blacklister.setStyle("-fx-background-color: #00bfff;"));	
-    		blacklister.setOnMouseExited(e-> blacklister.setStyle("-fx-background-color: #f8f8ff;"));
-    		
-    		//Set to each column
-    		GridPane.setHalignment(blacklister, HPos.CENTER);
-    		gridPane_2.add(blacklister, 0, j);
-    		
-    		//Remove event
-    		contentMenu.getItems().get(0).setOnAction(e-> gridPane_2.getChildren().remove(blacklister));
+    	ScrollPane scrollPane_2 = getScrollPane(gridPane_2, width, height);
+    	
+    	//Get whitebox 
+    	getWhiteBox(gridPane, 0);
+    	//Get blackList
+    	getBlackList(gridPane_2, 0);
+    	
+    	for(int i = 0; i < gridPane.getChildren().size(); ++i) {
+    		Label label= (Label) gridPane.getChildren().get(i);
+    			label.getContextMenu().getItems().get(1).setOnAction(e->{
+    				++blackList; --whiteBox;
+    				getBlackList(gridPane_2, gridPane_2.getChildren().size());
+    				gridPane.getChildren().remove(label);
+    		});
     	}
     	
     	scrollPane.setContent(gridPane);
@@ -468,7 +425,7 @@ public class AccountPageController {
     	}
     	
     	//Change password button event
-    	changePassword.setOnAction(e-> passwordChangeScene(width*0.4, height*0.5));
+    	changePassword.setOnAction(e-> passwordChangeScene(width*0.4, height*0.4));
     	
     	profile.setLeft(gridPane1);
     	profile.setCenter(gridPane2);
@@ -476,6 +433,7 @@ public class AccountPageController {
     }
     
     //New window for change password
+ 
     private void passwordChangeScene(double w, double h) {
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
@@ -488,15 +446,17 @@ public class AccountPageController {
     	gridpane.getColumnConstraints().add(new ColumnConstraints(w*0.8));
     	gridpane.setPadding(new Insets(10,w*0.1,10,w*0.1));
     	
-    	String[] tags = {"Old password", "New password", "Repeat password", "Confirm"};
-    	for(int i = 0; i < 7; ++i) {
+    	String[] tags = {"New password", "Repeat password", "Confirm"};
+    	for(int i = 0; i < 5; ++i) {
     		gridpane.getRowConstraints().add(new RowConstraints(h*0.12));
-    		if (i == 6) {
+    		if (i == 4) {
     			//create confirm button
     			Button confirm = new Button("Confirm");
     			getStyle(confirm,"-fx-border-color:#000000;");
+    			gridpane.getRowConstraints().get(4).setPrefHeight(h*0.3);
+    			GridPane.setValignment(confirm, VPos.CENTER);
     			GridPane.setHalignment(confirm, HPos.CENTER);
-    			gridpane.add(confirm, 0, i+3);
+    			gridpane.add(confirm, 0, i);
     		}
     		else if(i%2 == 0) {
     			//create tag
@@ -515,12 +475,25 @@ public class AccountPageController {
     			gridpane.add(field, 0, i);
     		}
     	}
-    	
+    	//Confirm event
+    	((Button) gridpane.getChildren().get(4)).setOnAction(e->{
+    		if(((PasswordField) gridpane.getChildren().get(1)).getText().isEmpty() || 
+    				((PasswordField) gridpane.getChildren().get(3)).getText().isEmpty() ||
+        			((PasswordField) gridpane.getChildren().get(1)).getText().compareTo(
+        					((PasswordField) gridpane.getChildren().get(3)).getText()) != 0) {
+        		getAlert(AlertType.ERROR, "Something wrong.", ButtonType.OK, "Error");
+        	}
+    		else {
+    			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
+    			newWindow.close();
+    		}
+    	});
     	//set children
     	pane.getChildren().add(gridpane);
     	//Call new window
-    	NewWindow(newWindow, secondScene, mainScene, "Password change", screen.getWidth()/2, screen.getHeight()/3);    	
+    	NewWindow(newWindow, secondScene, mainScene, "Password change");    	
     }
+    
     
 	//Edit protrait
     private void editProtrait(ImageView iv) throws IOException {
@@ -609,19 +582,118 @@ public class AccountPageController {
     		}
     	});
     	pane.getChildren().addAll(gridPane, invalidId);
-    	NewWindow(newWindow, scene, mainScene, "Search", width/2, height/3);
+    	NewWindow(newWindow, scene, mainScene, "Search");
     }
-        
+   
+    //Inspect content
+    private void inspectContent(double w, double h) {
+    	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
+    	Pane pane = new Pane();
+    	pane.setPrefSize(w, h);
+    	Scene secondScene = new Scene(pane, w, h);
+    	Stage newWindow = new Stage();
+    	
+   	 	//GridPane
+   	 	GridPane gridPane = new GridPane();
+   	 	gridPane.setPadding(new Insets(10,5,10,5));
+   	 	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.3));
+   	 	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.7));
+   	 	gridPane.setVgap(10);    	 
+   	 	String[] tags = {"Name:", "ID:", "Position:", "Email:"};
+   	 	//list member's informations
+   	 	for(int i = 0; i < tags.length; ++i) {
+   	 		Label tag = new Label(tags[i]);
+   	 		GridPane.setHalignment(tag, HPos.CENTER);
+   	 		gridPane.getRowConstraints().add(new RowConstraints(h*0.2));
+   	 		gridPane.add(tag, 0, i);
+   		 
+   	 		Label value = new Label("Unknown");
+    		value.setStyle("-fx-background-color: #00ffff;" 
+					+ "-fx-border-color: #00ffff;");
+   	 		GridPane.setHalignment(value, HPos.CENTER);
+   	 		gridPane.add(value, 1, i);
+   	 	}
+   	 	
+   	 	pane.getChildren().add(gridPane);
+   	 	//Call new window
+    	NewWindow(newWindow, secondScene, mainScene, "Information");  
+    }
+    
+    //Blacklist member
+//---------------------------------Friend Pane-----------------------------------------
+    private void getBlackList(GridPane gridPane, int start) {
+    	for(int j = start; j < blackList; ++j) {
+    		//MenuButton for each friend
+    		Label blacklister = new Label("Unknown");
+    		blacklister.setAlignment(Pos.CENTER);
+    		getSetting(blacklister, width*0.5, 40, 0, 0);
+    		
+    		//Create context menu
+    		ContextMenu contentMenu = new ContextMenu();
+    		contentMenu.getItems().addAll(new MenuItem("Remove"));
+    		blacklister.setContextMenu(contentMenu);
+    		
+    		//Mouse enter and exit
+    		blacklister.setOnMouseEntered(e-> blacklister.setStyle("-fx-background-color: #00bfff;"));	
+    		blacklister.setOnMouseExited(e-> blacklister.setStyle("-fx-background-color: #f8f8ff;"));
+    		
+    		//Set to each column
+    		GridPane.setHalignment(blacklister, HPos.CENTER);
+    		gridPane.add(blacklister, 0, j);
+    		
+    		//Remove event
+    		contentMenu.getItems().get(0).setOnAction(e-> gridPane.getChildren().remove(blacklister));
+    	}
+    }
+     
+    private void getWhiteBox(GridPane gridPane, int start) {
+    	for(int i = start; i < whiteBox; ++i) {
+    		//MenuButton for each friend
+    		Label friendName = new Label("Unknown" + i);
+    		friendName.setAlignment(Pos.CENTER);
+    		getSetting(friendName, width/2, 40, 0, 0);
+    		
+    		//Create context menu
+    		ContextMenu contentMenu = new ContextMenu();
+    		contentMenu.getItems().addAll(new MenuItem("Inspect"),
+    				new MenuItem("BlackList"),
+    				new MenuItem("Delete"));
+    		friendName.setContextMenu(contentMenu);
+    
+    		//Mouse enter and exit
+    		friendName.setOnMouseEntered(e->friendName.setStyle("-fx-background-color: #00bfff;"));	
+    		friendName.setOnMouseExited(e-> friendName.setStyle("-fx-background-color: #f8f8ff;"));
+    		
+    		//Set to each column
+    		GridPane.setHalignment(friendName, HPos.CENTER);
+    		gridPane.add(friendName, 0, i);
+    		
+    		//Delete event
+    		contentMenu.getItems().get(2).setOnAction(e-> gridPane.getChildren().remove(friendName));
+    		
+    		//Inspect event
+    		contentMenu.getItems().get(0).setOnAction(e->inspectContent(width*0.4, height*0.4));
+    	}
+    }
+    
+    private ScrollPane getScrollPane(GridPane gridPane, double w, double h) {
+    	ScrollPane scrollPane = new ScrollPane();
+    	getSetting(scrollPane, w*0.5, h*0.8, 0, 75);
+    	scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+    	scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+    	gridPane.setStyle("-fx-background-color: #f8f8ff;");
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
+    	return scrollPane;
+    }
+//************************************************************************************* 
+ 
     //Create alert
-   /* private void getAlert(Stage stage) {
-    	Alert alert = new Alert(AlertType.CONFIRMATION, "New password created.", ButtonType.OK);
-    	alert.setTitle("Confirmation");
+    private void getAlert(AlertType at, String content, ButtonType bt, String title) {
+    	Alert alert = new Alert(at, content, bt);
+    	alert.setTitle(title);
     	alert.setHeaderText(null);
     	alert.showAndWait();
-    	alert.setX(screen.getWidth()/2);
-    	alert.setY(screen.getHeight()/3);
-    	stage.close();
-    }*/
+    }
     
     
     //Create new window
@@ -630,7 +702,8 @@ public class AccountPageController {
     //			  mainStage: the parent window of newWindow
     //			  title: the name of newWindow
     //			  x : x-axis, y : y-axis
-    private void NewWindow(Stage newWindow, Scene scene, Stage mainStage, String title, double x, double y) {
+
+    private void NewWindow(Stage newWindow, Scene scene, Stage mainStage, String title) {
         newWindow.setTitle(title);
         newWindow.setScene(scene);
         newWindow.setResizable(false);
@@ -641,9 +714,6 @@ public class AccountPageController {
         // Specifies the owner Window (parent) for new window
         newWindow.initOwner(mainStage);
         
-        //Set the window default position
-        newWindow.setX(x);
-        newWindow.setY(y);
         newWindow.show();
     }
     
@@ -670,6 +740,7 @@ public class AccountPageController {
     }*/
   
     //Set up general setting of component
+    
     private void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);

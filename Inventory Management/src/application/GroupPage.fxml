@@ -20,7 +20,7 @@
                 <Image url="@../../Images/GroupPageImage.jpg" />
               </image>
             </ImageView>
-            <Label layoutX="101.0" layoutY="49.0" prefHeight="150.0" prefWidth="1000.0" text="Welcome">
+            <Label ellipsisString="..." layoutX="101.0" layoutY="49.0" prefHeight="150.0" prefWidth="1000.0" text="Welcome">
               <font>
                 <Font name="Algerian" size="90.0" />
               </font>

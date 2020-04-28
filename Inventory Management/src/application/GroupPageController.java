@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
@@ -32,7 +31,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
@@ -48,7 +46,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
 public class GroupPageController {
@@ -517,16 +514,16 @@ public class GroupPageController {
     	Pane pane = new Pane();
     	//Set up components
     	final String str = "Once you close the current window, the group will no longer exist and you will be " +
-    			"transferred to the homepage.(The bottom is optional)";
+    			"transferred to the homepage.(Default value of evaluation is 0, and only can be submitted once.))";
     	//Instruction label
     	Label instruction = new Label(str);
-    	getSetting(instruction, width, height*0.2, 0, 0);
+    	getSetting(instruction, width, height*0.25, 0, 0);
     	instruction.setPadding(new Insets(10,10,10,10));
     	instruction.setWrapText(true);
      	instruction.setStyle("-fx-background-color:#DAA520;");
      	//Add to blacklist or to whitebox
      	GridPane gridPane = new GridPane();
-     	getSetting(gridPane, width, height*0.7, 0, height*0.2);
+     	getSetting(gridPane, width, height*0.7, 0, height*0.25);
      	gridPane.setPadding(new Insets(10,0,0,0));
      	gridPane.getColumnConstraints().add(new ColumnConstraints(width));
      	//ComboBox for members
@@ -541,7 +538,7 @@ public class GroupPageController {
      	//ComboBox for blacklist or whitebox
      	ComboBox<String> field = new ComboBox<>();
      	field.setPromptText("W/B");
-     	field.getItems().addAll("White box", "Blacklist");
+     	field.getItems().addAll("Whitebox", "Blacklist");
      	gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
      	GridPane.setHalignment(field, HPos.CENTER);
      	gridPane.add(field, 0, 1);
@@ -549,19 +546,39 @@ public class GroupPageController {
      	TextArea reason = new TextArea();
      	reason.setPromptText("Reason");
      	reason.setMaxSize(width*0.7, height*0.25);
-     	gridPane.getRowConstraints().add(new RowConstraints(height*0.3));
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.2));
      	GridPane.setValignment(reason, VPos.BOTTOM);
      	GridPane.setHalignment(reason, HPos.CENTER);
      	gridPane.add(reason, 0, 2);
+     	//Group evaluation
+     	ComboBox<Integer> evaluation = new ComboBox<>();
+     	evaluation.setPromptText("Evaluation");
+     	evaluation.setPrefWidth(width*0.4);
+     	evaluation.getItems().addAll(1,2,3,4,5);
+     	gridPane.getRowConstraints().add(new RowConstraints(height*0.1));
+     	GridPane.setValignment(evaluation, VPos.BOTTOM);
+     	GridPane.setHalignment(evaluation, HPos.CENTER);
+     	gridPane.add(evaluation, 0, 3);
      	//Submit button
      	Button sumbit = new Button("Submit");
      	gridPane.getRowConstraints().add(new RowConstraints(height*0.15));
      	GridPane.setHalignment(sumbit, HPos.CENTER);
-     	gridPane.add(sumbit, 0, 3);
+     	gridPane.add(sumbit, 0, 4);
      	
      	//Submit event
      	sumbit.setOnAction(e->{
-     		getAlert(AlertType.CONFIRMATION, "Submission completed", ButtonType.OK, "Result");
+     		if((!members.getSelectionModel().isEmpty() &&
+     				!field.getSelectionModel().isEmpty() &&
+     				!reason.getText().isEmpty())) {
+     			getAlert(AlertType.CONFIRMATION, "Submission completed", ButtonType.OK, "Result");     			
+     		}
+     		else if(!evaluation.isDisable()) {
+     			getAlert(AlertType.CONFIRMATION, "Submission completed", ButtonType.OK, "Result");  
+     			evaluation.setDisable(true); //Evaluation can only be sumbitted once.
+     		}
+     		else {
+     			getAlert(AlertType.ERROR, "Don't submit with nothing. Click FINISH if you are done.", ButtonType.OK, "Error");
+     		}
      	});
      	
      	pane.getChildren().addAll(instruction, gridPane); // set children
@@ -569,7 +586,7 @@ public class GroupPageController {
     	Dialog<ButtonType> dialog = new Dialog<>(); //Create new dialog
     	dialog.initOwner(stage);	//Set poll status dialog as owner
     	Optional<ButtonType> result = getDialog(dialog, pane, "Ending window", "", finish);
-    	
+
     	//Close button event
     	if(result.get() == finish) {
     		//close poll status dialog
