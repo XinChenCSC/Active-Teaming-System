@@ -10,12 +10,16 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -24,6 +28,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LoginController {
 
@@ -62,15 +67,19 @@ public class LoginController {
     
     
     //List of each information
-    private List<Personal_Information> lst = new ArrayList<>();
+    //private List<Personal_Information> lst = new ArrayList<>();
     
     //Username for checkbox
     private String CB_username;
 
-    @FXML
+    //Resize the background image
+    private Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+    //The width and height of mini-window
+    //private double width = screen.getWidth()*0.3;
+    //private double height = screen.getHeight()*0.3;
+    
+    @FXML  
     void initialize() throws IOException {
-    	//Resize the background image
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
         Background.setFitWidth(screen.getWidth());
         Background.setFitHeight(screen.getHeight()*1.5);
         //////////////////////////////////////////////////////////
@@ -98,7 +107,7 @@ public class LoginController {
     	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
         Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
         home_scene.setScene(new Scene(homepage));
-        home_scene.setTitle("Searching area");
+        home_scene.setTitle("Home page");
         home_scene.show();
         
     	/*for (int i = 1; i <= lst.size(); ++i) {
@@ -134,8 +143,9 @@ public class LoginController {
     	}
     	br.close();
     }
-
+    
     @FXML
+   
     void Signup_Click(ActionEvent event) throws IOException {
     	//Switch to the signup scene..
     	Parent signup_page = FXMLLoader.load(getClass().getResource("SignUpPage.fxml"));
@@ -146,14 +156,55 @@ public class LoginController {
         signup_scene.show();
     }
 
-    
     @FXML
     private void Guest_Mode(ActionEvent event) throws IOException {
     	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-        Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage home_scene = (Stage) parentPane.getScene().getWindow();
         home_scene.setScene(new Scene(homepage));
         home_scene.setTitle("Searching area");
         home_scene.show();
     }
 
+    //If your registration passed, a popup alert will notice you.
+	private void SuccessedSignupAlert() throws IOException {
+    	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
+    	ButtonType login = new ButtonType("Login", ButtonData.OK_DONE);
+    	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: Unknown\nTemporary password: Unknown", login, later);
+    	alert.setTitle("Confirmation");
+    	alert.setHeaderText("Congratulation! Your account has been acitviated. You can login by click Login button!");
+    	//check click button types
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if(result.get() == login) {
+    		Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+            Stage home_scene = (Stage) parentPane.getScene().getWindow();
+            home_scene.setScene(new Scene(homepage));
+            home_scene.setTitle("Home page");
+            home_scene.show();
+    	}
+    }
+	//Fail for registration, an additional resumbit with a proper reason is required.
+	private void FailedSignupAlert() throws IOException {
+    	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
+    	ButtonType submit = new ButtonType("Submit", ButtonData.OK_DONE);
+    	Alert alert = new Alert(AlertType.ERROR,
+    			"Your registration has been denied, but you can submit again by click the submit button. "
+    			+ "You will lose your only chance to submit if your click the later button"
+    			, submit, later);
+    	alert.setTitle("Confirmation");
+    	alert.setHeaderText(null);
+    	//check click button types
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if(result.get() == submit) {
+    		Alert confirmAlert = new Alert(AlertType.CONFIRMATION, "Submission completed.", ButtonType.OK);
+    		confirmAlert.setTitle("Confirmation");
+        	confirmAlert.setHeaderText(null);
+        	confirmAlert.showAndWait();
+    	}
+	}
+
+	void signupAlert() throws IOException{
+		// TODO Auto-generated method stub
+		//SuccessedSignupAlert();
+		FailedSignupAlert();
+	}
 }

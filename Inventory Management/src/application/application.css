@@ -125,7 +125,7 @@
 	-fx-border-color: #00FA9A;
 }
 
-#edit:hover, #evaluation:hover {
+#edit:hover, #evaluation:hover, #claim:hover {
 	-fx-border-color: #00FA9A;
 }
 

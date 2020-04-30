@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -36,7 +37,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
@@ -139,6 +139,9 @@ public class homepageController {
     private Button Edit;
     
     @FXML
+    private Button Claim;
+    
+    @FXML
     private Button Evaluation;
     
     @FXML
@@ -157,14 +160,13 @@ public class homepageController {
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
+        scrollPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         //--------------------------------------------
         //Adjust layout positions
         Profile.setLayoutX(anchorPane_child.getPrefWidth()-120);
-        Profile.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         Profile.setId("profile");
         //Notificatino button
         Notification.setLayoutX(anchorPane_child.getPrefWidth()-240);
-        Notification.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         Notification.setId("notification");
         //Notification pane
     	NotificationPane.setLayoutX(Notification.getLayoutX()-150);
@@ -173,12 +175,14 @@ public class homepageController {
     					"-fx-border-radius: 20;");
     	//Edit button
         Edit.setLayoutX(anchorPane_child.getPrefWidth()-360);
-        Edit.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         Edit.setId("edit");
         
+        //Claim button
+        Claim.setLayoutX(anchorPane_child.getPrefWidth()-360);
+        Claim.setId("claim");
+        
         //Evaluation button
-        Evaluation.setLayoutX(anchorPane_child.getPrefWidth()-390);
-        Evaluation.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        Evaluation.setLayoutX(anchorPane_child.getPrefWidth()-510);
         Evaluation.setId("evaluation");
         //Image animation
         Images_Animation();
@@ -198,107 +202,76 @@ public class homepageController {
     	});
     }
 
-    @FXML
+    @SuppressWarnings("unused")
+	@FXML
     void Group_Click(ActionEvent event) {
-    	//Group main scene--------------------------------------------------------
-    	boolean group_status = false;
+    	//--------------------------Main Scene-----------------------
     	//Get the screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
         //Get the main scene size
         Stage mainScene = (Stage) Profile.getScene().getWindow();
-        //Create new stage
-        StackPane subScene = new StackPane();
-        subScene.setPadding(new Insets(10,10,10,10));
-        double subScene_height = screen.getHeight()/3;
-        double subScene_width = screen.getWidth()/5;
-        //Create label
-        Button lb = new Button();
-        // Display group status
-        if(!group_status) {
-            lb.setFocusTraversable(false);
-            lb.setDisable(true);
-            lb.setOpacity(1);
-            lb.setText("Currently no group avaliable!"); 
-            lb.setStyle("-fx-background-color: #F0F8FF;"
-            		+ "-fx-border-color: #F0F8FF;");
-        }
-        else {
-        	lb.setText("Move to group page.");
-        	lb.setFocusTraversable(false);
-        }
+        double height = screen.getHeight()/3;
+        double width = screen.getWidth()/5;
+        StackPane scene = groupMainScene(width, height);
         
-        //Create a button
-        Button createButton = new Button();
-        createButton.setText("Create");
-        createButton.setFocusTraversable(false);
-        getStyle(createButton);
-        
-        //set the position
-        StackPane.setAlignment(createButton, Pos.BOTTOM_RIGHT);
-        StackPane.setAlignment(lb, Pos.CENTER);
-        subScene.getChildren().addAll(createButton, lb);
-
-        
-        Scene secondScene = new Scene(subScene, subScene_width, subScene_height);
+        Scene secondScene = new Scene(scene, width, height);
         // New window (Stage)
         Stage newWindow = new Stage();
         // set new window
-        NewWindow(newWindow, secondScene, mainScene, "Group"); 
+        NewWindow(newWindow, secondScene, mainScene, "Group");    
+        
+        //Move to group
+        ((Button)((HBox)scene.getChildren().get(1)).getChildren().get(1)).setOnAction(group->{
+        	//Search group
+        	if(((TextField)((HBox)scene.getChildren().get(1)).getChildren().get(2)).getText().isEmpty()) {
+        		FXMLLoader loader = new FXMLLoader(getClass().getResource("GroupPage.fxml"));
+        		Parent group_page;
+        		try {
+        			newWindow.close();
+        			group_page = loader.load();
+        			//AccountPageController account = loader.getController();
+        			Stage account_scene = (Stage) Profile.getScene().getWindow();
+        			account_scene.setScene(new Scene(group_page));
+        			account_scene.setTitle("Group page");
+        			account_scene.show();
+        		} catch (IOException e1) {
+        			// TODO Auto-generated catch block
+        			e1.printStackTrace();
+        		}
+        	}
+        	else {
+        		Alert alert = getAlert(AlertType.ERROR, "Wrong group ID.", ButtonType.OK, "Error");
+        	}
+        });
+        //----------------------Get appeal scene--------------------------
+        ((Button) scene.getChildren().get(2)).setOnAction(e->{
+        	StackPane AppealScene = new StackPane();
+        	groupAppealScene(AppealScene, width, height);
+        	Scene appealScene = new Scene(AppealScene, width*0.7, height); //New scene
+        	Stage newWindow_3 = new Stage();	// new stage
+        	NewWindow(newWindow_3, appealScene, newWindow, "Appeal");  //Call new window
+        	//If text area is empty, submission fail. 
+        	((Button)AppealScene.getChildren().get(2)).setOnAction(h->{
+        		if(((TextArea)AppealScene.getChildren().get(1)).getText().isEmpty()) {
+        			Alert alert = getAlert(AlertType.ERROR, "Can't be Empty.", ButtonType.OK, "Error");
+        		}
+        		else {
+        			//Submission completed, appeal button sets to invisible
+        			Alert alert = getAlert(AlertType.CONFIRMATION, "Submission completed.", ButtonType.OK, "Confirmation");
+        			if(alert.getResult() == ButtonType.OK) {
+        				newWindow_3.close();
+        				((Button)scene.getChildren().get(2)).setVisible(false);
+        			}
+        		}
+        	});
+        });
         
         //------------------------------------------------------------------
         //Group information-------------------------------------------------
-        createButton.setOnAction(e->{
-        	Pane pane = new Pane();
-        	//Group title
-        	TextField group_title =  new TextField();
-        	getSetting(group_title, 300, 0, 30, 30);
-        	group_title.setPadding(new Insets(10,10,10,10));
-        	group_title.setPromptText("Group name");
-        	group_title.setStyle("-fx-border-color:#DEB887;"
-        						+ "-fx-border-width: 5;");
-        	//Group description
-        	TextField group_description =  new TextField();
-        	getSetting(group_description, 300, 0, 30, 100);
-        	group_description.setPadding(new Insets(10,10,300,10));
-        	group_description.setPromptText("Group Description");
-        	group_description.setStyle("-fx-border-color:#DEB887;"      						
-        							+ "-fx-border-width: 5;");
-        	//Friends List
-        	ScrollPane friend_list = new ScrollPane();
-        	getSetting(friend_list, 350, 500, 350, 30);
-        	friend_list.setHbarPolicy(ScrollBarPolicy.NEVER);
-        	friend_list.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-        	friend_list.setStyle("-fx-border-color:#DEB887;"
-        						+ "-fx-border-width: 5;");
-        	//Grid Pane
-        	GridPane friend_grid = new GridPane();
-        	friend_grid.setVgap(10);
-        	friend_grid.setHgap(120);
-        	friend_grid.setPadding(new Insets(20,20,10,0));
-        	ColumnConstraints column1 = new ColumnConstraints(100);
-        	ColumnConstraints column2 = new ColumnConstraints(70);
-        	friend_grid.getColumnConstraints().addAll(column1, column2);
-        	//Show all avaliable friends
-        	for(int i = 0; i < 30; ++i) {
-            	//Label names
-            	Label l1 = new Label("Unknown");
-            	l1.setFont(new Font(16));
-        		GridPane.setHalignment(l1, HPos.RIGHT);
-            	friend_grid.add(l1, 0, i);
-            	//set up invite button
-            	Button b1 = new Button("Invite");
-            	b1.setFocusTraversable(false);
-            	getStyle(b1);
-            	GridPane.setHalignment(b1, HPos.LEFT);
-            	friend_grid.add(b1, 1, i);
-        	}
-        	//Confirmed button
-        	Button confirm_button = new Button("Confirm");
-        	getSetting(confirm_button, 100, 30, 300, 550);
-        	getStyle(confirm_button);
-        	friend_list.setContent(friend_grid);
-        	pane.getChildren().addAll(group_title, group_description, friend_list, confirm_button);
-        	
+        ((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setOnAction(e->{
+        	//Create scene
+        	Pane pane = groupCreateScene(width, height);
+        	//Scene	
         	Scene thirdScene = new Scene(pane, 700, 600);
             // New window (Stage)
             Stage newWindow_2 = new Stage();
@@ -306,9 +279,8 @@ public class homepageController {
             NewWindow(newWindow_2, thirdScene, newWindow, "Informations"); 
             
             //Confirmed button click event
-            confirm_button.setOnAction(c->{
-            	if(group_title.getText().isEmpty() || group_description.getText().isEmpty()) {
-            		@SuppressWarnings("unused")
+            ((Button)pane.getChildren().get(3)).setOnAction(c->{
+            	if(((TextField)pane.getChildren().get(0)).getText().isEmpty() || ((TextField)pane.getChildren().get(1)).getText().isEmpty()) {
 					Alert warning = getAlert(AlertType.WARNING, "Wrong inputs existed.", ButtonType.OK, "Caution!");
             	}
             	else {
@@ -411,9 +383,10 @@ public class homepageController {
          tab3.setClosable(false);
      	 //Import css file
      	 tabPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+     	 //-----------------------------------------------General-----------------------------------------------
      	 //Tab content methods
      	 generalTabContent(tab1, w, h);
-     	 //***************************Group Tab*******************************
+     	 //---------------------------------------------------Group----------------------------------------------------------
          groupTabContent(tab2, w, h);
          GridPane gridPane = (GridPane) ((BorderPane) tab2.getContent()).getCenter();
          //hide all nodes
@@ -470,11 +443,36 @@ public class homepageController {
         		 }
         	 }
          });
+         //------------------------------------------Blacklist-------------------------------------------------------
          blacklistTabContent(tab3, w, h);
          Scene scene = new Scene(tabPane, w, h);
          NewWindow(newWindow, scene, mainStage, "Edit");
     }
  
+    @SuppressWarnings({ "unused", "unchecked" })
+	@FXML
+    void Claim_Click(ActionEvent event) {
+    	double width = screen.getWidth()*0.2;
+    	double height = screen.getHeight()*0.5;
+    	Stage mainStage = (Stage) scrollPane.getScene().getWindow();
+    	GridPane pane = ClaimMainScene(width, height);
+    	Scene mainScene = new Scene(pane, width, height);
+    	Stage newWindow = new Stage();
+    	NewWindow(newWindow, mainScene, mainStage, "Claim");
+    	
+    	((Button)pane.getChildren().get(4)).setOnAction(e->{
+    		if(((ComboBox<String>)pane.getChildren().get(1)).getSelectionModel().isEmpty() ||
+    				((TextField)pane.getChildren().get(2)).getText().isEmpty() ||
+    				((TextArea)pane.getChildren().get(3)).getText().isEmpty()) {
+    			Alert alert = getAlert(AlertType.ERROR, "Can't be empty.", ButtonType.OK, "Error");
+    		}
+    		else {
+    			Alert alert = getAlert(AlertType.CONFIRMATION, "Claim submitted.", ButtonType.OK, "Confirmation");
+    			newWindow.close();
+    		}
+    	});
+    }
+    
     @FXML
     void Evaluation_Click(ActionEvent event) {
     	double w = screen.getWidth()*0.5;
@@ -491,6 +489,166 @@ public class homepageController {
     	EvaluationTabContent(tab, w, h, newWindow);
         Scene scene = new Scene(tabPane, w, h);
         NewWindow(newWindow, scene, mainStage, "Evaluation");
+    }
+    
+    //----------------------------Claim main scene------------------------------
+    private GridPane ClaimMainScene(double w, double h) {
+    	GridPane pane = new GridPane();
+    	pane.setVgap(h*0.05);
+    	pane.setPadding(new Insets(w*0.05,h*0.05,w*0.05,h*0.05));
+    	pane.getColumnConstraints().add(new ColumnConstraints(w*0.9));
+    	//Title
+    	Label title = new Label("Fill up your claim");
+    	title.setPrefSize(w*0.9, h*0.1);
+    	title.setAlignment(Pos.CENTER);
+    	title.setStyle("-fx-background-color: #FFA07A;");
+    	pane.getRowConstraints().add(new RowConstraints(h*0.1));
+    	pane.add(title, 0, 0);
+    	//Claim types
+    	ComboBox<String> claimType = new ComboBox<>();
+    	claimType.getItems().addAll("Complaint", "Compliment");
+    	claimType.setPromptText("Claim types");
+    	claimType.setPrefWidth(w*0.5);
+    	GridPane.setHalignment(claimType, HPos.CENTER);
+    	pane.add(claimType, 0, 1);
+    	//Target
+    	TextField target = new TextField();
+    	target.setFocusTraversable(false);
+    	target.setPromptText("Member ID");
+    	GridPane.setHalignment(target, HPos.CENTER);
+    	pane.add(target, 0, 2);
+    	//Reason 
+    	TextArea reason = new TextArea();
+    	reason.setPromptText("Reason");
+    	reason.setFocusTraversable(false);
+    	pane.add(reason, 0, 3);
+    	//Button
+    	Button submit = new Button("Submit");
+    	GridPane.setHalignment(submit, HPos.CENTER);
+    	pane.add(submit, 0, 4);
+    	
+    	return pane;
+    }
+    //**************************************************************************
+    
+    //----------------------------Group main scene------------------------------
+    private StackPane groupMainScene(double w, double h) {
+    	boolean group_status = false;
+        StackPane subScene = new StackPane();
+        subScene.setPadding(new Insets(h*0.1,w*0.05,h*0.05,w*0.05));
+        //Create label
+        Button lb = new Button();
+        // Display group status
+        if(!group_status) {
+            lb.setFocusTraversable(false);
+            lb.setDisable(true);
+            lb.setOpacity(1);
+            lb.setText("You don't have a group."); 
+            lb.setStyle("-fx-background-color: #F0F8FF;"
+            		+ "-fx-border-color: #F0F8FF;");
+        }
+        else {
+        	lb.setText("Move to group page.");
+        	lb.setFocusTraversable(false);
+        }
+        HBox hbox = new HBox();
+        hbox.setPrefSize(w, h*0.4);
+        //Move to target group button
+        Button go = new Button("Go");
+        getSetting(go, w*0.2, h*0.08, 0, 0);
+        //Serach for group id
+        TextField groupId = new TextField();
+        groupId.setPromptText("Group ID");
+        getSetting(groupId, w*0.4, h*0.08, 0, 0);
+        //Create a button
+        Button createButton = new Button();
+        createButton.setText("Create");
+        createButton.setFocusTraversable(false);
+        
+        hbox.setAlignment(Pos.TOP_CENTER);
+        hbox.getChildren().addAll(createButton, go,groupId);
+        
+        //Appeal button
+        Button appeal = new Button("Appeal");
+        appeal.setFocusTraversable(false);
+        
+        //set the position
+        StackPane.setAlignment(appeal, Pos.BOTTOM_LEFT);
+        StackPane.setAlignment(hbox, Pos.TOP_CENTER);
+        subScene.getChildren().addAll(lb, hbox, appeal);
+        return subScene;
+    }
+    
+    //Appeal scene
+    private void groupAppealScene(StackPane pane, double w, double h) {
+    	pane.setPadding(new Insets(h*0.05, w*0.1, h*0.05, w*0.1));
+    	//Title
+    	Label reason = new Label("Give a reason");
+    	//TextField
+    	TextArea reasonArea = new TextArea();
+    	reasonArea.setMaxSize(w*0.8, h*0.7);
+    	reasonArea.setFocusTraversable(false);
+    	//Submit button
+    	Button submit = new Button("Submit");
+    	
+    	StackPane.setAlignment(submit, Pos.BOTTOM_CENTER);
+    	StackPane.setAlignment(reason, Pos.TOP_CENTER);
+    	StackPane.setAlignment(reasonArea, Pos.CENTER);
+    	pane.getChildren().addAll(reason, reasonArea, submit);
+    }
+    
+    private Pane groupCreateScene(double w, double h) {
+    	Pane pane = new Pane();
+    	//Group title
+    	TextField group_title =  new TextField();
+    	getSetting(group_title, 300, 0, 30, 30);
+    	group_title.setPadding(new Insets(10,10,10,10));
+    	group_title.setPromptText("Group name");
+    	group_title.setStyle("-fx-border-color:#DEB887;"
+    						+ "-fx-border-width: 5;");
+    	//Group description
+    	TextField group_description =  new TextField();
+    	getSetting(group_description, 300, 0, 30, 100);
+    	group_description.setPadding(new Insets(10,10,300,10));
+    	group_description.setPromptText("Group Description");
+    	group_description.setStyle("-fx-border-color:#DEB887;"      						
+    							+ "-fx-border-width: 5;");
+    	//Friends List
+    	ScrollPane friend_list = new ScrollPane();
+    	getSetting(friend_list, 350, 500, 350, 30);
+    	friend_list.setHbarPolicy(ScrollBarPolicy.NEVER);
+    	friend_list.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+    	friend_list.setStyle("-fx-border-color:#DEB887;"
+    						+ "-fx-border-width: 5;");
+    	//Grid Pane
+    	GridPane friend_grid = new GridPane();
+    	friend_grid.setVgap(10);
+    	friend_grid.setHgap(120);
+    	friend_grid.setPadding(new Insets(20,20,10,0));
+    	ColumnConstraints column1 = new ColumnConstraints(100);
+    	ColumnConstraints column2 = new ColumnConstraints(70);
+    	friend_grid.getColumnConstraints().addAll(column1, column2);
+    	//Show all avaliable friends
+    	for(int i = 0; i < 30; ++i) {
+        	//Label names
+        	Label l1 = new Label("Unknown");
+        	l1.setFont(new Font(16));
+    		GridPane.setHalignment(l1, HPos.RIGHT);
+        	friend_grid.add(l1, 0, i);
+        	//set up invite button
+        	Button b1 = new Button("Invite");
+        	b1.setFocusTraversable(false);
+        	getStyle(b1);
+        	GridPane.setHalignment(b1, HPos.LEFT);
+        	friend_grid.add(b1, 1, i);
+    	}
+    	//Confirmed button
+    	Button confirm_button = new Button("Confirm");
+    	getSetting(confirm_button, 100, 30, 300, 550);
+    	getStyle(confirm_button);
+    	friend_list.setContent(friend_grid);
+    	pane.getChildren().addAll(group_title, group_description, friend_list, confirm_button);
+    	return pane;
     }
     //----------------------------Evaluation Tab Pane---------------------------
     //Set up evaluation tab content
@@ -727,7 +885,124 @@ public class homepageController {
     
     //Set up general editing compoents
     private void generalTabContent(Tab tab, double w, double h) {
+    	BorderPane pane = new BorderPane();
+    	pane.setPadding(new Insets(h*0.05, w*0.05, h*0.15, w*0.05));
+    	//*******************Top**********************
+    	//Create hbox
+    	HBox hbox = new HBox();
+    	//Search Button
+    	Button Search = new Button("Search");
+    	getSetting(Search, w*0.15, h*0.05, 0, 0);
+    	//Search Field
+    	TextField searchField = new TextField();
+    	searchField.setPromptText("Enter member ID");
+    	getSetting(searchField, w*0.3, h*0.05, 0, 0);
+    	//Get member information board
+    	memberBoard(pane, w, h);
+    	//Get member management board
+    	memberManage(pane, w, h);
+    	//Get new member registration board
+    	newMemberBoard(pane, w, h);
+    	//Set chidlren
+    	hbox.setAlignment(Pos.TOP_CENTER);
+    	hbox.getChildren().addAll(Search, searchField);
+    	pane.setTop(hbox);
+    	tab.setContent(pane);
+    	//All event
+    	generalTabEvent(pane);
+    }
+    
+    private void generalTabEvent(BorderPane pane) {
+    	//Create random id and temporary password.
+    	((Button)((HBox)pane.getBottom()).getChildren().get(0)).setOnAction(e->{
+    		Random rand = new Random();
+    		String id = "";
+    		String password = "";
+    		//Seven digits password
+    		for(int i = 0; i < 7; ++i) {
+    			int digit = rand.nextInt(10);
+    			int character = rand.nextInt(94)+33;
+    			id += Integer.toString(digit);
+    			password += (char)character;
+    		}
+    	});
+    }
+    
+    private void newMemberBoard(BorderPane pane, double w, double h) {
+    	//HBox
+    	HBox hbox = new HBox();
+    	//Gather random password and random ID;
+    	Button registration = new Button("Randomize");
+    	//Email adress
+    	TextField address = new TextField();
+    	address.setPromptText("Email address");
     	
+    	hbox.setAlignment(Pos.CENTER);
+    	hbox.getChildren().addAll(registration, address);
+    	pane.setBottom(hbox);
+    }
+    
+    private void memberManage(BorderPane pane, double w, double h) {
+    	//Frame
+    	GridPane gridPane = new GridPane();
+    	gridPane.setStyle("-fx-background-color: #F5F5DC;");
+    	gridPane.setPadding(new Insets(h*0.1, 0, 0, 0));
+    	gridPane.setVgap(h*0.05);
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+    	final String[] tags = {"+ Score", "- Score", "System kick", "Member revise"};
+    	for(int i = 0; i < tags.length; ++i) {
+    		//Tag
+    		Label tag = new Label(tags[i]);
+    		GridPane.setHalignment(tag, HPos.CENTER);
+    		gridPane.add(tag, 0, i);
+    		if(i < 2) {
+    			//score combobox
+    			ComboBox<Integer> scores = new ComboBox<>();
+    			scores.getItems().addAll(1,2,3,4,5,6,7,8,10);
+    			GridPane.setHalignment(scores, HPos.CENTER);
+    			gridPane.add(scores, 1, i);
+    		}
+    		else if(i < 3) {
+    			//Check box
+    			CheckBox checkBox = new CheckBox();
+    			GridPane.setHalignment(checkBox, HPos.CENTER);
+    			gridPane.add(checkBox, 1, i);
+    		}
+    		else{
+    			//Textfield
+    			Button memberName = new Button("Confirm");
+    			GridPane.setHalignment(memberName, HPos.CENTER);
+    			gridPane.add(memberName, 1, i);
+    		}
+    	}
+    	pane.setCenter(gridPane);
+    	BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
+    }
+    
+    //Member information board
+    private void memberBoard(BorderPane pane, double w, double h) {
+    	//Frame
+    	GridPane gridPane = new GridPane();
+    	gridPane.setStyle("-fx-background-color: #F5F5DC;");
+    	gridPane.setPadding(new Insets(h*0.1, 0, 0, 0));
+    	gridPane.setVgap(h*0.05);
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+    	final String[] tags = {"Name:", "ID:", "Position:", "Email:", "Password:"};
+    	for(int i = 0; i < tags.length; ++i) {
+    		//Tag
+    		Label tag = new Label(tags[i]);
+    		GridPane.setHalignment(tag, HPos.CENTER);
+    		gridPane.add(tag, 0, i);
+    		//Value
+    		Label value = new Label("Unknown"+i);
+    		value.setStyle("-fx-background-color: #00FFFF;");
+    		GridPane.setHalignment(value, HPos.CENTER);
+    		gridPane.add(value, 1, i);
+    	}
+    	pane.setLeft(gridPane);
+    	BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
     }
     //**************************************************************************
     

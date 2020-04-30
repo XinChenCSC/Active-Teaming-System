@@ -95,22 +95,23 @@ public class AccountPageController {
     @FXML
     private AnchorPane Anchor_Pane_2;
         
+    private String str = "s";
     
     //Get the size of the current window
     Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 
     //Pane size
-	final double width = screen.getWidth()/2.5;
-	final double height = screen.getHeight()/1.5;
+	private final double width = screen.getWidth()/2.5;
+	private final double height = screen.getHeight()/1.5;
 	
 	//Blacklist size & whitebox size
-	int blackList = 5;
-	int whiteBox = 5;
+	private int blackList = 5;
+	private int whiteBox = 5;
 	
     @FXML
     void initialize() {
+    	System.out.println(str);
     	//Resize the background image
-    	
         Image_View.setLayoutX(screen.getMaxX());
         Image_View.setLayoutY(screen.getMaxY()); 
         
@@ -746,5 +747,5 @@ public class AccountPageController {
     	n.setLayoutX(x);
     	n.setLayoutY(y);
     	n.setFocusTraversable(false);
-    }    
+    }   
 }

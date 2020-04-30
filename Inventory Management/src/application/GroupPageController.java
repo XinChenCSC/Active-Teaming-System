@@ -715,4 +715,7 @@ public class GroupPageController {
   		String currentDate = dateFormat.format(cal.getTime()).toString();
   		return currentDate;
     }
+
+	
+
 }

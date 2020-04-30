@@ -14,17 +14,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			FXMLLoader firstLoader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
+			FXMLLoader firstLoader = new FXMLLoader(getClass().getResource("LoginPage.fxml"));
             Parent first_pane = firstLoader.load();
 	        Scene fir_scene = new Scene(first_pane);
 	        primaryStage.setScene(fir_scene);
 			primaryStage.setTitle("Login");
 	        primaryStage.show();
-	        //primaryStage.setFullScreen(true);
-	        //primaryStage.setMaximized(true);
-	        
-	        //Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-	        
+	  	       
 	        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 	        //set Stage boundaries to visible bounds of the main screen
 	        primaryStage.setY(primaryScreenBounds.getMinY());
@@ -33,6 +29,8 @@ public class Main extends Application {
 	        primaryStage.setWidth(primaryScreenBounds.getWidth());
 	        primaryStage.setHeight(primaryScreenBounds.getHeight());
 	        
+	        LoginController login = firstLoader.getController();
+	        login.signupAlert();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
