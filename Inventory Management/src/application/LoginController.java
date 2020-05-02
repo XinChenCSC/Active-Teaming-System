@@ -67,7 +67,8 @@ public class LoginController {
     
     
     //List of each information
-    //private List<Personal_Information> lst = new ArrayList<>();
+    @SuppressWarnings("unused")
+	private List<Personal_Information> lst = new ArrayList<>();
     
     //Username for checkbox
     private String CB_username;
@@ -104,11 +105,14 @@ public class LoginController {
     
     @FXML
     void Login_Click(ActionEvent event) throws IOException {	
-    	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-        Stage home_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        home_scene.setScene(new Scene(homepage));
-        home_scene.setTitle("Home page");
+    	FXMLLoader Loader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
+        Parent home_pane = Loader.load();
+        Stage home_scene = (Stage) parentPane.getScene().getWindow();
+        home_scene.setScene(new Scene(home_pane));
+        home_scene.setTitle("Homepage");
         home_scene.show();
+        homepageController hc = Loader.getController();
+        hc.recommenderEvaluation();
         
     	/*for (int i = 1; i <= lst.size(); ++i) {
     		if(lst.get(i).getId().compareTo(usernameF.getText()) == 0 &&
@@ -158,14 +162,16 @@ public class LoginController {
 
     @FXML
     private void Guest_Mode(ActionEvent event) throws IOException {
-    	Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+    	FXMLLoader Loader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
+        Parent home_pane = Loader.load();
         Stage home_scene = (Stage) parentPane.getScene().getWindow();
-        home_scene.setScene(new Scene(homepage));
-        home_scene.setTitle("Searching area");
+        home_scene.setScene(new Scene(home_pane));
+        home_scene.setTitle("Guest mode");
         home_scene.show();
     }
 
     //If your registration passed, a popup alert will notice you.
+	@SuppressWarnings("unused")
 	private void SuccessedSignupAlert() throws IOException {
     	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
     	ButtonType login = new ButtonType("Login", ButtonData.OK_DONE);
@@ -182,6 +188,7 @@ public class LoginController {
             home_scene.show();
     	}
     }
+	
 	//Fail for registration, an additional resumbit with a proper reason is required.
 	private void FailedSignupAlert() throws IOException {
     	ButtonType later = new ButtonType("Later", ButtonData.FINISH);

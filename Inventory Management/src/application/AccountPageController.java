@@ -98,7 +98,7 @@ public class AccountPageController {
     private String str = "s";
     
     //Get the size of the current window
-    Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
+    private Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 
     //Pane size
 	private final double width = screen.getWidth()/2.5;
@@ -434,7 +434,8 @@ public class AccountPageController {
     }
     
     //New window for change password
- 
+
+    //------------------------------Profile Pane--------------------------------------
     private void passwordChangeScene(double w, double h) {
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
@@ -494,6 +495,7 @@ public class AccountPageController {
     	//Call new window
     	NewWindow(newWindow, secondScene, mainScene, "Password change");    	
     }
+    //**********************************************************************************
     
     
 	//Edit protrait
@@ -621,7 +623,7 @@ public class AccountPageController {
     }
     
     //Blacklist member
-//---------------------------------Friend Pane-----------------------------------------
+    //---------------------------------Friend Pane-----------------------------------------
     private void getBlackList(GridPane gridPane, int start) {
     	for(int j = start; j < blackList; ++j) {
     		//MenuButton for each friend
@@ -686,7 +688,7 @@ public class AccountPageController {
     	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
     	return scrollPane;
     }
-//************************************************************************************* 
+    //************************************************************************************* 
  
     //Create alert
     private void getAlert(AlertType at, String content, ButtonType bt, String title) {
@@ -740,8 +742,7 @@ public class AccountPageController {
 					+ "-fx-background-radius: 20;");
     }*/
   
-    //Set up general setting of component
-    
+    //Set up general setting of component   
     private void getSetting(Node n, double w, double h, double x, double y) {
     	((Region) n).setPrefSize(w,h);
     	n.setLayoutX(x);

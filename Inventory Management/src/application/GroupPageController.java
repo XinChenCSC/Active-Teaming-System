@@ -194,21 +194,20 @@ public class GroupPageController {
     }
 
     //Votes
-    private void VotingPane() {
+    @SuppressWarnings("unused")
+	private void VotingPane() {
     	ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
     	//GridPane
     	GridPane gridPane = new GridPane();
-        getSetting(gridPane, 400, 400, 0, 10);
-        gridPane.getColumnConstraints().add(new ColumnConstraints(400));
-        gridPane.setHgap(10);
+    	gridPane.setPadding(new Insets(height*0.05, width*0.1, height*0.05, width*0.1));
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.8));
         gridPane.setVgap(10);
         //Warning string
     	String str = "One vote at a time!";
      	Label instruction = new Label(str);
-     	instruction.setPadding(new Insets(10,10,10,10));
+     	instruction.setPrefSize(width*0.8, height*0.2);
      	instruction.setAlignment(Pos.CENTER);
      	instruction.setStyle("-fx-background-color:#DAA520;");
-     	getSetting(instruction, 400, 50, 0, 50);
      	gridPane.getRowConstraints().add(new RowConstraints(50));
      	gridPane.add(instruction, 0, 0);
      	
@@ -221,9 +220,8 @@ public class GroupPageController {
      	
      	//Choose vote type
      	ComboBox<String> vote = new ComboBox<>();
-     	for(int i = 0; i < voting_tags.length; ++i)
-     		vote.getItems().add(voting_tags[i]);
-     	getSetting(vote, 200, 30, 0, 0);
+     	for(String string : voting_tags)
+     		vote.getItems().add(string);
      	GridPane.setHalignment(vote, HPos.CENTER);
      	gridPane.getRowConstraints().add(new RowConstraints(30));
      	gridPane.add(vote, 0, 2);
@@ -237,7 +235,6 @@ public class GroupPageController {
      	
      	//Name
      	ComboBox<String> name = new ComboBox<String>();
-     	getSetting(name, 200, 30, 0, 0);
      	for(int i = 0; i < 5; ++i) 
      		name.getItems().add("Unknown");
      	GridPane.setHalignment(name, HPos.CENTER);
@@ -245,7 +242,7 @@ public class GroupPageController {
      	gridPane.add(name, 0, 4);
     	
      	//Reason label
-     	Label writeReason = new Label("Give a reason");
+     	Label writeReason = new Label("Reason");
      	writeReason.setAlignment(Pos.CENTER);
      	GridPane.setHalignment(writeReason, HPos.CENTER);
      	gridPane.getRowConstraints().add(new RowConstraints(30));
@@ -253,8 +250,6 @@ public class GroupPageController {
      	
      	//Reason area
      	TextArea reasonArea = new TextArea();
-     	reasonArea.setMaxSize(300, 130);
-     	reasonArea.setPadding(new Insets(10,10,10,10));
      	GridPane.setHalignment(reasonArea, HPos.CENTER);
      	gridPane.getRowConstraints().add(new RowConstraints(130));
      	gridPane.add(reasonArea, 0, 6);
@@ -300,13 +295,13 @@ public class GroupPageController {
      	
      	//Get dialog
       	Dialog<ButtonType> dialog = new Dialog<>();
-      	@SuppressWarnings("unused")
 		Optional<ButtonType> result = getDialog(dialog, gridPane, "Vote", "", cancel);
 
     }
     
     //Display member's info
-    private void infoDisplay() {    
+    @SuppressWarnings("unused")
+	private void infoDisplay() {    
       	 ButtonType ok = new ButtonType("OK",ButtonData.OK_DONE);
       	 //BorderPane
       	 BorderPane borderPane = new BorderPane();
@@ -317,11 +312,10 @@ public class GroupPageController {
       	 
     	 //GridPane
     	 GridPane gridPane = new GridPane();
-    	 gridPane.setPadding(new Insets(30,0,0,0));
     	 //Import css file
     	 gridPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
-    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.5));
+    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.4));
+    	 gridPane.getColumnConstraints().add(new ColumnConstraints(width*0.4));
     	 gridPane.setVgap(10);    	 
     	 
     	 String[] tags = {"Name:", "ID:", "Position:"};
@@ -344,7 +338,6 @@ public class GroupPageController {
     	 
     	 //Evaluation contents
     	 TextArea textArea = new TextArea("Unknown");
-    	 textArea.setMaxSize(width*0.5-20, height*0.2);
     	 textArea.setEditable(false);
     	 GridPane.setHalignment(textArea, HPos.CENTER);
     	 GridPane.setValignment(textArea, VPos.CENTER);
@@ -352,9 +345,9 @@ public class GroupPageController {
     	 
     	 //Set children
     	 borderPane.setCenter(gridPane);
+    	 BorderPane.setMargin(gridPane, new Insets(height*0.05, width*0.1, height*0.05, width*0.1));
     	 //Call dialog
        	 Dialog<ButtonType> dialog = new Dialog<>();
-       	 @SuppressWarnings("unused")
        	 Optional<ButtonType> result = getDialog(dialog, borderPane, "Information", "", ok);
     }
         
@@ -716,6 +709,5 @@ public class GroupPageController {
   		return currentDate;
     }
 
-	
 
 }

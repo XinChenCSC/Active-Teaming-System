@@ -20,7 +20,7 @@ public class Main extends Application {
 	        primaryStage.setScene(fir_scene);
 			primaryStage.setTitle("Login");
 	        primaryStage.show();
-	  	       
+	  	       	        
 	        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 	        //set Stage boundaries to visible bounds of the main screen
 	        primaryStage.setY(primaryScreenBounds.getMinY());

@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -35,10 +37,8 @@ import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -60,7 +60,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -206,8 +205,6 @@ public class homepageController {
 	@FXML
     void Group_Click(ActionEvent event) {
     	//--------------------------Main Scene-----------------------
-    	//Get the screen size
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
         //Get the main scene size
         Stage mainScene = (Stage) Profile.getScene().getWindow();
         double height = screen.getHeight()/3;
@@ -325,8 +322,6 @@ public class homepageController {
 
     @FXML
     void Message_Click(ActionEvent event) {   
-    	//Get the screen size
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();          
         //Get the main scene size
         Stage mainStage = (Stage) Profile.getScene().getWindow();     
         //Create new window
@@ -912,7 +907,8 @@ public class homepageController {
     	generalTabEvent(pane);
     }
     
-    private void generalTabEvent(BorderPane pane) {
+    @SuppressWarnings("unused")
+	private void generalTabEvent(BorderPane pane) {
     	//Create random id and temporary password.
     	((Button)((HBox)pane.getBottom()).getChildren().get(0)).setOnAction(e->{
     		Random rand = new Random();
@@ -1024,7 +1020,7 @@ public class homepageController {
     	GridPane emails = new GridPane();
     	emails.getColumnConstraints().add(new ColumnConstraints(w*0.25));
     	//Email content
-    	Pane content = emailContent(w, h);
+    	Pane content = emailContent("From", w, h);
     	
     	//Search button
     	Button search_button = new Button("Go");
@@ -1216,7 +1212,7 @@ public class homepageController {
     }
    
     //Email contents
-    private Pane emailContent(double w, double h) {
+    private Pane emailContent(String label, double w, double h) {
     	Pane content = new Pane();
     	getSetting(content, w*0.74, h*0.88, w*0.25+10, h*0.12+5);
     	content.setStyle("-fx-background-color:white;"
@@ -1226,7 +1222,7 @@ public class homepageController {
     	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.74));
     
     	//Sender label
-    	Label to = new Label("	Receiver");
+    	Label to = new Label("	" + label);
     	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
     	GridPane.setHalignment(to, HPos.LEFT);
     	gridPane.add(to, 0, 0);
@@ -1271,16 +1267,14 @@ public class homepageController {
     	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
     	GridPane.setHalignment(reply, HPos.CENTER);
     	gridPane.add(reply, 0, 3);
-    	
-    	gridPane.setGridLinesVisible(true);
-
+ 
     	content.getChildren().add(gridPane);
     	return content;
     }
 
     //Email compose scene
     private void composeScene(GridPane gridPane, Pane content, double w, double h, Stage s) {
-    	Pane scene = emailContent(w*(1/0.73),h*(1/0.86));
+    	Pane scene = emailContent("To", w*(1/0.73),h*(1/0.86));
     	getSetting(scene, w, h, 0, 0);
     	scene.setStyle(null);
     	//Adjustments
@@ -1391,7 +1385,6 @@ public class homepageController {
     	gridPane.getColumnConstraints().add(new ColumnConstraints(285));
     	gridPane.setPadding(new Insets(5,5,5,5));
     	gridPane.setGridLinesVisible(true);
-    	gridPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     	//Set up each row
     	for(int i = 0; i < 5; ++i) {
     		//Unread notification
@@ -1402,7 +1395,7 @@ public class homepageController {
     		GridPane.setValignment(unread, VPos.TOP);
     		gridPane.add(unread, 0, i);
     		//Content label
-    		Label content = new Label("Notification " + i);
+    		Label content = new Label("Unknown" + i);
     		content.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(content, HPos.CENTER);
     		GridPane.setValignment(content, VPos.CENTER);
@@ -1414,13 +1407,12 @@ public class homepageController {
     		GridPane.setHalignment(time, HPos.RIGHT);
     		GridPane.setValignment(time, VPos.BOTTOM);
     		gridPane.add(time, 0, i);
-    		ContextMenu menu = new ContextMenu();
-    		menu.getItems().addAll(new MenuItem("Delete"));
     		//Back pane
     		Pane pane = new Pane();
     		getSetting(pane, 285, 70, 0, 0);
     		pane.setId("back_pane");
     		gridPane.add(pane, 0, i);
+    		//Delete event
     		pane.setOnMouseClicked(e->{
     			//Set up alert
     			ButtonType delete = new ButtonType("Delete", ButtonData.OK_DONE);
@@ -1534,7 +1526,10 @@ public class homepageController {
     	GridPane.setHalignment(delete, HPos.CENTER);
     	GridPane.setValignment(delete, VPos.CENTER);
     	gridPane.add(delete, 0, 3);
-    	
+
+    	//dummy
+    	HashMap<Integer, String> container = new HashMap<Integer, String>();
+
     	//Grid pane
     	GridPane messages = new GridPane();
     	messages.getColumnConstraints().add(new ColumnConstraints(w-45));
@@ -1542,26 +1537,12 @@ public class homepageController {
     	messages.setVgap(10);
     	//Always at the bottom of the scroll pane
     	messages.heightProperty().addListener(observable -> chat.setVvalue(1D));
-    	send.setOnAction(e->{
-    		if(!text.getText().isEmpty()) {
-        		Label input = new Label(text.getText());
-        		input.setStyle("-fx-background-color: #7FFF00;");
-        		input.setWrapText(true);
-        		input.setAlignment(Pos.CENTER_RIGHT);
-            	//Get the width of string
-            	Text theText = new Text(text.getText());
-            	theText.setFont(text.getFont());
-            	double width = theText.getBoundsInLocal().getWidth();
-            	int radio = (int) (((int) width / (w-45))+1);
-            	text.clear();
-            	//add row
-            	RowConstraints row = new RowConstraints(h*0.05*radio);
-            	messages.getRowConstraints().add(row);
-            	//set label to the right
-            	GridPane.setHalignment(input, HPos.RIGHT);
-            	messages.add(input, 0, messages.getRowConstraints().size()-1);
-    		}
-    	});
+    	
+    	//Load previous messages
+    	loadPreviousMessages(container, messages);
+    	
+    	//Send button event
+    	MessageSendEvent(send, messages, text);
     	
     	//Delete event
     	delete.setOnAction(e->{
@@ -1575,6 +1556,49 @@ public class homepageController {
     	chat.setContent(messages);
     	result.getChildren().addAll(gridPane);
     	return result;
+    }
+
+    //Load previous messages
+    private void loadPreviousMessages(HashMap<Integer, String> hashmap, GridPane messages) {
+		for (Entry<Integer, String> m : hashmap.entrySet()) {
+			// messages
+			Label input = new Label(m.getValue());
+			input.setWrapText(true);
+			input.setAlignment(Pos.CENTER_RIGHT);
+			// Get the width of string
+			if (m.getKey() % 2 == 0) {
+				input.setStyle("-fx-background-color: #7FFF00;");
+				GridPane.setHalignment(input, HPos.RIGHT);
+			} else {
+				input.setStyle("-fx-background-color: #F0FFFF;");
+				GridPane.setHalignment(input, HPos.LEFT);
+			}
+			// add row
+        	messages.getRowConstraints().add(new RowConstraints());
+        	messages.getRowConstraints().get(messages.getRowConstraints().size()-1).prefHeightProperty().bind(input.prefHeightProperty());
+			messages.add(input, 0, messages.getRowConstraints().size() - 1);
+		}
+    }
+
+    //Message send button event
+    private void MessageSendEvent(Button send, GridPane messages, TextField text) {
+    	send.setOnAction(e->{
+    		// messages
+    		Label input = new Label(text.getText());
+    		input.setStyle("-fx-background-color: #7FFF00;");
+    		input.setWrapText(true);
+    		input.setAlignment(Pos.CENTER_RIGHT);
+    		if(!text.getText().isEmpty()) {
+            	text.clear();
+            	//add row
+            	messages.getRowConstraints().add(new RowConstraints());
+            	//Resize the height of row.
+            	messages.getRowConstraints().get(messages.getRowConstraints().size()-1).prefHeightProperty().bind(input.prefHeightProperty());
+            	//set label to the right
+            	GridPane.setHalignment(input, HPos.RIGHT);
+            	messages.add(input, 0, messages.getRowConstraints().size()-1);
+    		}
+    	});
     }
     
     //Set up all essential components
@@ -1783,9 +1807,52 @@ public class homepageController {
     		gridPane.add(list.get(i*2-1), 0, i);
     	}
     }
-    //**************************************************************************
+   
+    @SuppressWarnings("unused")
+	//**************************************************************************
     
-    //General style
+    //New user evaluation by their recommender
+    void recommenderEvaluation() {
+        Stage mainScene = (Stage) scrollPane.getScene().getWindow();       
+        double height = screen.getHeight()*0.2;
+        double width = screen.getWidth()*0.2;     
+        StackPane scene = new StackPane();
+        Scene secondScene = new Scene(scene, width, height);
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        scene.setPadding(new Insets(height*0.1, width*0.2, height*0.1, width*0.2));
+        //Title 
+        Label title = new Label("Quick Evaluation");
+        title.setStyle("-fx-background-color: #FF7F50;");
+        //ComboBox for scores
+        ComboBox<Integer> scores = new ComboBox<>();
+        scores.setPrefWidth(width*0.4);
+        scores.setPromptText("Enter scores");
+        scores.getItems().addAll(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+        //Confirm
+        Button confirm = new Button("Confirm");
+        confirm.setPrefWidth(width*0.3);
+        
+        StackPane.setAlignment(confirm, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(scores, Pos.CENTER);
+        StackPane.setAlignment(title, Pos.TOP_CENTER);
+        scene.getChildren().addAll(title, scores, confirm);
+        
+        //confirm button event
+        confirm.setOnAction(e->{
+        	if(scores.getSelectionModel().isEmpty()) {
+        		Alert alert = getAlert(AlertType.ERROR, "Scores can't be empty.", ButtonType.OK, "Error");
+        	}
+        	else {
+        		Alert alert = getAlert(AlertType.INFORMATION, "Submission completed.", ButtonType.OK, "Confirmation");
+        		newWindow.close();
+        	}
+        });
+        // set new window
+        NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
+    }
+    
+    //General style   
     private void getStyle(Node b) {
     	b.setStyle("-fx-background-radius: 20;"
 				+ "-fx-border-radius: 20;"
