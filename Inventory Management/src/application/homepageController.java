@@ -39,6 +39,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -1808,9 +1809,78 @@ public class homepageController {
     	}
     }
    
-    @SuppressWarnings("unused")
 	//**************************************************************************
     
+    //----------------------------------Password change-------------------------------------
+    void passwordChangeScene() {
+    	double w = screen.getWidth()*0.2;
+    	double h = screen.getHeight()*0.2;
+    	Stage mainScene = (Stage) scrollPane.getScene().getWindow();
+    	Pane pane = new Pane();
+    	pane.setPrefSize(w, h);
+    	Scene secondScene = new Scene(pane, w, h);
+    	Stage newWindow = new Stage();
+    	
+    	//Create gridpane 
+    	GridPane gridpane = new GridPane();
+    	gridpane.getColumnConstraints().add(new ColumnConstraints(w*0.8));
+    	gridpane.setPadding(new Insets(10,w*0.1,10,w*0.1));
+    	
+    	String[] tags = {"New password", "Repeat password", "Confirm"};
+    	for(int i = 0; i < 5; ++i) {
+    		gridpane.getRowConstraints().add(new RowConstraints(h*0.15));
+    		if (i == 4) {
+    			//create confirm button
+    			Button confirm = new Button("Confirm");
+    			getStyle(confirm);
+    			gridpane.getRowConstraints().get(4).setPrefHeight(h*0.3);
+    			GridPane.setValignment(confirm, VPos.CENTER);
+    			GridPane.setHalignment(confirm, HPos.CENTER);
+    			gridpane.add(confirm, 0, i);
+    		}
+    		else if(i%2 == 0) {
+    			//create tag
+    			Label tag = new Label(tags[i/2]);
+    			GridPane.setValignment(tag, VPos.BOTTOM);
+    			GridPane.setHalignment(tag, HPos.LEFT);
+    			gridpane.add(tag, 0, i);
+    		}
+    		else {
+    			//Textfield
+    			PasswordField field = new PasswordField();
+    			field.setMaxWidth(w*0.8);
+    			getStyle(field);
+    			GridPane.setValignment(field, VPos.TOP);
+    			GridPane.setHalignment(field, HPos.LEFT);
+    			gridpane.add(field, 0, i);
+    		}
+    	}
+    	//Confirm event
+    	((Button) gridpane.getChildren().get(4)).setOnAction(e->{
+    		if(((PasswordField) gridpane.getChildren().get(1)).getText().isEmpty() || 
+    				((PasswordField) gridpane.getChildren().get(3)).getText().isEmpty() ||
+        			((PasswordField) gridpane.getChildren().get(1)).getText().compareTo(
+        					((PasswordField) gridpane.getChildren().get(3)).getText()) != 0) {
+        		getAlert(AlertType.ERROR, "Please reset your password.", ButtonType.OK, "Error");
+        	}
+    		else {
+    			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
+    			newWindow.close();
+    		}
+    	});
+    	newWindow.setOnCloseRequest(e->{
+    		getAlert(AlertType.WARNING, "Please click the confirm button when you entered the new password.", ButtonType.OK, "Warning");
+			e.consume();
+    	});
+    	//set children
+    	pane.getChildren().add(gridpane);
+    	//Call new window
+    	NewWindow(newWindow, secondScene, mainScene, "Password change");    
+    	
+    }
+    //**************************************************************************************
+    
+    @SuppressWarnings("unused")
     //New user evaluation by their recommender
     void recommenderEvaluation() {
         Stage mainScene = (Stage) scrollPane.getScene().getWindow();       
@@ -1822,7 +1892,9 @@ public class homepageController {
         Stage newWindow = new Stage();
         scene.setPadding(new Insets(height*0.1, width*0.2, height*0.1, width*0.2));
         //Title 
-        Label title = new Label("Quick Evaluation");
+        Label title = new Label("Quick Evaluation" + "(Unknonw)");
+        title.setAlignment(Pos.CENTER);
+        title.setPrefSize(width, height*0.2);
         title.setStyle("-fx-background-color: #FF7F50;");
         //ComboBox for scores
         ComboBox<Integer> scores = new ComboBox<>();
@@ -1848,6 +1920,10 @@ public class homepageController {
         		newWindow.close();
         	}
         });
+    	newWindow.setOnCloseRequest(e->{
+    		getAlert(AlertType.WARNING, "Please select a proper initial scores for your presentee.", ButtonType.OK, "Warning");
+			e.consume();
+    	});
         // set new window
         NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
     }

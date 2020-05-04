@@ -171,13 +171,11 @@ public class LoginController {
     }
 
     //If your registration passed, a popup alert will notice you.
-	@SuppressWarnings("unused")
-	private void SuccessedSignupAlert() throws IOException {
-    	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
+	void SuccessedSignupAlert() throws IOException {
     	ButtonType login = new ButtonType("Login", ButtonData.OK_DONE);
-    	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: Unknown\nTemporary password: Unknown", login, later);
+    	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: Unknown\nTemporary password: Unknown", login);
     	alert.setTitle("Confirmation");
-    	alert.setHeaderText("Congratulation! Your account has been acitviated. You can login by click Login button!");
+    	alert.setHeaderText("Congratulation! Your account has been acitviated. You can login by click the login button!");
     	//check click button types
     	Optional<ButtonType> result = alert.showAndWait();
     	if(result.get() == login) {
@@ -190,12 +188,12 @@ public class LoginController {
     }
 	
 	//Fail for registration, an additional resumbit with a proper reason is required.
-	private void FailedSignupAlert() throws IOException {
+	void FailedSignupAlert() throws IOException {
     	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
     	ButtonType submit = new ButtonType("Submit", ButtonData.OK_DONE);
     	Alert alert = new Alert(AlertType.ERROR,
     			"Your registration has been denied, but you can submit again by click the submit button. "
-    			+ "You will lose your only chance to submit if your click the later button"
+    			+ "You will lose your last chance to submit if your click the later button"
     			, submit, later);
     	alert.setTitle("Confirmation");
     	alert.setHeaderText(null);
@@ -209,6 +207,14 @@ public class LoginController {
     	}
 	}
 
+/*   private Alert getAlert(AlertType at, String content, ButtonType bt, String title) {
+    	Alert alert = new Alert(at, content, bt);
+    	alert.setTitle(title);
+    	alert.setHeaderText(null);
+    	alert.showAndWait();    	
+    	return alert;
+    }*/
+    
 	void signupAlert() throws IOException{
 		// TODO Auto-generated method stub
 		//SuccessedSignupAlert();

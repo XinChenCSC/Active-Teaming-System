@@ -26,7 +26,16 @@ public class Message_Container {
 		container.put(key, value);
 	}
 	
+	//Clear the current content
+	public void removeContent() {
+		container.clear();
+	}
+	
 	public HashMap<Integer, String> getContainer(){
 		return this.container;
+	}
+	
+	public int size() {
+		return this.container.size();
 	}
 }
