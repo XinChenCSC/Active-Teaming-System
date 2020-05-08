@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_221" class="java.beans.XMLDecoder">
+ <object class="Clients.Guest">
+  <void property="email">
+   <string>WillianHu@gmail.com</string>
+  </void>
+  <void property="name">
+   <string>Willian Hu</string>
+  </void>
+  <void property="recommender">
+   <string>Liam Lee</string>
+  </void>
+ </object>
+</java>

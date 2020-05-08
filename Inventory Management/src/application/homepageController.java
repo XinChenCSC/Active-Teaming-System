@@ -18,6 +18,12 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import Clients.Client;
+import Clients.OU;
+import Clients.SU;
+import Clients.VIP;
+import Clients.Guest;
+import Email.Email;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -67,7 +73,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-public class homepageController {
+public class homepageController{
 
     @FXML
     private ResourceBundle resources;
@@ -146,14 +152,25 @@ public class homepageController {
     
     @FXML
     private Pane NotificationPane;
-    
+        
 	// Number of existing emails.
-	private int emailNum = 5;
+	private int emailNum = 0;
 	// Number of existing messages
-	private int messageNum = 5;
+	private int messageNum = 0;
+	// Target email index
+	private int emailIndex = 0;
+	// Target message index
+	private int messageIndex = 0;
     //Window size
 	private final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
-	
+	//is guest
+	private boolean isGuest = false;
+	//Userlist
+	private UserList userList = new UserList();
+	//User information
+	private Information_List Info_List = new Information_List();
+	//Target
+	private Client target;
 	
     @FXML
     void initialize() throws IOException, InterruptedException {
@@ -211,6 +228,12 @@ public class homepageController {
         double height = screen.getHeight()/3;
         double width = screen.getWidth()/5;
         StackPane scene = groupMainScene(width, height);
+        
+        //Is guest?
+        if(this.isGuest || this.target instanceof SU) {        	
+        	((Button)scene.getChildren().get(2)).setVisible(false);
+        	((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
+        }
         
         Scene secondScene = new Scene(scene, width, height);
         // New window (Stage)
@@ -316,7 +339,9 @@ public class homepageController {
         //Set email list
     	getEmailList(w, h, newWindow, gridPane, content, 0);
         //Delete emails
-        delete.setOnAction(e -> deleteEmail(emailPane, gridPane, content));
+        delete.setOnAction(e ->{      	
+        	deleteEmail(emailPane, gridPane, content);
+        });
         //set new window
         NewWindow(newWindow, secondScene, mainStage, "Email"); 
 }
@@ -445,7 +470,7 @@ public class homepageController {
          NewWindow(newWindow, scene, mainStage, "Edit");
     }
  
-    @SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings("unchecked")
 	@FXML
     void Claim_Click(ActionEvent event) {
     	double width = screen.getWidth()*0.2;
@@ -460,10 +485,21 @@ public class homepageController {
     		if(((ComboBox<String>)pane.getChildren().get(1)).getSelectionModel().isEmpty() ||
     				((TextField)pane.getChildren().get(2)).getText().isEmpty() ||
     				((TextArea)pane.getChildren().get(3)).getText().isEmpty()) {
-    			Alert alert = getAlert(AlertType.ERROR, "Can't be empty.", ButtonType.OK, "Error");
+    			getAlert(AlertType.ERROR, "Can't be empty.", ButtonType.OK, "Error");
+    		}
+    		else if (!isValidID(((TextField)pane.getChildren().get(2)).getText())) {
+    			getAlert(AlertType.ERROR, "Invalid ID", ButtonType.OK, "Error");
     		}
     		else {
-    			Alert alert = getAlert(AlertType.CONFIRMATION, "Claim submitted.", ButtonType.OK, "Confirmation");
+    			//Save claim as email format to the SU
+    			String content = ((TextField)pane.getChildren().get(2)).getText() + "\n" + 
+    						((TextArea)pane.getChildren().get(3)).getText();
+    			Email email = new Email(((ComboBox<String>)pane.getChildren().get(1)).getSelectionModel().getSelectedItem().toString(),
+    					content, this.target.getName());
+    			this.Info_List.CreateEmail(this.userList.getSU_User().get(0).getID(), email);
+    			
+    			//Confirmation alert
+    			getAlert(AlertType.CONFIRMATION, "Claim submitted.", ButtonType.OK, "Confirmation");
     			newWindow.close();
     		}
     	});
@@ -1076,12 +1112,14 @@ public class homepageController {
     
     //List all existed emails and call email reply
     private void getEmailList(double w, double h, Stage mainStage, GridPane gridPane, Pane content, int start) {
+    	//Get the index of email list
+    	this.emailIndex = setEmailLength();
     	//List all existed emails
-    	for(int i = start; i < emailNum; ++i) {
+    	for(int i = emailNum-1, j = 0; i >= start ; --i, ++j) {
     		//Hide content area
     		content.setVisible(false);
-    		//Create button
-    		Button email_label = new Button("Unknown"+i);
+    		//Create button and assign subject to it
+    		Button email_label = new Button(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getSubject());
     		getSetting(email_label, gridPane.getColumnConstraints().get(0).getPrefWidth(), h*0.1, 0, 0);
     		email_label.setAlignment(Pos.CENTER);
     		email_label.setFont(new Font(16));
@@ -1096,12 +1134,7 @@ public class homepageController {
         	
         	//Set text to text fields
         	ObservableList<Node> children = ((GridPane) content.getChildren().get(0)).getChildren();
-        	email_label.setOnAction(e->{
-        		content.setVisible(true);
-        		((TextField) children.get(1)).setText("Unknown");
-        		((TextField) children.get(3)).setText("Unknown");
-        		((TextArea) children.get(4)).setText("Unknown");
-        	});
+        	setEmailContent(children, email_label, content, i);
         	
         	//Reply
         	((Button)children.get(5)).setOnAction(e->{
@@ -1119,11 +1152,22 @@ public class homepageController {
         	});
         	     	
     		GridPane.setHalignment(email_label, HPos.CENTER);
-        	gridPane.add(email_label, 0, i);
-        	gridPane.add(delete_dot, 0, i);
+        	gridPane.add(email_label, 0, j);
+        	gridPane.add(delete_dot, 0, j);
     	}
     }
 	
+    //Set email content
+    private void setEmailContent(ObservableList<Node> children, Button label, Pane pane, int i) {
+    	//Set text to text fields
+    	label.setOnAction(e->{
+    		pane.setVisible(true);
+    		((TextField) children.get(1)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getTarget());
+    		((TextField) children.get(3)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getSubject());
+    		((TextArea) children.get(4)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getContent());
+    	});
+    }
+    
     //Delete emails
     private void deleteEmail(Pane pane, GridPane gridPane, Pane content) {
     	ArrayList<Integer> selectedNum = new ArrayList<Integer>();
@@ -1168,7 +1212,7 @@ public class homepageController {
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		((Button) pane.getChildren().get(6)).setOnAction(d->{  
 			//Warning alart for deletion
-			Alert alert = getAlert(AlertType.WARNING, "Delete all selected Emails?", ButtonType.YES, "Caution!");   			  		
+			Alert alert = getAlert(AlertType.WARNING, "Delete all selected Emails?", ButtonType.YES, "Caution");   			  		
 			if(alert.getResult() == ButtonType.YES) {
 				ObservableList<Node> children = gridPane.getChildren();	
 				//Remove deleted emails
@@ -1177,6 +1221,9 @@ public class homepageController {
 					if(!selectedNum.contains(i)) 
 						index += 2;
 					else {
+						//Remove email
+						this.emailIndex = setEmailLength();
+						this.Info_List.removeEmail(this.target.getID(), this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(emailNum-1-i));
 						gridPane.getChildren().remove(index, index+2);
 						content.setVisible(false);
 					}
@@ -1278,7 +1325,7 @@ public class homepageController {
     	Pane scene = emailContent("To", w*(1/0.73),h*(1/0.86));
     	getSetting(scene, w, h, 0, 0);
     	scene.setStyle(null);
-    	//Adjustments
+    	//Activate compose scene 
     	((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).setEditable(true);
     	((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).setEditable(true);
     	((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).setEditable(true);
@@ -1286,23 +1333,35 @@ public class homepageController {
     	send.setText("Send");
    	 	//Send button event
     	send.setOnAction(e->{
-  			//check whether object, subject, or content is empty.
+  			//check whether object, subject, or content is empty, and whether the email address is valid
     		if(!((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).getText().isEmpty() &&
     				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText().isEmpty() &&
-    				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).getText().isEmpty()) {
+    				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).getText().isEmpty() &&
+    				isValidEmail(((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText())) {
+    			//Save email to yourself
+    			Email email = new Email(((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).getText(),
+    					((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).getText(),
+    					((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText());
+    			this.Info_List.CreateEmail(this.target.getID(), email);
+    			//Save email to the receiver email box
+    			Email email2 = new Email(((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).getText(),
+    					((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).getText(),
+    					this.target.getEmail());
+    			this.Info_List.CreateEmail(getUserID(((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText()), email2);
+    			//Confirmation Alert
     			Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton");			
 				if(alert.getResult() == ButtonType.OK) {
 					((Stage) scene.getScene().getWindow()).close(); 
 					 //Add new email to the email list
+
 		            ++emailNum;
-		            getEmailList(w, h, s,gridPane, content, emailNum-1);
+		            getEmailList(w, h, s, gridPane, content, emailNum-1);
 		            //set email to the top
 		            emailMoveUp(gridPane);					
 				}
     		}
     		else {
-    			@SuppressWarnings("unused")
-				Alert alert = getAlert(AlertType.ERROR, "Content can't be empty!", ButtonType.OK, "Error");
+				getAlert(AlertType.ERROR, "Invalid email address or empty field existed.", ButtonType.OK, "Error");
     		}
     	});
     	//Set new window
@@ -1440,25 +1499,17 @@ public class homepageController {
     //Move to the login page
     @FXML
     private void Logout(ActionEvent event)throws IOException {
-    	Parent login_page = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
-        Stage login_scene = (Stage) Profile.getScene().getWindow();
-    
-        login_scene.setScene(new Scene(login_page));
-        login_scene.setTitle("Login");
-        login_scene.show();
+    	FXMLLoader loader = sceneSwitch("LoginPage.fxml", "Login");
+    	LoginController lc = loader.getController();
+    	lc.HomeToLogin(userList, Info_List);
     }
     
     //Move to the account page
     @FXML
     private void moveToAccount(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("AccountPage.fxml"));
-    	Parent account_page = loader.load();
-    	
-    	//AccountPageController account = loader.getController();
-        Stage account_scene = (Stage) Profile.getScene().getWindow();
-        account_scene.setScene(new Scene(account_page));
-        account_scene.setTitle("Account page");
-        account_scene.show();
+//    	FXMLLoader loader = sceneSwitch("AccountPage.fxml", "Account");
+//    	LoginController lc = loader.getController();
+//    	lc.HomeToLogin(userList);
     }
     //**************************************************************************
 
@@ -1812,7 +1863,7 @@ public class homepageController {
 	//**************************************************************************
     
     //----------------------------------Password change-------------------------------------
-    void passwordChangeScene() {
+    private void passwordChangeScene() {
     	double w = screen.getWidth()*0.2;
     	double h = screen.getHeight()*0.2;
     	Stage mainScene = (Stage) scrollPane.getScene().getWindow();
@@ -1864,6 +1915,16 @@ public class homepageController {
         		getAlert(AlertType.ERROR, "Please reset your password.", ButtonType.OK, "Error");
         	}
     		else {
+    			//Save the password to the database
+    			this.target.setPassword(((PasswordField) gridpane.getChildren().get(3)).getText());
+    			//If the new user reset their password, their recommender needs to evaluate them.
+    			((Guest) this.target).setLogin(true);
+    			((Guest) this.target).setActivate(true);
+    			//Promote the new user up to OU
+    			OU ou = new OU(this.target.getName(), "123456", this.target.getEmail(),
+    					"OU", this.target.getInterest(), this.target.getRecommender(),
+    					this.target.getPassword());
+    			userList.addOU_User(ou);
     			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
     			newWindow.close();
     		}
@@ -1880,9 +1941,9 @@ public class homepageController {
     }
     //**************************************************************************************
     
-    @SuppressWarnings("unused")
     //New user evaluation by their recommender
-    void recommenderEvaluation() {
+    @SuppressWarnings("unchecked")
+	private void recommenderEvaluation() {
         Stage mainScene = (Stage) scrollPane.getScene().getWindow();       
         double height = screen.getHeight()*0.2;
         double width = screen.getWidth()*0.2;     
@@ -1892,7 +1953,7 @@ public class homepageController {
         Stage newWindow = new Stage();
         scene.setPadding(new Insets(height*0.1, width*0.2, height*0.1, width*0.2));
         //Title 
-        Label title = new Label("Quick Evaluation" + "(Unknonw)");
+        Label title = new Label("Quick Evaluation" + "(" + this.userList.getGuest().getName() + ")");
         title.setAlignment(Pos.CENTER);
         title.setPrefSize(width, height*0.2);
         title.setStyle("-fx-background-color: #FF7F50;");
@@ -1900,7 +1961,13 @@ public class homepageController {
         ComboBox<Integer> scores = new ComboBox<>();
         scores.setPrefWidth(width*0.4);
         scores.setPromptText("Enter scores");
-        scores.getItems().addAll(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+        //Get the scores range
+        if(this.target instanceof OU)
+        	 for(int i = 0; i < OU.getEvaluationScoreRange(); ++i)
+        		 scores.getItems().add(i+1);
+        else if(this.target instanceof VIP)
+        	for(int i = 0; i < VIP.getEvaluationScoreRange(); ++i)
+       		 	scores.getItems().add(i+1);
         //Confirm
         Button confirm = new Button("Confirm");
         confirm.setPrefWidth(width*0.3);
@@ -1913,10 +1980,18 @@ public class homepageController {
         //confirm button event
         confirm.setOnAction(e->{
         	if(scores.getSelectionModel().isEmpty()) {
-        		Alert alert = getAlert(AlertType.ERROR, "Scores can't be empty.", ButtonType.OK, "Error");
+        		getAlert(AlertType.ERROR, "Scores can't be empty.", ButtonType.OK, "Error");
         	}
         	else {
-        		Alert alert = getAlert(AlertType.INFORMATION, "Submission completed.", ButtonType.OK, "Confirmation");
+        		incScore(this.userList.getGuest().getName(), ((ComboBox<Integer>) scene.getChildren().get(1)).getSelectionModel().getSelectedItem());
+        		//Remove the presentee
+        		if(this.target instanceof OU)
+        			((OU)this.target).removePresentee(this.userList.getGuest());
+        		else if(this.target instanceof VIP)
+        			((VIP)this.target).removePresentee(this.userList.getGuest());
+        		//Make guest empty 
+        		this.userList.setGuest(new Guest());
+        		getAlert(AlertType.INFORMATION, "Submission completed.", ButtonType.OK, "Confirmation");
         		newWindow.close();
         	}
         });
@@ -1926,6 +2001,33 @@ public class homepageController {
     	});
         // set new window
         NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
+    }
+    
+    void carryingInformation(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il) {
+    	this.userList = ul;	//set userList
+    	this.target = target; //set target user
+    	this.Info_List = il; //set user information
+    	if(evaluation)
+    		recommenderEvaluation();
+    	if(passwordChange)
+    		passwordChangeScene();
+    	if(target.getPosition().compareTo("SU") == 0)
+    		SUMode();
+    }
+      
+    private void SUMode() {
+    	this.Evaluation.setDisable(true);
+    	this.Claim.setVisible(false);
+    }
+    
+    void GuestMode() {
+    	this.Edit.setDisable(true);
+    	this.Evaluation.setDisable(true);
+    	this.Notification.setDisable(true);
+    	this.Profile.getItems().get(1).setDisable(true);
+    	this.Profile.getItems().get(2).setDisable(true);
+    	this.Profile.getItems().get(3).setDisable(true);
+    	this.isGuest = true;
     }
     
     //General style   
@@ -2065,6 +2167,74 @@ public class homepageController {
             }
         };
         animation.play();   
+   
+    }
+    
+    //Check invalid ID
+    private boolean isValidID(String id) {
+    	boolean result = false;
+    	for(int i = 0; i < userList.getAll_Size(); ++i) {
+    		//The target ID can't be your own id.
+    		if(this.target.getID().compareTo(id) != 0 && userList.getAll_User().get(i).getID().compareTo(id) == 0) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+    
+    private void incScore(String name, int score) {
+    	for(int i = 0; i < userList.getAll_Size(); ++i) {
+    		if(userList.getAll_User().get(i).getName().compareTo(name) == 0)
+    			userList.getAll_User().get(i).addReputationScore(score);
+    	}
+    }
+    
+    @SuppressWarnings("unused")
+	private void decScore(String name, int score) {
+    	for(int i = 0; i < userList.getAll_Size(); ++i) {
+    		if(userList.getAll_User().get(i).getName().compareTo(name) == 0)
+    			userList.getAll_User().get(i).subReputationScore(score);
+    	}
     }
 
+    private int setEmailLength() {
+    	int result = 0;
+    	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
+    		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
+    			this.emailNum = this.Info_List.getInfo_Con().get(i).getEmail_Content().size();
+    			result = i;
+    			break;
+    		}
+    	}
+    	return result;
+    }
+  
+    //Check the invalidation of email receiver
+    private boolean isValidEmail(String email) {
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    		if(this.target.getEmail().compareTo(email) != 0 && 
+    				this.userList.getAll_User().get(i).getEmail().compareTo(email) == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    //Get ID using Email address
+    private String getUserID(String email) {
+    	for(int i = 0; i < userList.getAll_Size(); ++i) {
+    		if(userList.getAll_User().get(i).getEmail().compareTo(email) == 0)
+    			return userList.getAll_User().get(i).getID();
+    	}
+    	return "";
+    }
+    
+	private FXMLLoader sceneSwitch(String url, String title) throws IOException {
+		FXMLLoader Loader = new FXMLLoader(getClass().getResource(url));
+        Parent home_pane = Loader.load();
+        Stage stage = (Stage) Profile.getScene().getWindow();
+        stage.setScene(new Scene(home_pane));
+        stage.setTitle(title);
+        return Loader;
+	}
 }

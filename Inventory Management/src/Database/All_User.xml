@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_221" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="Clients.SU"/>
+  </void>
+  <void method="add">
+   <object class="Clients.OU"/>
+  </void>
+  <void method="add">
+   <object class="Clients.VIP"/>
+  </void>
+ </object>
+</java>

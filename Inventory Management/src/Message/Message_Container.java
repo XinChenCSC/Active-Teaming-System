@@ -12,6 +12,8 @@ public class Message_Container {
 	public Message_Container(String target) {
 		this.setTarget(target);
 	}
+	
+	public Message_Container() {}
 
 	public String getTarget() {
 		return target;

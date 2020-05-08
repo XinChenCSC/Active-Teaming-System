@@ -39,6 +39,7 @@ public class UserList {
 	public int getAll_Size() {
 		return this.All_User.size();
 	}
+	
 	//************************************************************
 	
 	//---------------------------OU Users-------------------------------
@@ -55,6 +56,10 @@ public class UserList {
 	public ArrayList<OU> getOU_User() {
 		return this.OU_User;
 	}
+	
+	public void setOU_User(ArrayList<OU> ou) {
+		this.OU_User = ou;
+	}
 	//******************************************************************
 	
 	//---------------------------VIP Users-------------------------------
@@ -70,6 +75,10 @@ public class UserList {
 	
 	public ArrayList<VIP> getVip_User() {
 		return this.VIP_User;
+	}
+	
+	public void setVIP_User(ArrayList<VIP> vip) {
+		this.VIP_User = vip;
 	}
 	//******************************************************************
 	
@@ -88,8 +97,8 @@ public class UserList {
 		return this.SU_User;
 	}
 	
-	public void setSU(ArrayList<SU> s) {
-		this.SU_User = s;
+	public void setSU_User(ArrayList<SU> su) {
+		this.SU_User = su;
 	}
 	//******************************************************************
 	
@@ -104,4 +113,13 @@ public class UserList {
 	public Guest getGuest() {
 		return this.guest;
 	}
+	
+	public void addAll_User(Client client) {
+		this.All_User.add(client);
+	}
+	
+	public void setAll_User(ArrayList<Client> client) {
+		this.All_User = client;
+	}
+
 }

@@ -2,85 +2,28 @@ package Clients;
 
 import java.util.ArrayList;
 
-import Email.Email;
-import Message.Message_Container;
-import application.Notification.Notification;
-
 public class OU extends Client{
 	
-	private ArrayList<String> presentee = new ArrayList<String>();
+	private ArrayList<Guest> presentee = new ArrayList<Guest>();
 	
 	private final static int Evaluation_Score_Range = 10;
 	
-	//Constructor
-	public OU() {}
+	private int numCompliment = 0;
 	
+	//Constructor	
 	public OU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password) {
 		super(Name, ID, Email, Position, Interest, Recommender, Password);
 	}
 	
-	//Getters and setters
-	public void setPassword(String Password) {super.setPassword(Password);}
+	public OU() {
+		super("Noah Lee", "55555", "NoahLee@gmail.com", "OU", "Baseball", "Qichen You", "66666");
+	}
 	
-	public String getPassword() {return super.Password;}
+	public ArrayList<Guest> getPresentee() {return presentee;}
 	
-	public void setComment(String Comment) {super.setComment(Comment);}
-	
-	public String getComment() {return super.Comment;}
-	
-	public void setPosition(String Position) {super.setPosition(Position);}
-	
-	public String getPosition() {return super.Position;}
-	
-	public void setID(String ID) {super.setID(ID);}
-	
-	public String getID() {return super.ID;}
-	
-	public void setName(String Name) {super.setName(Name);}
-	
-	public String getName() {return super.Name;}
-	
-	public void setEmail(String Email) {super.setEmail(Email);}
-	
-	public String getEmail() {return super.Email;}
-	
-	public void setInterest(String Interest) {super.setInterest(Interest);}
-	
-	public String getInterest() {return super.Interest;}
-	
-	public void setRecommender(String Recommender) {super.setRecommender(Recommender);}
-	
-	public String getRecommender() {return super.Recommender;}
-	
-	public ArrayList<String> getPresentee() {return presentee;}
-	
-	public void setPresentee(ArrayList<String> presentee) {this.presentee = presentee;}
+	public void setPresentee(ArrayList<Guest> presentee) {this.presentee = presentee;}
 	//*****************************************************************************************
 
-	//Email container and message container
-	public void addMessage(Message_Container MC) {
-		super.addMessage(MC);
-	}
-	
-	public ArrayList<Message_Container> getMessageList() {
-		return super.Message_Content;
-	}
-	
-	public void removeMessage(Message_Container MC) {
-		super.removeMessage(MC);
-	}
-	
-	public void addEmail(Email email) {
-		super.addEmail(email);
-	}
-	
-	public ArrayList<Email> getEmailList() {
-		return super.Email_Content;
-	}	
-	
-	public void removeEmail(Email email) {
-		super.removeEmail(email);
-	}
 	//**************************************************************************
 	
 	//Return Evaluation score Range
@@ -89,44 +32,31 @@ public class OU extends Client{
 	}
 	
 	//Remove presentee if you have filled up the initial evaluation for your presentee
-	public void removePresentee(String Name) {
+	public void removePresentee(Guest Name) {
 		presentee.remove(Name);
 	}
 	
 	//Add presentee if your presentee needs you to provide them an initial scores
-	public void addPresentee(String Name) {
+	public void addPresentee(Guest Name) {
 		presentee.add(Name);
 	}
 	
-	public ArrayList<String> getPresenteeList() {
+	public ArrayList<Guest> getPresenteeList() {
 		return presentee;
 	}
-	
-	//-------------------------------Notifications-------------------------------------
-	public void addNotification(Notification notification) {
-		super.addNotification(notification);
+
+//--------------------------------Number of Compliments------------------------------------
+	public void incNumCompliment() {
+		++this.numCompliment;
 	}
 	
-	public void removeNotification(Notification notification) {
-		super.removeNotification(notification);
+	public int getNumCompliment() {
+		return numCompliment;
+	}
+
+	public void setNumCompliment(int numCompliment) {
+		this.numCompliment = numCompliment;
 	}
 	
-	public ArrayList<Notification> getNotification(){
-		return super.getNotification();
-	}
-	//******************************************************************************
-	
-	//---------------------------Whitebox & blacklist------------------------------------
-	public void removeFriend(Client Name) {super.removeFriend(Name);}
-	
-	public void addFriend(Client Name) {super.addFriend(Name);}
-	
-	public ArrayList<Client> getWhitebox() {return super.getWhitebox();}
-	
-	public void removeBLMember(Client Name) {super.removeBLMember(Name);}
-	
-	public ArrayList<Client> getBL() {return super.Personal_Blacklist;}
-	
-	public void addBLMember(Client Name) {super.addBLMember(Name);}
-	//******************************************************************************
+//******************************************************************************************
 }

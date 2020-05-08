@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_221" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="application.Information_Container" id="Information_Container0">
+    <void property="ID">
+     <string>23333</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>anime</string>
+       </void>
+       <void property="subject">
+        <string>anime</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>hello</string>
+       </void>
+       <void property="subject">
+        <string>hello</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Hell</string>
+       </void>
+       <void property="subject">
+        <string>Hell</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>NXN</string>
+       </void>
+       <void property="subject">
+        <string>NXN</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="application.Information_Container" id="Information_Container1">
+    <void property="ID">
+     <string>77777</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Hello World.</string>
+       </void>
+       <void property="subject">
+        <string>Hello</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Good</string>
+       </void>
+       <void property="subject">
+        <string>Good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Anime</string>
+       </void>
+       <void property="subject">
+        <string>Anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Good</string>
+       </void>
+       <void property="subject">
+        <string>Good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Anime</string>
+       </void>
+       <void property="subject">
+        <string>Anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Anime</string>
+       </void>
+       <void property="subject">
+        <string>Anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>anime</string>
+       </void>
+       <void property="subject">
+        <string>anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>good</string>
+       </void>
+       <void property="subject">
+        <string>good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>LiamLee@gmail.com</string>
+       </void>
+       <void property="subject">
+        <string>LiamLee@gmail.com</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Good</string>
+       </void>
+       <void property="subject">
+        <string>Good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>sss</string>
+       </void>
+       <void property="subject">
+        <string>sss</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Liam</string>
+       </void>
+       <void property="subject">
+        <string>Liam</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Anime</string>
+       </void>
+       <void property="subject">
+        <string>Anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>anime</string>
+       </void>
+       <void property="subject">
+        <string>anime</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>good</string>
+       </void>
+       <void property="subject">
+        <string>good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>hello</string>
+       </void>
+       <void property="subject">
+        <string>hello</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>world</string>
+       </void>
+       <void property="subject">
+        <string>world</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Hell</string>
+       </void>
+       <void property="subject">
+        <string>Hell</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>wow</string>
+       </void>
+       <void property="subject">
+        <string>wow</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>NTN</string>
+       </void>
+       <void property="subject">
+        <string>NTN</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>NAN</string>
+       </void>
+       <void property="subject">
+        <string>NAN</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>NCN</string>
+       </void>
+       <void property="subject">
+        <string>NCN</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>NXN</string>
+       </void>
+       <void property="subject">
+        <string>NXN</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

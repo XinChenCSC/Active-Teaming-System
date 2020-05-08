@@ -15,6 +15,8 @@ public class Notification {
 		this.message = message;
 	}
 
+	public Notification() {}
+	
 	//Icon 
 	public boolean isNewIcon() {
 		return NewIcon;

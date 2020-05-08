@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -26,12 +25,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class LoginController {
-
+public class LoginController{
+	
     @FXML
     private ResourceBundle resources;
 
@@ -65,10 +62,9 @@ public class LoginController {
     @FXML
     private ImageView Background;
     
+    private UserList userList = new UserList();
     
-    //List of each information
-    @SuppressWarnings("unused")
-	private List<Personal_Information> lst = new ArrayList<>();
+	private Information_List Info_List = new Information_List();
     
     //Username for checkbox
     private String CB_username;
@@ -76,8 +72,6 @@ public class LoginController {
     //Resize the background image
     private Rectangle2D screen = Screen.getPrimary().getVisualBounds();
     //The width and height of mini-window
-    //private double width = screen.getWidth()*0.3;
-    //private double height = screen.getHeight()*0.3;
     
     @FXML  
     void initialize() throws IOException {
@@ -85,8 +79,6 @@ public class LoginController {
         Background.setFitHeight(screen.getHeight()*1.5);
         //////////////////////////////////////////////////////////
        
-    	wrong_info.setOpacity(0);
-
     	//Get the current dir. path
     	File currentDirectory = new File(new File(".").getAbsolutePath().concat("\\Datas"));
     	
@@ -104,24 +96,25 @@ public class LoginController {
     }
     
     @FXML
-    void Login_Click(ActionEvent event) throws IOException {	
-    	FXMLLoader Loader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
-        Parent home_pane = Loader.load();
-        Stage home_scene = (Stage) parentPane.getScene().getWindow();
-        home_scene.setScene(new Scene(home_pane));
-        home_scene.setTitle("Homepage");
-        home_scene.show();
-        homepageController hc = Loader.getController();
-        hc.recommenderEvaluation();
-        
-    	/*for (int i = 1; i <= lst.size(); ++i) {
-    		if(lst.get(i).getId().compareTo(usernameF.getText()) == 0 &&
-    				lst.get(i).getPassword().compareTo(passwordF.getText()) == 0) {
-    			//Enter the home page
-    			break; // no more iterations
-    		}
-    	}
-    	wrong_info.setOpacity(1); // display incorrect notification */
+    void Login_Click(ActionEvent event) throws IOException{	        
+        //check login information
+        for(int i = 0; i < userList.getAll_Size(); ++i) {
+        	if(userList.getAll_User().get(i).getID().compareTo(usernameF.getText()) == 0 &&	
+        			userList.getAll_User().get(i).getPassword().compareTo(passwordF.getText()) == 0) {
+        		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
+        		boolean evaluation = false;
+        		//Chec whether anyone of your presentee needs to be evaluated.  
+        		if(userList.getGuest().getRecommender() != null)
+        			if(userList.getGuest().getRecommender().compareTo(userList.getAll_User().get(i).getName()) == 0 && userList.getGuest().isLogin()) {
+        				evaluation = true;
+        			}
+        		homepageController hc = Loader.getController();
+        		//para1: eavluation; para2: password change; para3: transit userList; para4: specific user
+        		hc.carryingInformation(evaluation, false, userList,
+        				userList.getAll_User().get(i), Info_List);        			
+        	}
+        }
+    	wrong_info.setVisible(true); // display incorrect notification 
     }
 
     @FXML
@@ -151,50 +144,43 @@ public class LoginController {
     @FXML
    
     void Signup_Click(ActionEvent event) throws IOException {
-    	//Switch to the signup scene..
-    	Parent signup_page = FXMLLoader.load(getClass().getResource("SignUpPage.fxml"));
-        Stage signup_scene = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    
-        signup_scene.setScene(new Scene(signup_page));
-        signup_scene.setTitle("Signup");
-        signup_scene.show();
+    	FXMLLoader Loader = sceneSwitch("SignUpPage.fxml", "Registration");
+    	SignupController sc = Loader.getController();
+    	sc.LoginToSignup(userList, Info_List);
     }
 
     @FXML
     private void Guest_Mode(ActionEvent event) throws IOException {
-    	FXMLLoader Loader = new FXMLLoader(getClass().getResource("Homepage.fxml"));
-        Parent home_pane = Loader.load();
-        Stage home_scene = (Stage) parentPane.getScene().getWindow();
-        home_scene.setScene(new Scene(home_pane));
-        home_scene.setTitle("Guest mode");
-        home_scene.show();
+    	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");
+    	homepageController hc = Loader.getController();
+    	hc.GuestMode();
     }
 
     //If your registration passed, a popup alert will notice you.
 	void SuccessedSignupAlert() throws IOException {
     	ButtonType login = new ButtonType("Login", ButtonData.OK_DONE);
-    	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: Unknown\nTemporary password: Unknown", login);
+    	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: " + userList.getGuest().getID() +
+    			"\nYour password: " + userList.getGuest().getPassword(), login);
     	alert.setTitle("Confirmation");
     	alert.setHeaderText("Congratulation! Your account has been acitviated. You can login by click the login button!");
     	//check click button types
     	Optional<ButtonType> result = alert.showAndWait();
+    	
     	if(result.get() == login) {
-    		Parent homepage = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-            Stage home_scene = (Stage) parentPane.getScene().getWindow();
-            home_scene.setScene(new Scene(homepage));
-            home_scene.setTitle("Home page");
-            home_scene.show();
+    		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
+    		homepageController hc = Loader.getController();
+			hc.carryingInformation(false, true, userList,
+					userList.getGuest(), Info_List);   
     	}
     }
 	
 	//Fail for registration, an additional resumbit with a proper reason is required.
-	void FailedSignupAlert() throws IOException {
+	void FailedSignupAlert() throws IOException {		
     	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
     	ButtonType submit = new ButtonType("Submit", ButtonData.OK_DONE);
     	Alert alert = new Alert(AlertType.ERROR,
-    			"Your registration has been denied, but you can submit again by click the submit button. "
-    			+ "You will lose your last chance to submit if your click the later button"
-    			, submit, later);
+    			"Your registration has been denied, but you can submit again by click the submit button. ",
+    			 submit, later);
     	alert.setTitle("Confirmation");
     	alert.setHeaderText(null);
     	//check click button types
@@ -206,18 +192,37 @@ public class LoginController {
         	confirmAlert.showAndWait();
     	}
 	}
-
-/*   private Alert getAlert(AlertType at, String content, ButtonType bt, String title) {
-    	Alert alert = new Alert(at, content, bt);
-    	alert.setTitle(title);
-    	alert.setHeaderText(null);
-    	alert.showAndWait();    	
-    	return alert;
-    }*/
+	
     
-	void signupAlert() throws IOException{
-		// TODO Auto-generated method stub
-		//SuccessedSignupAlert();
-		FailedSignupAlert();
+	//Carry information from the main class
+	void signupAlert(UserList ul, Information_List il) throws IOException{
+		this.userList = ul; //set database
+		this.Info_List = il;
+		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivated())
+			FailedSignupAlert();	
+		else if(userList.getGuest().getNumRegister() != 0 && !userList.getGuest().isActivated())
+			SuccessedSignupAlert();
 	}
+	
+	private FXMLLoader	sceneSwitch(String url, String title) throws IOException {
+		FXMLLoader Loader = new FXMLLoader(getClass().getResource(url));
+        Parent home_pane = Loader.load();
+        Stage stage = (Stage) parentPane.getScene().getWindow();
+        stage.setScene(new Scene(home_pane));
+        stage.setTitle(title);
+        return Loader;
+	}
+
+	public void HomeToLogin(UserList ul, Information_List il) {
+		this.userList = ul;
+		this.Info_List = il;
+	}
+
+	
+	public void SignupToLogin(UserList ul, Information_List il) {
+		this.userList = ul;
+		this.Info_List = il;
+	}
+	
+	
 }

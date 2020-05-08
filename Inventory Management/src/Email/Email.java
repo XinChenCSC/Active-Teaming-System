@@ -2,35 +2,38 @@ package Email;
 
 public class Email {
 
-	private String from ;
+	private String Target ;
 	
-	private String subject;
+	private String Subject;
 	
-	private String content;
+	private String Content;
 	
-	private String to;
-	
-	//Constructor
-	public Email(String from, String subject, String content, String to) {
-		this.from = from;
-		this.subject = subject;
-		this.content = content;
-		this.to = to;
+	//ConstrucTor
+	public Email() {
+		this.Target = "";
+		this.Subject = "";
+		this.Content = "";
 	}
 
-	public String getfrom() {return from;}
+	public Email(String Subject, String Content, String Target) {
+		this.Target = Target;
+		this.Subject = Subject;
+		this.Content = Content;
+	}
 
-	public void setfrom(String from) {this.from = from;}
+	public String getTarget() {return this.Target;}
 
-	public String getSubject() {return subject;}
+	public void setTarget(String Target) {this.Target = Target;}
 
-	public void setSubject(String subject) {this.subject = subject;}
+	public String getSubject() {return this.Subject;}
+
+	public void setSubject(String Subject) {this.Subject = Subject;}
 	
-	public String getContent() {return content;}
+	public String getContent() {return this.Content;}
 
-	public void setContent(String content) {this.content = content;}
-
-	public String getTo() {return to;}
-
-	public void setTo(String to) {this.to = to;}
+	public void setContent(String Content) {this.Content = Content;}
+	
+	public String toString() {
+		return this.Target + "\n" + this.Content;
+	}
 }
