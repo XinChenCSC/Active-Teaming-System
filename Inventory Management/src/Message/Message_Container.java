@@ -1,43 +1,52 @@
 package Message;
 
-import java.util.HashMap;
 
 public class Message_Container {
 
-	private String target;
+	private String ID;
 	
-	private HashMap<Integer, String> container = new HashMap<Integer, String>();
+	//Message container
+	private String[][] content = new String[100][2];
+	
+	private int position = 0;
 	
 	//Constructor
-	public Message_Container(String target) {
-		this.setTarget(target);
+	public Message_Container(String ID) {
+		this.setID(ID);
 	}
 	
-	public Message_Container() {}
-
-	public String getTarget() {
-		return target;
+	public Message_Container() {
+		this.ID = "";
 	}
 
-	public void setTarget(String target) {
-		this.target = target;
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String ID) {
+		this.ID = ID;
 	}
 	
-	//Add message 
-	public void addMessage(int key, String value) {
-		container.put(key, value);
+
+	public String[][] getContent() {
+		return content;
+	}
+
+	public void setContent(String[][] content) {
+		this.content = content;
+	}
+
+	public void addContent(String key, String value) {
+		this.content[this.position][0] = key;
+		this.content[this.position][1] = value;
+		++this.position;
 	}
 	
-	//Clear the current content
-	public void removeContent() {
-		container.clear();
+	public int getPosition() {
+		return position;
 	}
-	
-	public HashMap<Integer, String> getContainer(){
-		return this.container;
-	}
-	
-	public int size() {
-		return this.container.size();
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }

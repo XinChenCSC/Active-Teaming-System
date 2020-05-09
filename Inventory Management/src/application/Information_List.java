@@ -3,6 +3,7 @@ package application;
 import java.util.ArrayList;
 
 import Email.Email;
+import Message.Message_Container;
 import application.Notification.Notification;
 
 public class Information_List {
@@ -30,6 +31,31 @@ public class Information_List {
 		for(int i = 0; i < Info_Con.size(); ++i) {
 			if(id.compareTo(Info_Con.get(i).getID()) == 0) {
 				Info_Con.get(i).removeEmail(email);
+				break;
+			}
+		}
+	}
+	
+	public void CreateMessage(String id, Message_Container message) {
+		boolean b = false;
+		for(int i = 0; i < Info_Con.size(); ++i) {
+			if(id.compareTo(Info_Con.get(i).getID()) == 0) {
+				this.Info_Con.get(i).addMessage(message);
+				b = true;
+				break;
+			}
+		}
+		if(!b) {
+			Information_Container ic = new Information_Container(id);
+			ic.addMessage(message);
+			this.Info_Con.add(ic);			
+		}
+	}
+	
+	public void removeMessage(String id, Message_Container message) {
+		for(int i = 0; i < Info_Con.size(); ++i) {
+			if(id.compareTo(Info_Con.get(i).getID()) == 0) {
+				Info_Con.get(i).removeMessage(message);
 				break;
 			}
 		}

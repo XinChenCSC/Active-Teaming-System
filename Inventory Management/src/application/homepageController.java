@@ -12,8 +12,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -24,6 +22,7 @@ import Clients.SU;
 import Clients.VIP;
 import Clients.Guest;
 import Email.Email;
+import Message.Message_Container;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -39,7 +38,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -158,9 +156,7 @@ public class homepageController{
 	// Number of existing messages
 	private int messageNum = 0;
 	// Target email index
-	private int emailIndex = 0;
-	// Target message index
-	private int messageIndex = 0;
+	private int UserIndex = 0;
     //Window size
 	private final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 	//is guest
@@ -355,25 +351,20 @@ public class homepageController{
         //Create chat list
         Pane chatList = messageList(screen.getWidth()/5, screen.getHeight()/2);
         //create scene
-        Scene MESSAGE_Scene = new Scene(chatList,screen.getWidth()/5, screen.getHeight()/2);
+        Scene scene = new Scene(chatList,screen.getWidth()/5, screen.getHeight()/2);
         //Create message board
-        Pane messageChat = messageChat(screen.getWidth()/5, screen.getHeight()/2);
+        Pane chatContent = chatContent(scene, chatList, screen.getWidth()/5, screen.getHeight()/2);
         //Message list
         GridPane gridPane = (GridPane) ((ScrollPane) chatList.getChildren().get(0)).getContent();
-        //Message board 
-        GridPane messageBoard = (GridPane) messageChat.getChildren().get(0);
         //Show original list
-        getChatList(MESSAGE_Scene, chatList, messageChat, gridPane, 0);
+        getChatList(scene, chatList, chatContent, gridPane, 0);
         //first time message with sb
-        ((ButtonBase) chatList.getChildren().get(2)).setOnAction(e-> {
-        	((Label) messageBoard.getChildren().get(0)).setText("You");
-        	MESSAGE_Scene.setRoot(messageChat);
-        	firstMessage(MESSAGE_Scene, chatList, messageChat, (TextField) chatList.getChildren().get(5), gridPane);  
-    	});
+        firstMessage(scene, chatList, chatContent, (TextField) chatList.getChildren().get(5), gridPane);  
+        
         //Delete messages
         ((Button) chatList.getChildren().get(1)).setOnAction(e-> deleteMessage(chatList, gridPane));  
         //Set new window
-        NewWindow(newWindow, MESSAGE_Scene, mainStage, "Message");
+        NewWindow(newWindow, scene, mainStage, "Message");
     }
     
     @FXML
@@ -1113,13 +1104,13 @@ public class homepageController{
     //List all existed emails and call email reply
     private void getEmailList(double w, double h, Stage mainStage, GridPane gridPane, Pane content, int start) {
     	//Get the index of email list
-    	this.emailIndex = setEmailLength();
+    	this.UserIndex = getUserIndex();
     	//List all existed emails
     	for(int i = emailNum-1, j = 0; i >= start ; --i, ++j) {
     		//Hide content area
     		content.setVisible(false);
     		//Create button and assign subject to it
-    		Button email_label = new Button(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getSubject());
+    		Button email_label = new Button(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject());
     		getSetting(email_label, gridPane.getColumnConstraints().get(0).getPrefWidth(), h*0.1, 0, 0);
     		email_label.setAlignment(Pos.CENTER);
     		email_label.setFont(new Font(16));
@@ -1162,9 +1153,9 @@ public class homepageController{
     	//Set text to text fields
     	label.setOnAction(e->{
     		pane.setVisible(true);
-    		((TextField) children.get(1)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getTarget());
-    		((TextField) children.get(3)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getSubject());
-    		((TextArea) children.get(4)).setText(this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(i).getContent());
+    		((TextField) children.get(1)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getTarget());
+    		((TextField) children.get(3)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject());
+    		((TextArea) children.get(4)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getContent());
     	});
     }
     
@@ -1217,13 +1208,13 @@ public class homepageController{
 				ObservableList<Node> children = gridPane.getChildren();	
 				//Remove deleted emails
 				int index = 0;
+				this.UserIndex = getUserIndex();
 				for(int i = 0; i < emailNum; ++i) {
 					if(!selectedNum.contains(i)) 
 						index += 2;
 					else {
 						//Remove email
-						this.emailIndex = setEmailLength();
-						this.Info_List.removeEmail(this.target.getID(), this.Info_List.getInfo_Con().get(emailIndex).getEmail_Content().get(emailNum-1-i));
+						this.Info_List.removeEmail(this.target.getID(), this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(emailNum-1-i));
 						gridPane.getChildren().remove(index, index+2);
 						content.setVisible(false);
 					}
@@ -1352,12 +1343,12 @@ public class homepageController{
     			Alert alert = getAlert(AlertType.INFORMATION, "Email has been sent!", ButtonType.OK, "Confirmaton");			
 				if(alert.getResult() == ButtonType.OK) {
 					((Stage) scene.getScene().getWindow()).close(); 
-					 //Add new email to the email list
-
-		            ++emailNum;
-		            getEmailList(w, h, s, gridPane, content, emailNum-1);
-		            //set email to the top
-		            emailMoveUp(gridPane);					
+					
+					//Add new email to the email list, clear the email list and reload again
+					gridPane.getChildren().clear();
+					gridPane.getRowConstraints().clear();
+		            ++this.emailNum;
+		            getEmailList(w, h, s, gridPane, content, 0);				
 				}
     		}
     		else {
@@ -1370,24 +1361,6 @@ public class homepageController{
         Stage newWindow = new Stage();
         //Set newWindow
         NewWindow(newWindow, secondScene, s, "Compose");    
-    }
-
-    //Set the new email to the top
-    private void emailMoveUp(GridPane gridPane) {
-    	ArrayList<Node> list = new ArrayList<>();
-    	for(int i = 0; i <gridPane.getChildren().size(); i+=2) {
-    		list.add(gridPane.getChildren().get(i));
-    		list.add(gridPane.getChildren().get(i+1));
-    	}
-    	//Clear gridPane
-    	gridPane.getChildren().clear();
-    	//Sort
-    	gridPane.add(list.get(list.size()-2), 0, 0);
-    	gridPane.add(list.get(list.size()-1), 0, 0);
-    	for(int i = 1; i < list.size()/2; ++i) {
-    		gridPane.add(list.get(i*2-2), 0, i);
-    		gridPane.add(list.get(i*2-1), 0, i);
-    	}
     }
    
     //Email reply scene
@@ -1516,7 +1489,7 @@ public class homepageController{
     
     //-------------------------------Message---------------------------------------------
     //Messaging scene
-    private Pane messageChat(double w, double h) {
+    private Pane chatContent(Scene scene, Pane chatList, double w, double h) {
     	Pane result = new Pane();
     	//Import css file 
     	result.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -1525,7 +1498,7 @@ public class homepageController{
     	gridPane.getColumnConstraints().add(new ColumnConstraints(w-15));
     	
     	//Object
-    	Label object = new Label("Unknown");
+    	Label object = new Label();
     	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
     	GridPane.setHalignment(object, HPos.CENTER);
     	GridPane.setValignment(object, VPos.CENTER);
@@ -1570,40 +1543,15 @@ public class homepageController{
     	GridPane.setHalignment(send, HPos.RIGHT);
     	GridPane.setValignment(send, VPos.CENTER);
     	gridPane.add(send, 0, 3);
-    	
-    	//Delete button
-    	Button delete = new Button("Delete");
-    	getStyle(delete);
-    	getSetting(delete, w*0.2, h*0.05, 0, 0);
-    	GridPane.setHalignment(delete, HPos.CENTER);
-    	GridPane.setValignment(delete, VPos.CENTER);
-    	gridPane.add(delete, 0, 3);
-
-    	//dummy
-    	HashMap<Integer, String> container = new HashMap<Integer, String>();
 
     	//Grid pane
     	GridPane messages = new GridPane();
     	messages.getColumnConstraints().add(new ColumnConstraints(w-45));
     	messages.setPadding(new Insets(0,0,0,15));
     	messages.setVgap(10);
-    	//Always at the bottom of the scroll pane
-    	messages.heightProperty().addListener(observable -> chat.setVvalue(1D));
     	
-    	//Load previous messages
-    	loadPreviousMessages(container, messages);
-    	
-    	//Send button event
-    	MessageSendEvent(send, messages, text);
-    	
-    	//Delete event
-    	delete.setOnAction(e->{
-    		Alert alert = getAlert(AlertType.WARNING, "All contents will be deleted.", ButtonType.YES, "Caution!");
-    		if(alert.getResult() == ButtonType.YES) {
-    			messages.getRowConstraints().clear();
-    			messages.getChildren().clear();
-    		}
-    	});
+    	//Back button
+    	back.setOnAction(e-> scene.setRoot(chatList));
 
     	chat.setContent(messages);
     	result.getChildren().addAll(gridPane);
@@ -1611,50 +1559,79 @@ public class homepageController{
     }
 
     //Load previous messages
-    private void loadPreviousMessages(HashMap<Integer, String> hashmap, GridPane messages) {
-		for (Entry<Integer, String> m : hashmap.entrySet()) {
+    private void loadPreviousMessages(String[][] container, int i, GridPane messages) {
+		for (int j = 0; j < this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getPosition(); ++j) {
 			// messages
-			Label input = new Label(m.getValue());
+			Label input = new Label(container[j][1]);
 			input.setWrapText(true);
 			input.setAlignment(Pos.CENTER_RIGHT);
 			// Get the width of string
-			if (m.getKey() % 2 == 0) {
+			if (container[j][0].compareTo("0") == 0) {
 				input.setStyle("-fx-background-color: #7FFF00;");
 				GridPane.setHalignment(input, HPos.RIGHT);
 			} else {
 				input.setStyle("-fx-background-color: #F0FFFF;");
 				GridPane.setHalignment(input, HPos.LEFT);
 			}
-			// add row
+			// add row 
         	messages.getRowConstraints().add(new RowConstraints());
         	messages.getRowConstraints().get(messages.getRowConstraints().size()-1).prefHeightProperty().bind(input.prefHeightProperty());
-			messages.add(input, 0, messages.getRowConstraints().size() - 1);
+			messages.add(input, 0, j);
 		}
     }
 
     //Message send button event
-    private void MessageSendEvent(Button send, GridPane messages, TextField text) {
+    private void MessageSendEvent(Button send, GridPane messages, TextField text, int i) {
     	send.setOnAction(e->{
     		// messages
     		Label input = new Label(text.getText());
     		input.setStyle("-fx-background-color: #7FFF00;");
     		input.setWrapText(true);
     		input.setAlignment(Pos.CENTER_RIGHT);
-    		if(!text.getText().isEmpty()) {
-            	text.clear();
+    		if(text.getText().trim().length() > 0) {
             	//add row
             	messages.getRowConstraints().add(new RowConstraints());
             	//Resize the height of row.
             	messages.getRowConstraints().get(messages.getRowConstraints().size()-1).prefHeightProperty().bind(input.prefHeightProperty());
             	//set label to the right
             	GridPane.setHalignment(input, HPos.RIGHT);
-            	messages.add(input, 0, messages.getRowConstraints().size()-1);
+            	messages.add(input, 0, this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getPosition());
+            	//Save message
+            	int userIndex = getTargetIndex(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
+            	int messIndex = getTargetMessageIndex(text.getText(), userIndex);
+            	//Create a new chat board for target user
+            	if(messIndex == 0) {
+            		Message_Container mc = new Message_Container(this.target.getID());
+            		mc.addContent("1", text.getText());
+            		this.Info_List.CreateMessage(this.userList.getAll_User().get(userIndex).getID(), mc);
+            	}
+            	
+        		this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).addContent("0", text.getText());  		
+        		this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(messIndex).addContent("1", text.getText());
+            	text.clear();
     		}
     	});
     }
     
+    private int getTargetMessageIndex(String id, int userIndex) {
+    	for(int i = 0; i < this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(i).getID().compareTo(id) == 0)
+    			return i;
+    	}
+    	return 0;
+    }
+    
+    private int getTargetIndex(String id) {
+    	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(i).getID().compareTo(id) == 0) {
+    			return i;
+    		}
+    	}
+    	return 0;
+    }
+    
     //Set up all essential components
-    private Pane messageList(double w, double h) {
+    private Pane messageList(double w, double h) {   	
     	Pane result = new Pane();
     	result.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     	ScrollPane list = new ScrollPane();
@@ -1701,21 +1678,44 @@ public class homepageController{
     	contacter.getColumnConstraints().add(column);
     	
     	list.setContent(contacter);
-    	result.getChildren().addAll(list,delete,text, okay, cancel, search);
+    	result.getChildren().addAll(list, delete, text, okay, cancel, search);
     	return result;
     }
     
     //Find the member and message to 
-    private void firstMessage(Scene scene, Pane chatList, Pane messageChat, TextField search, GridPane gridPane) {
-    	if(!search.getText().isEmpty())
-    		getAlert(AlertType.WARNING, "Wrong input.", ButtonType.OK, "Caution!");
-    	else {
-    		messageNum += 1;
-    		getChatList(scene, chatList, messageChat, gridPane, messageNum-1);
-    		messageMoveUp(gridPane);
-    	}
+    private void firstMessage(Scene scene, Pane chatList, Pane chatContent, TextField search, GridPane gridPane) {
+    	((Button)chatList.getChildren().get(2)).setOnAction(e->{
+    		if(search.getText().isEmpty() || !isValidID(search.getText()) || !isRepeatID(search.getText()))
+    			search.setStyle("-fx-border-color: #FF0000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");
+    		else {
+    			//Save message target for the current user
+    			Message_Container mc = new Message_Container(search.getText());
+    			this.Info_List.CreateMessage(this.target.getID(), mc);
+    			//Save message for the target user
+    			Message_Container mc2 = new Message_Container(this.target.getID());
+    			this.Info_List.CreateMessage(search.getText(), mc2);
+    			
+    			search.clear();
+    			search.setStyle("-fx-border-color: #000000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");
+    			gridPane.getChildren().clear();
+    			//Increase total number of messages
+    			++this.messageNum;
+    			//Refresh chat list
+    			getChatList(scene, chatList, chatContent, gridPane, 0);
+    			//scene.setRoot(chatContent);
+    		}
+    	});
     }
   
+    private boolean isRepeatID(String id) {
+    	for(int i = 0; i < this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID().compareTo(id) == 0) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    
     //Delete Events
     private void deleteMessage(Pane Chat, GridPane gridPane) {
     	ArrayList<Integer> selectedNum = new ArrayList<Integer>();
@@ -1762,10 +1762,12 @@ public class homepageController{
 				ObservableList<Node> children = gridPane.getChildren();	
 				//Remove deleted emails
 				int index = 0;
+				this.UserIndex = getUserIndex();
 				for(int i = 0; i < messageNum; ++i) {
 					if(!selectedNum.contains(i)) 
 						index += 2;
 					else {
+						this.Info_List.removeMessage(this.target.getID(), this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(messageNum-1-i));
 						gridPane.getChildren().remove(index, index+2);
 					}
 				}
@@ -1802,10 +1804,12 @@ public class homepageController{
     }
     
     //Create each row information of chat list
-    private void getChatList(Scene scene, Pane chatList, Pane messageChat, GridPane gridPane, int start) {
-    	for(int i = start; i < messageNum; ++i) {
-    		//Create button
-    		Button label = new Button("Unknown"+i);
+    private void getChatList(Scene scene, Pane chatList, Pane chatContent, GridPane gridPane, int start) {
+    	//Get the user index in the userlist
+    	this.UserIndex = getUserIndex();
+    	for(int i = this.messageNum-1, j = 0; i >= start ; --i, ++j) {
+    		//Set the label in chat list as target's ID
+    		Button label = new Button(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
     		getSetting(label, screen.getWidth()/5, 50, 0, 0);
     		label.setAlignment(Pos.CENTER);
         	label.setFont(new Font(16));
@@ -1818,13 +1822,8 @@ public class homepageController{
         	delete_dot.setPadding(new Insets(10,10,10,10));
         	delete_dot.setVisible(false);
             
-            //Change to the content scene
-            label.setOnAction(e->{
-            	((Label) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(0)).setText("You");
-            	scene.setRoot(messageChat);
-            });
-            //Back to the messagelist if BACK button clicked.
-            ((Button) ((GridPane) messageChat.getChildren().get(0)).getChildren().get(4)).setOnAction(e->scene.setRoot(chatList));
+        	//Set chat content
+        	setChatContent(scene, chatList, chatContent, label, i);
             
         	//Hover effects
         	label.setOnMouseEntered(e->{
@@ -1837,29 +1836,49 @@ public class homepageController{
         	});
         	     	
     		GridPane.setHalignment(label, HPos.LEFT);
-        	gridPane.add(label, 0, i);
-        	gridPane.add(delete_dot, 0, i);  
+        	gridPane.add(label, 0, j);
+        	gridPane.add(delete_dot, 0, j);  
     	}
     }
-    
-    //Set lastest massage row to the top
-    private void messageMoveUp(GridPane gridPane) {
-    	ArrayList<Node> list = new ArrayList<>();
-    	for(int i = 0; i <gridPane.getChildren().size(); i+=2) {
-    		list.add(gridPane.getChildren().get(i));
-    		list.add(gridPane.getChildren().get(i+1));
-    	}
-    	//Clear gridPane
-    	gridPane.getChildren().clear();
-    	//Sort
-    	gridPane.add(list.get(list.size()-2), 0, 0);
-    	gridPane.add(list.get(list.size()-1), 0, 0);
-    	for(int i = 1; i < list.size()/2; ++i) {
-    		gridPane.add(list.get(i*2-2), 0, i);
-    		gridPane.add(list.get(i*2-1), 0, i);
-    	}
+       
+    private void setChatContent(Scene scene, Pane chatList, Pane chatContent, Button label, int i) {
+    	//Get the components from the parameters
+    	ScrollPane scrollPane = (ScrollPane)((GridPane)chatContent.getChildren().get(0)).getChildren().get(2);
+    	GridPane gridPane = (GridPane) scrollPane.getContent();
+    	TextField textField = (TextField) ((GridPane)chatContent.getChildren().get(0)).getChildren().get(3);
+    	Button send = (Button) ((GridPane)chatContent.getChildren().get(0)).getChildren().get(5);
+    	//Always at the bottom of the scroll pane
+    	gridPane.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
+    	
+    	//Change to the content scene
+        label.setOnAction(e->{
+        	
+        	//Set the ID of target user
+        	((Label) ((GridPane) chatContent.getChildren().get(0)).getChildren().get(0)).setText(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
+        	
+        	//Change Label
+        	((Label)((GridPane)chatContent.getChildren().get(0)).getChildren().get(0)).setText(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
+        	
+        	//Get previous messages container
+        	String[][] container = this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getContent();
+
+        	//Load previous messages
+        	loadPreviousMessages(container, i, gridPane);
+        	
+        	//Send button event
+        	MessageSendEvent(send, gridPane, textField, i);
+        	
+        	scene.setRoot(chatContent);
+        });
+        
+        //Back to the messagelist if BACK button clicked.
+        ((Button) ((GridPane) chatContent.getChildren().get(0)).getChildren().get(4)).setOnAction(e->{
+        	//Clear gridPane
+        	gridPane.getChildren().clear();
+        	gridPane.getRowConstraints().clear();
+        	scene.setRoot(chatList);
+        });
     }
-   
 	//**************************************************************************
     
     //----------------------------------Password change-------------------------------------
@@ -2197,11 +2216,12 @@ public class homepageController{
     	}
     }
 
-    private int setEmailLength() {
+    private int getUserIndex() {
     	int result = 0;
     	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
     		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
     			this.emailNum = this.Info_List.getInfo_Con().get(i).getEmail_Content().size();
+    			this.messageNum = this.Info_List.getInfo_Con().get(i).getMessage_Content().size();
     			result = i;
     			break;
     		}
