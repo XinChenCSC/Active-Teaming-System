@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import Clients.Client;
 import Clients.Guest;
+import Clients.Information_Container;
 import Clients.OU;
 import Clients.SU;
 import Clients.VIP;

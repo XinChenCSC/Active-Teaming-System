@@ -71,7 +71,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-public class homepageController{
+public class HomepageController{
 
     @FXML
     private ResourceBundle resources;
@@ -1480,9 +1480,9 @@ public class homepageController{
     //Move to the account page
     @FXML
     private void moveToAccount(ActionEvent event) throws IOException {
-//    	FXMLLoader loader = sceneSwitch("AccountPage.fxml", "Account");
-//    	LoginController lc = loader.getController();
-//    	lc.HomeToLogin(userList);
+    	FXMLLoader Loader = sceneSwitch("Accountpage.fxml", "Account");
+    	AccountpageController apc = Loader.getController();
+    	apc.HomeToAccount(this.userList, this.Info_List);
     }
     //**************************************************************************
 
@@ -1598,16 +1598,17 @@ public class homepageController{
             	messages.add(input, 0, this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getPosition());
             	//Save message
             	int userIndex = getTargetIndex(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
-            	int messIndex = getTargetMessageIndex(text.getText(), userIndex);
+            	int messIndex = getTargetMessageIndex(this.target.getID(), userIndex);
+            	System.out.println(messIndex);
             	//Create a new chat board for target user
-            	if(messIndex == 0) {
+            	if(messIndex == -1) {
             		Message_Container mc = new Message_Container(this.target.getID());
             		mc.addContent("1", text.getText());
             		this.Info_List.CreateMessage(this.userList.getAll_User().get(userIndex).getID(), mc);
             	}
-            	
-        		this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).addContent("0", text.getText());  		
-        		this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(messIndex).addContent("1", text.getText());
+            	else
+            		this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(messIndex).addContent("1", text.getText());
+        		this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).addContent("0", text.getText());  	
             	text.clear();
     		}
     	});
@@ -1618,16 +1619,16 @@ public class homepageController{
     		if(this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(i).getID().compareTo(id) == 0)
     			return i;
     	}
-    	return 0;
+    	return -1;
     }
     
     private int getTargetIndex(String id) {
-    	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
-    		if(this.Info_List.getInfo_Con().get(i).getID().compareTo(id) == 0) {
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    		if(this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
     			return i;
     		}
     	}
-    	return 0;
+    	return -1;
     }
     
     //Set up all essential components
@@ -1685,8 +1686,8 @@ public class homepageController{
     //Find the member and message to 
     private void firstMessage(Scene scene, Pane chatList, Pane chatContent, TextField search, GridPane gridPane) {
     	((Button)chatList.getChildren().get(2)).setOnAction(e->{
-    		if(search.getText().isEmpty() || !isValidID(search.getText()) || !isRepeatID(search.getText()))
-    			search.setStyle("-fx-border-color: #FF0000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");
+    		if(search.getText().isEmpty() || !isValidID(search.getText()) || !isRepeatID(search.getText())) {
+    			search.setStyle("-fx-border-color: #FF0000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");}
     		else {
     			//Save message target for the current user
     			Message_Container mc = new Message_Container(search.getText());
@@ -1698,6 +1699,7 @@ public class homepageController{
     			search.clear();
     			search.setStyle("-fx-border-color: #000000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");
     			gridPane.getChildren().clear();
+    			gridPane.getRowConstraints().clear();
     			//Increase total number of messages
     			++this.messageNum;
     			//Refresh chat list
@@ -2256,5 +2258,10 @@ public class homepageController{
         stage.setScene(new Scene(home_pane));
         stage.setTitle(title);
         return Loader;
+	}
+
+	public void AccountToHome(UserList ul, Information_List il) {
+		this.userList = ul;
+		this.Info_List = il;
 	}
 }

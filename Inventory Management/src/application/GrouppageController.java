@@ -48,7 +48,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
-public class GroupPageController {
+public class GrouppageController {
 
     @FXML
     private ResourceBundle resources;

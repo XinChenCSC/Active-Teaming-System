@@ -54,7 +54,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
-public class AccountPageController {
+public class AccountpageController {
 
     @FXML
     private ResourceBundle resources;
@@ -95,6 +95,11 @@ public class AccountPageController {
     @FXML
     private AnchorPane Anchor_Pane_2;
         
+    //User list 
+    private UserList userList = new UserList();
+    //User information
+    private Information_List Info_List = new Information_List();
+    
     private String str = "s";
     
     //Get the size of the current window
@@ -175,11 +180,9 @@ public class AccountPageController {
     //Return to the homepage
     @FXML
     private void homePage(ActionEvent event) throws IOException {
-    	Parent home_page = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-        Stage home_scene = (Stage) Profile.getScene().getWindow();
-        home_scene.setScene(new Scene(home_page));
-        home_scene.setTitle("Homepage");
-        home_scene.show();
+    	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Home");
+    	HomepageController hc = Loader.getController();
+    	hc.AccountToHome(this.userList, this.Info_List);
     }
 
     //Create remainder contents
@@ -748,5 +751,19 @@ public class AccountPageController {
     	n.setLayoutX(x);
     	n.setLayoutY(y);
     	n.setFocusTraversable(false);
-    }   
+    }
+
+	public void HomeToAccount(UserList userList, Information_List info_List) {
+		this.userList = userList;
+		this.Info_List = info_List;
+	}  
+	
+	private FXMLLoader sceneSwitch(String url, String title) throws IOException {
+		FXMLLoader Loader = new FXMLLoader(getClass().getResource(url));
+        Parent home_pane = Loader.load();
+        Stage stage = (Stage) Profile.getScene().getWindow();
+        stage.setScene(new Scene(home_pane));
+        stage.setTitle(title);
+        return Loader;
+	}
 }

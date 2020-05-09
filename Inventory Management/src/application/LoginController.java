@@ -108,7 +108,7 @@ public class LoginController{
         			if(userList.getGuest().getRecommender().compareTo(userList.getAll_User().get(i).getName()) == 0 && userList.getGuest().isLogin()) {
         				evaluation = true;
         			}
-        		homepageController hc = Loader.getController();
+        		HomepageController hc = Loader.getController();
         		//para1: eavluation; para2: password change; para3: transit userList; para4: specific user
         		hc.carryingInformation(evaluation, false, userList,
         				userList.getAll_User().get(i), Info_List);        			
@@ -152,7 +152,7 @@ public class LoginController{
     @FXML
     private void Guest_Mode(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");
-    	homepageController hc = Loader.getController();
+    	HomepageController hc = Loader.getController();
     	hc.GuestMode();
     }
 
@@ -168,7 +168,7 @@ public class LoginController{
     	
     	if(result.get() == login) {
     		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
-    		homepageController hc = Loader.getController();
+    		HomepageController hc = Loader.getController();
 			hc.carryingInformation(false, true, userList,
 					userList.getGuest(), Info_List);   
     	}
@@ -192,8 +192,7 @@ public class LoginController{
         	confirmAlert.showAndWait();
     	}
 	}
-	
-    
+	    
 	//Carry information from the main class
 	void signupAlert(UserList ul, Information_List il) throws IOException{
 		this.userList = ul; //set database
@@ -218,11 +217,9 @@ public class LoginController{
 		this.Info_List = il;
 	}
 
-	
 	public void SignupToLogin(UserList ul, Information_List il) {
 		this.userList = ul;
 		this.Info_List = il;
 	}
-	
 	
 }
