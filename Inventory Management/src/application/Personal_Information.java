@@ -1,4 +1,4 @@
-package application;
+	package application;
 
 public class Personal_Information {
 
@@ -6,16 +6,18 @@ public class Personal_Information {
 		private String lastname;
 		private String id;
 		private String password;
+		private int score;
 		
 		public Personal_Information() {
-			this(" ", " ", " ", " ");
+			this(" ", " ", " ", " ",0);
 		}
 
-		public Personal_Information(String firstname, String lastname, String id, String password) {
+		public Personal_Information(String firstname, String lastname, String id, String password,int score ) {
 			this.firstname = firstname;
 			this.lastname = lastname;
 			this.id = id;
 			this.password = password;
+			this.score = score;
 		}
 		
 		//setters
@@ -35,6 +37,10 @@ public class Personal_Information {
 			this.password = password;	
 		}
 		
+		public void setScore(int score) {
+			this.score = score;	
+		}
+		
 		//getters
 		public String getFirstname() {
 			return this.firstname;
@@ -50,6 +56,9 @@ public class Personal_Information {
 		
 		public String getPassword() {
 			return this.password;
+		}
+		public int getScore() {
+			return this.score;	
 		}
 		
 		
