@@ -2,31 +2,58 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container0">
+   <object class="Clients.Information_Container">
     <void property="ID">
      <string>23333</string>
     </void>
-    <void property="appointment">
-     <void method="add">
-      <object class="Appointment.Appointment">
-       <void property="date">
-        <string>2021-02-21 9:00AM</string>
-       </void>
-       <void property="duration">
-        <double>2.0</double>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="Appointment.Appointment">
-       <void property="date">
-        <string>2021-04-10 10:00AM</string>
-       </void>
-       <void property="duration">
-        <double>3.0</double>
-       </void>
-      </object>
-     </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>77777</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>55555</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>13579</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>24680</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>98374</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>43754</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container">
+    <void property="ID">
+     <string>29384</string>
     </void>
    </object>
   </void>

@@ -2,17 +2,132 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="Clients.SU">
-    <void property="imageURL">
-     <string>@../../Images/photography-of-person-walking-on-road-1236701.jpg</string>
-    </void>
-   </object>
+   <object class="Clients.SU"/>
   </void>
   <void method="add">
    <object class="Clients.OU"/>
   </void>
   <void method="add">
    <object class="Clients.VIP"/>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>13579</string>
+    </void>
+    <void property="email">
+     <string>JohnSmith@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Sing</string>
+    </void>
+    <void property="name">
+     <string>John Smith</string>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>24680</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/03/2019</string>
+    </void>
+    <void property="email">
+     <string>JuanCarlos@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Hike</string>
+    </void>
+    <void property="name">
+     <string>Juan Carlos</string>
+    </void>
+    <void property="reputationScore">
+     <int>31</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>43754</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/04/2019</string>
+    </void>
+    <void property="email">
+     <string>MikeJones@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Ski</string>
+    </void>
+    <void property="name">
+     <string>Mike Jones</string>
+    </void>
+    <void property="reputationScore">
+     <int>16</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>98374</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/05/2019</string>
+    </void>
+    <void property="email">
+     <string>RafealThomas@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Sleep</string>
+    </void>
+    <void property="name">
+     <string>Rafael Thomas</string>
+    </void>
+    <void property="reputationScore">
+     <int>17</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>29384</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/06/2019</string>
+    </void>
+    <void property="email">
+     <string>CarmenGabriela@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Swimming</string>
+    </void>
+    <void property="name">
+     <string>Carmen Gabriela</string>
+    </void>
+    <void property="reputationScore">
+     <int>18</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
   </void>
  </object>
 </java>
