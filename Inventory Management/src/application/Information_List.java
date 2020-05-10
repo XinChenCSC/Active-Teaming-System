@@ -146,6 +146,10 @@ public class Information_List {
 		return this.Info_Con;
 	}
 	
+	public void addInfo_Con(Information_Container info_con) {
+		this.Info_Con.add(info_con);
+	}
+	
 	public void setInfo_Con(ArrayList<Information_Container> info_con) {
 		this.Info_Con = info_con;
 	}

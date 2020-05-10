@@ -46,7 +46,7 @@
                 <URL value="@application.css" />
               </stylesheets>
             </MenuButton>
-            <MenuButton fx:id="Projects" alignment="CENTER" focusTraversable="false" layoutX="368.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Projects">
+            <MenuButton fx:id="Group" alignment="CENTER" focusTraversable="false" layoutX="368.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Group">
               <items>
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
@@ -62,7 +62,6 @@
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
                 <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
-                <MenuItem id="more" mnemonicParsing="false" style="-fx-text-alignment: center;" styleClass="more" text="More" />
               </items>
               <stylesheets>
                 <URL value="@application.css" />

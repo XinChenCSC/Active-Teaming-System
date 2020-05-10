@@ -612,8 +612,6 @@ public class AccountpageController {
 				gridPane.add(tag, 0, i);
 				
 				Label value = new Label();
-				value.setStyle("-fx-background-color: #00ffff;" 
-						+ "-fx-border-color: #00ffff;");
 				GridPane.setHalignment(value, HPos.CENTER);
 				gridPane.add(value, 1, i);
 				

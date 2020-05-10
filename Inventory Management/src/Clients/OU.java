@@ -10,6 +10,8 @@ public class OU extends Client{
 	
 	private int numCompliment = 0;
 	
+	private boolean needAppeal = false;
+	
 	//Constructor	
 	public OU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
 			int reputation_score, int total_project_completed, int total_group_engaged, int total_penalty_received,
@@ -31,36 +33,26 @@ public class OU extends Client{
 	//**************************************************************************
 	
 	//Return Evaluation score Range
-	public static int getEvaluationScoreRange() {
-		return Evaluation_Score_Range;
-	}
+	public static int getEvaluationScoreRange() {return Evaluation_Score_Range;}
 	
 	//Remove presentee if you have filled up the initial evaluation for your presentee
-	public void removePresentee(Guest Name) {
-		presentee.remove(Name);
-	}
-	
+	public void removePresentee(Guest Name) {presentee.remove(Name);}
+
 	//Add presentee if your presentee needs you to provide them an initial scores
-	public void addPresentee(Guest Name) {
-		presentee.add(Name);
-	}
+	public void addPresentee(Guest Name) {presentee.add(Name);}
 	
-	public ArrayList<Guest> getPresenteeList() {
-		return presentee;
-	}
+	public ArrayList<Guest> getPresenteeList() {return presentee;}
 
 //--------------------------------Number of Compliments------------------------------------
-	public void incNumCompliment() {
-		++this.numCompliment;
-	}
+	public void incNumCompliment() {++this.numCompliment;}
 	
-	public int getNumCompliment() {
-		return numCompliment;
-	}
+	public int getNumCompliment() {return numCompliment;}
 
-	public void setNumCompliment(int numCompliment) {
-		this.numCompliment = numCompliment;
-	}
+	public void setNumCompliment(int numCompliment) {this.numCompliment = numCompliment;}
 	
-//******************************************************************************************
+//	----------------------------------Need appeal getter and setter------------------------------
+	public boolean NeedAppeal() {return needAppeal;}
+
+	
+	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}	
 }

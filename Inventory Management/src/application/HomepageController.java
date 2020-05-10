@@ -43,6 +43,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -92,7 +93,7 @@ public class HomepageController{
     private MenuButton News;
 
     @FXML
-    private MenuButton Projects;
+    private MenuButton Group;
     
     @FXML
     private MenuButton Profile;
@@ -197,9 +198,9 @@ public class HomepageController{
         //Evaluation button
         Evaluation.setLayoutX(anchorPane_child.getPrefWidth()-510);
         Evaluation.setId("evaluation");
+        
         //Image animation
         Images_Animation();
-        
     }
     
     @FXML
@@ -229,6 +230,10 @@ public class HomepageController{
         if(this.isGuest || this.target instanceof SU) {        	
         	((Button)scene.getChildren().get(2)).setVisible(false);
         	((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
+        }
+        else if((this.target instanceof OU && !((OU) this.target).NeedAppeal()) ||
+        		(this.target instanceof VIP && !((VIP) this.target).NeedAppeal())) {
+        	((Button)scene.getChildren().get(2)).setVisible(false);
         }
         
         Scene secondScene = new Scene(scene, width, height);
@@ -386,18 +391,18 @@ public class HomepageController{
          Stage newWindow = new Stage(); //New mini window
          TabPane tabPane = new TabPane();
          //Create tabs
-         Tab tab1 = new Tab("General"); //General 
+         Tab tainvite = new Tab("General"); //General 
          Tab tab2 = new Tab("Group"); //Group 
          Tab tab3 = new Tab("Blacklist"); //Blacklist
-         tabPane.getTabs().addAll(tab1, tab2, tab3);
-         tab1.setClosable(false);
+         tabPane.getTabs().addAll(tainvite, tab2, tab3);
+         tainvite.setClosable(false);
          tab2.setClosable(false);
          tab3.setClosable(false);
      	 //Import css file
      	 tabPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
      	 //-----------------------------------------------General-----------------------------------------------
      	 //Tab content methods
-     	 generalTabContent(tab1, w, h);
+     	 generalTabContent(tainvite, w, h);
      	 //---------------------------------------------------Group----------------------------------------------------------
          groupTabContent(tab2, w, h);
          GridPane gridPane = (GridPane) ((BorderPane) tab2.getContent()).getCenter();
@@ -621,6 +626,7 @@ public class HomepageController{
     }
     
     private Pane groupCreateScene(double w, double h) {
+    	this.UserIndex = getUserIndex(); //refresh
     	Pane pane = new Pane();
     	//Group title
     	TextField group_title =  new TextField();
@@ -645,25 +651,30 @@ public class HomepageController{
     						+ "-fx-border-width: 5;");
     	//Grid Pane
     	GridPane friend_grid = new GridPane();
-    	friend_grid.setVgap(10);
-    	friend_grid.setHgap(120);
-    	friend_grid.setPadding(new Insets(20,20,10,0));
-    	ColumnConstraints column1 = new ColumnConstraints(100);
-    	ColumnConstraints column2 = new ColumnConstraints(70);
+    	friend_grid.setVgap(20);
+    	friend_grid.setHgap(20);
+    	friend_grid.setPadding(new Insets(20,10,20,10));
+    	ColumnConstraints column1 = new ColumnConstraints(170);
+    	ColumnConstraints column2 = new ColumnConstraints(100);
     	friend_grid.getColumnConstraints().addAll(column1, column2);
     	//Show all avaliable friends
-    	for(int i = 0; i < 30; ++i) {
+    	for(int i = 0, j = 0; i < this.userList.getAll_Size(); ++i) {
         	//Label names
-        	Label l1 = new Label("Unknown");
-        	l1.setFont(new Font(16));
-    		GridPane.setHalignment(l1, HPos.RIGHT);
-        	friend_grid.add(l1, 0, i);
-        	//set up invite button
-        	Button b1 = new Button("Invite");
-        	b1.setFocusTraversable(false);
-        	getStyle(b1);
-        	GridPane.setHalignment(b1, HPos.LEFT);
-        	friend_grid.add(b1, 1, i);
+        	Label Name = new Label();
+        	Name.setFont(new Font(16));
+    		GridPane.setHalignment(Name, HPos.CENTER);
+        	friend_grid.add(Name, 0, j);
+        	if(this.target.getID().compareTo(this.userList.getAll_User().get(i).getID()) != 0 &&
+        			!this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().contains(this.userList.getAll_User().get(i)) &&
+        			!(this.userList.getAll_User().get(i) instanceof SU)) {
+        		//set up invite button
+        		Name.setText(this.userList.getAll_User().get(i).getName());
+        		Button invite = new Button("Invite");
+        		invite.setFocusTraversable(false);
+        		getStyle(invite);
+        		GridPane.setHalignment(invite, HPos.CENTER);
+        		friend_grid.add(invite, 1, j++);        		
+        	}
     	}
     	//Confirmed button
     	Button confirm_button = new Button("Confirm");
@@ -673,6 +684,7 @@ public class HomepageController{
     	pane.getChildren().addAll(group_title, group_description, friend_list, confirm_button);
     	return pane;
     }
+       
     //----------------------------Evaluation Tab Pane---------------------------
     //Set up evaluation tab content
     private void EvaluationTabContent(Tab tab, double w, double h, Stage stage) {
@@ -790,7 +802,7 @@ public class HomepageController{
     	EvaluationPane.setBottom(eva_hbox);
     	tab.setContent(EvaluationPane);
     }
-    //**************************************************************************
+   
     //-------------------------------Edit---------------------------------------
     //set up group tab content
     private void groupTabContent(Tab tab, double w, double h) {
@@ -1962,6 +1974,7 @@ public class HomepageController{
     }
     //**************************************************************************************
     
+//    ---------------------------------------Scene Switch Method----------------------------------------------
     //New user evaluation by their recommender
     @SuppressWarnings("unchecked")
 	private void recommenderEvaluation() {
@@ -2034,6 +2047,9 @@ public class HomepageController{
     		passwordChangeScene();
     	if(this.target instanceof SU)
     		SUMode();
+    	
+        //List top three members
+        ListTopMember();
     }
       
     private void SUMode() {
@@ -2049,6 +2065,71 @@ public class HomepageController{
     	this.Profile.getItems().get(2).setDisable(true);
     	this.Profile.getItems().get(3).setDisable(true);
     	this.isGuest = true;
+    }
+//  ******************************************************************************************************************
+    
+//  List three top members
+    private void ListTopMember() {
+    	int HighestThreeIndex[] = new int[3];
+    	HighestThreeIndex[0] = 1;
+    	for(int i = 2; i < this.userList.getAll_Size(); ++i) {
+    		if(this.userList.getAll_User().get(i).getReputationScore() > this.userList.getAll_User().get(HighestThreeIndex[0]).getReputationScore()) {
+    			HighestThreeIndex[1] = HighestThreeIndex[0];
+    			HighestThreeIndex[2] = HighestThreeIndex[1];
+    			HighestThreeIndex[0] = i;
+    		}
+    		else if(this.userList.getAll_User().get(i).getReputationScore() > this.userList.getAll_User().get(HighestThreeIndex[1]).getReputationScore()) {
+    			HighestThreeIndex[2] = HighestThreeIndex[1];
+    			HighestThreeIndex[1] = i;
+    		}
+    		else if(this.userList.getAll_User().get(i).getReputationScore() > this.userList.getAll_User().get(HighestThreeIndex[2]).getReputationScore()) {
+    			HighestThreeIndex[2] = i;
+    		}
+    	}
+    	for(int i = 0; i < 3; ++i) {
+    		this.Members.getItems().get(i).setText(this.userList.getAll_User().get(HighestThreeIndex[i]).getName());
+    		inspectContent(this.Members.getItems().get(i), this.userList.getAll_User().get(HighestThreeIndex[i]), 
+    				screen.getWidth()/2.5*0.4, screen.getHeight()/1.5*0.4);
+    	}
+    }
+
+//  Inspect content
+    private void inspectContent(MenuItem menuItem, Client client, double w, double h) {
+    	menuItem.setOnAction(e->{    		
+    		Stage mainScene = (Stage) scrollPane.getScene().getWindow();
+    		Pane pane = new Pane();
+    		pane.setPrefSize(w, h);
+    		Scene secondScene = new Scene(pane, w, h);
+    		Stage newWindow = new Stage();
+    		
+    		//GridPane
+    		GridPane gridPane = new GridPane();
+    		gridPane.setPadding(new Insets(10,5,10,5));
+    		gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.3));
+    		gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.7));
+    		gridPane.setVgap(10);    	 
+    		String[] tags = {"Name:", "ID:", "Position:", "Email:"};
+    		//list member's informations
+    		for(int i = 0; i < tags.length; ++i) {
+    			Label tag = new Label(tags[i]);
+    			GridPane.setHalignment(tag, HPos.CENTER);
+    			gridPane.getRowConstraints().add(new RowConstraints(h*0.2));
+    			gridPane.add(tag, 0, i);
+    			
+    			Label value = new Label();
+    			GridPane.setHalignment(value, HPos.CENTER);
+    			gridPane.add(value, 1, i);
+    			
+    			if(i == 0) 		value.setText(client.getName());
+    			else if(i == 1) value.setText(client.getID());
+    			else if(i == 2) value.setText(client.getPosition());
+    			else			value.setText(client.getEmail());
+    		}	
+    		
+    		pane.getChildren().add(gridPane);
+    		//Call new window
+    		NewWindow(newWindow, secondScene, mainScene, "Information");  
+    	});
     }
     
     //General style   
@@ -2196,7 +2277,7 @@ public class HomepageController{
     	boolean result = false;
     	for(int i = 0; i < userList.getAll_Size(); ++i) {
     		//The target ID can't be your own id.
-    		if(this.target.getID().compareTo(id) != 0 && userList.getAll_User().get(i).getID().compareTo(id) == 0) {
+    		if(this.target.getID().compareTo(id) != 0 && this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
     			result = true;
     		}
     	}
@@ -2259,6 +2340,7 @@ public class HomepageController{
         stage.setTitle(title);
         return Loader;
 	}
+	
 
 	public void AccountToHome(UserList ul, Information_List il, Client client) {
 		this.userList = ul;

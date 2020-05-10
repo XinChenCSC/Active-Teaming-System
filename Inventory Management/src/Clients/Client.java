@@ -1,6 +1,5 @@
 package Clients;
 
-
 public class Client {
 	
 	protected String Name;

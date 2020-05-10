@@ -87,15 +87,41 @@ public class Main extends Application {
 //		SU su = new SU();
 //		OU ou = new OU();
 //		VIP vip = new VIP();
+//		OU ou1 = new OU("John Smith", "13579", "JohnSmith@gmail.com", "OU", "Sing", "Qichen You", "66666",
+//				10, 2, 2, 0, "Good", "On", "05/02/2019");
+//		OU ou2 = new OU("Juan Carlos", "24680", "JuanCarlos@gmail.com", "OU", "Hike", "Qichen You", "66666",
+//				31, 2, 2, 0, "Good", "On", "05/03/2019");
+//		OU ou3 = new OU("Mike Jones", "43754", "MikeJones@gmail.com", "OU", "Ski", "Qichen You", "66666",
+//				16, 2, 2, 0, "Good", "On", "05/04/2019");
+//		OU ou4 = new OU("Rafael Thomas", "98374", "RafealThomas@gmail.com", "OU", "Sleep", "Qichen You", "66666",
+//				17, 2, 2, 0, "Good", "On", "05/05/2019");
+//		OU ou5 = new OU("Carmen Gabriela", "29384", "CarmenGabriela@gmail.com", "OU", "Swimming", "Qichen You", "66666",
+//				18, 2, 2, 0, "Good", "On", "05/06/2019");	
 //		userList.addSU_User(su);
+//		userList.addAll_User(su);
 //		userList.addOU_User(ou);
+//		userList.addAll_User(ou);
 //		userList.addVIP_User(vip);
-//		Appointment app1 = new Appointment("2021-02-21 9:00AM", 2);
-//		Appointment app2 = new Appointment("2021-04-10 10:00AM", 3);
-//		Appointment app3 = new Appointment("2020-01-01 11:00AM", 4);
-//		this.il.addAppointment(su.getID(), app1);
-//		this.il.addAppointment(su.getID(), app2);
-//		this.il.addAppointment(su.getID(), app3);
+//		userList.addAll_User(vip);
+//		userList.addOU_User(ou1);
+//		userList.addAll_User(ou1);
+//		userList.addOU_User(ou2);
+//		userList.addAll_User(ou2);
+//		userList.addOU_User(ou3);
+//		userList.addAll_User(ou3);
+//		userList.addOU_User(ou4);
+//		userList.addAll_User(ou4);
+//		userList.addOU_User(ou5);
+//		userList.addAll_User(ou5);
+//		il.addInfo_Con(new Information_Container("23333"));
+//		il.addInfo_Con(new Information_Container("77777"));
+//		il.addInfo_Con(new Information_Container("55555"));
+//		il.addInfo_Con(new Information_Container("13579"));
+//		il.addInfo_Con(new Information_Container("24680"));
+//		il.addInfo_Con(new Information_Container("98374"));
+//		il.addInfo_Con(new Information_Container("43754"));
+//		il.addInfo_Con(new Information_Container("29384"));
+		
 		//read file
 		for(int i = 0; i < xmlFile.length; ++i) {
 			try {
@@ -113,7 +139,6 @@ public class Main extends Application {
             		file.writeObject(userList.getVip_User());
             	else
             		file.writeObject(il.getInfo_Con());
-            		
             	file.close();
         	}
         	catch (IOException e) {
@@ -142,6 +167,32 @@ public class Main extends Application {
     			il.setInfo_Con((ArrayList<Information_Container>) file.readObject());
     		file.close();
     	}
-//    	System.out.println(userList.getGuest().getRecommender());
+    	int remove[] = new int[this.userList.getOU_Size()];
+		//Check if any OU has a chance to promote up.
+		for(int i = 0, j = 0; i < this.userList.getOU_Size(); ++i) {
+			if(this.userList.getOU_User().get(i).getReputationScore() >= 30) {
+				VIP new_vip = new VIP(this.userList.getOU_User().get(i).getName(),
+						this.userList.getOU_User().get(i).getID(),
+						this.userList.getOU_User().get(i).getEmail(),
+						"VIP", 
+						this.userList.getOU_User().get(i).getInterest(),
+						this.userList.getOU_User().get(i).getRecommender(),
+						this.userList.getOU_User().get(i).getPassword(),
+						this.userList.getOU_User().get(i).getReputationScore(),
+						this.userList.getOU_User().get(i).getTotal_Project_Completed(),
+						this.userList.getOU_User().get(i).getTotal_Group_Engaged(),
+						this.userList.getOU_User().get(i).getTotal_Penalty_Received(),
+						this.userList.getOU_User().get(i).getStatus(),
+						this.userList.getOU_User().get(i).getEvaluation(),
+						this.userList.getOU_User().get(i).getDate_Of_Join());
+				remove[j++] = i;
+				this.userList.addVIP_User(new_vip);
+			}
+		}
+		for(int i = 0; i < this.userList.getOU_Size(); ++i) {
+			if(remove[i] > 0) {
+				this.userList.removeOU_User(this.userList.getOU_User().get(remove[i]));
+			}
+		}
      }
 }

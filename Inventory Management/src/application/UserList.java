@@ -45,7 +45,6 @@ public class UserList {
 	//---------------------------OU Users-------------------------------
 	public void addOU_User(OU ou) {
 		this.OU_User.add(ou);
-		this.All_User.add(ou);
 	}
 	
 	public void removeOU_User(OU ou) {
@@ -65,7 +64,6 @@ public class UserList {
 	//---------------------------VIP Users-------------------------------
 	public void addVIP_User(VIP vip) {
 		this.VIP_User.add(vip);
-		this.All_User.add(vip);
 	}
 	
 	public void removeVIP_User(VIP vip) {
@@ -85,7 +83,6 @@ public class UserList {
 	//---------------------------SU Users-------------------------------
 	public void addSU_User(SU su) {
 		this.SU_User.add(su);
-		this.All_User.add(su);
 	}
 	
 	public void removeSU_User(SU su) {
