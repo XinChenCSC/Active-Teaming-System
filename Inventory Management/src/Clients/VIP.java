@@ -17,12 +17,16 @@ public class VIP extends Client{
 	private int numCompliment = 0;
 	
 	//Constructor
-	public VIP(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password) {
-		super(Name, ID, Email, Position, Interest, Recommender, Password);
+	public VIP(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
+			int reputation_score, int total_project_completed, int total_group_engaged, int total_penalty_received,
+			String status, String evaluation, String date_of_join) {
+		super(Name, ID, Email, Position, Interest, Recommender, Password, reputation_score, total_project_completed, 
+				total_group_engaged, total_penalty_received, status, evaluation, date_of_join);
 	}
 	
 	public VIP() {
-		super("Liam Lee", "77777", "LiamLee@gmail.com", "VIP", "Game", "Qichen You", "66666");
+		super("Liam Lee", "77777", "LiamLee@gmail.com", "VIP", "Game", "Qichen You", "66666",
+				35, 5, 5, 0, "Excellent", "On", "03/24/2016");
 	}
 
 	//****************************************************************************************	

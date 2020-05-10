@@ -155,7 +155,7 @@ public class HomepageController{
 	private int emailNum = 0;
 	// Number of existing messages
 	private int messageNum = 0;
-	// Target email index
+	// Target index in the user list
 	private int UserIndex = 0;
     //Window size
 	private final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
@@ -1482,7 +1482,7 @@ public class HomepageController{
     private void moveToAccount(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Accountpage.fxml", "Account");
     	AccountpageController apc = Loader.getController();
-    	apc.HomeToAccount(this.userList, this.Info_List);
+    	apc.HomeToAccount(this.userList, this.Info_List, this.target);
     }
     //**************************************************************************
 
@@ -1944,7 +1944,7 @@ public class HomepageController{
     			//Promote the new user up to OU
     			OU ou = new OU(this.target.getName(), "123456", this.target.getEmail(),
     					"OU", this.target.getInterest(), this.target.getRecommender(),
-    					this.target.getPassword());
+    					this.target.getPassword(), 0, 0, 0, 0, "Good", "On", getCurrentTime());
     			userList.addOU_User(ou);
     			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
     			newWindow.close();
@@ -2032,7 +2032,7 @@ public class HomepageController{
     		recommenderEvaluation();
     	if(passwordChange)
     		passwordChangeScene();
-    	if(target.getPosition().compareTo("SU") == 0)
+    	if(this.target instanceof SU)
     		SUMode();
     }
       
@@ -2099,7 +2099,7 @@ public class HomepageController{
    
     //Get the current time
     private String getCurrentTime() {
-    	DateFormat dateFormat =  new SimpleDateFormat("dd-M-yyyy");
+    	DateFormat dateFormat =  new SimpleDateFormat("MM/dd/yyyy");
   		Calendar cal = Calendar.getInstance();
   		String currentDate = dateFormat.format(cal.getTime()).toString();
   		return currentDate;
@@ -2260,8 +2260,11 @@ public class HomepageController{
         return Loader;
 	}
 
-	public void AccountToHome(UserList ul, Information_List il) {
+	public void AccountToHome(UserList ul, Information_List il, Client client) {
 		this.userList = ul;
 		this.Info_List = il;
+		this.target = client;
+		if(this.target instanceof SU)
+			SUMode();
 	}
 }

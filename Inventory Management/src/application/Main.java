@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Appointment.Appointment;
 import Clients.Client;
 import Clients.Guest;
 import Clients.Information_Container;
@@ -89,9 +90,12 @@ public class Main extends Application {
 //		userList.addSU_User(su);
 //		userList.addOU_User(ou);
 //		userList.addVIP_User(vip);
-//		Guest guest = new Guest("Willian Hu", "Volleyball", "Liam Lee", "WillianHu@gmail.com");
-//		userList.setGuest(guest);
-		
+//		Appointment app1 = new Appointment("2021-02-21 9:00AM", 2);
+//		Appointment app2 = new Appointment("2021-04-10 10:00AM", 3);
+//		Appointment app3 = new Appointment("2020-01-01 11:00AM", 4);
+//		this.il.addAppointment(su.getID(), app1);
+//		this.il.addAppointment(su.getID(), app2);
+//		this.il.addAppointment(su.getID(), app3);
 		//read file
 		for(int i = 0; i < xmlFile.length; ++i) {
 			try {

@@ -11,12 +11,16 @@ public class OU extends Client{
 	private int numCompliment = 0;
 	
 	//Constructor	
-	public OU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password) {
-		super(Name, ID, Email, Position, Interest, Recommender, Password);
+	public OU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
+			int reputation_score, int total_project_completed, int total_group_engaged, int total_penalty_received,
+			String status, String evaluation, String date_of_join) {
+		super(Name, ID, Email, Position, Interest, Recommender, Password, reputation_score, total_project_completed, 
+				total_group_engaged, total_penalty_received, status, evaluation, date_of_join);
 	}
 	
 	public OU() {
-		super("Noah Lee", "55555", "NoahLee@gmail.com", "OU", "Baseball", "Qichen You", "66666");
+		super("Noah Lee", "55555", "NoahLee@gmail.com", "OU", "Baseball", "Qichen You", "66666",
+				10, 2, 2, 1, "Good", "On", "05/02/2019");
 	}
 	
 	public ArrayList<Guest> getPresentee() {return presentee;}

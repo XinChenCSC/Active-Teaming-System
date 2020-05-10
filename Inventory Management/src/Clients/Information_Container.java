@@ -2,6 +2,7 @@ package Clients;
 
 import java.util.ArrayList;
 
+import Appointment.Appointment;
 import Email.Email;
 import Message.Message_Container;
 import application.Notification.Notification;
@@ -24,6 +25,9 @@ public class Information_Container {
 	
 	//Notification
 	private ArrayList<Notification> Notification = new ArrayList<Notification>();
+	
+	//Appointment
+	private ArrayList<Appointment> Appointment = new ArrayList<Appointment>();
 	
 	private String ID;
 	
@@ -90,4 +94,13 @@ public class Information_Container {
 	public ArrayList<Client> getSystem_Blacklist() {return System_Blacklist;}
 
 	public void setSystem_Blacklist(ArrayList<Client> system_Blacklist) {System_Blacklist = system_Blacklist;}
+	
+//	-----------------------------------Appointment----------------------------------------
+	public ArrayList<Appointment> getAppointment() {return Appointment;}
+
+	public void setAppointment(ArrayList<Appointment> appointment) {Appointment = appointment;}
+	
+	public void addAppointment(Appointment appointment) {this.Appointment.add(appointment);}
+	
+	public void removeAppointment(Appointment appointment) {this.Appointment.remove(appointment);}
 }

@@ -4,46 +4,16 @@ public class SU extends Client{
 	
 	//Constructor
 	//Name - ID - Email - Position - Interest - Recommender - Password
+	public SU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
+			int reputation_score, int total_project_completed, int total_group_engaged, int total_penalty_received,
+			String status, String evaluation, String date_of_join) {
+		super(Name, ID, Email, Position, Interest, Recommender, Password, reputation_score, total_project_completed, 
+				total_group_engaged, total_penalty_received, status, evaluation, date_of_join);
+	}
+	
 	public SU() {
-		super("Steve Chan", "23333", "SteveChan@gmail.com", "SU", "Basketball", "Qichen You", "66666");
+		super("Steve Chan", "23333", "SteveChan@gmail.com", "SU", "Basketball", "Qichen You", "66666",
+				50, 5, 5, 5, "Good", "Off", "01/01/2000");
 	}
-	
-	public SU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password) {
-		super(Name, ID, Email, Position, Interest, Recommender, Password);
-	}
-	
-	//Getters and setters
-	public void setPassword(String Password) {super.setPassword(Password);}
-	
-	public String getPassword() {return super.Password;}
-	
-	public void setComment(String Comment) {super.setComment(Comment);}
-	
-	public String getComment() {return super.Comment;}
-	
-	public void setPosition(String Position) {super.setPosition(Position);}
-	
-	public String getPosition() {return super.Position;}
-	
-	public void setID(String ID) {super.setID(ID);}
-	
-	public String getID() {return super.ID;}
-	
-	public void setName(String Name) {super.setName(Name);}
-	
-	public String getName() {return super.Name;}
-	
-	public void setEmail(String Email) {super.setEmail(Email);}
-	
-	public String getEmail() {return super.Email;}
-	
-	public void setInterest(String Interest) {super.setInterest(Interest);}
-	
-	public String getInterest() {return super.Interest;}
-	
-	public void setRecommender(String Recommender) {super.setRecommender(Recommender);}
-	
-	public String getRecommender() {return super.Recommender;}
-	
 	//******************************************************************
 }

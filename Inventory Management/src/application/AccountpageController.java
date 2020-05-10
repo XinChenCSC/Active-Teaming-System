@@ -8,8 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
+import Clients.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -99,8 +103,12 @@ public class AccountpageController {
     private UserList userList = new UserList();
     //User information
     private Information_List Info_List = new Information_List();
-    
-    private String str = "s";
+    //User
+    private Client target;
+    //Image path
+    private String ImagePath = "@../../Images/";
+	// Target index in the user list
+	private int UserIndex = 0;
     
     //Get the size of the current window
     private Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
@@ -110,71 +118,18 @@ public class AccountpageController {
 	private final double height = screen.getHeight()/1.5;
 	
 	//Blacklist size & whitebox size
-	private int blackList = 5;
-	private int whiteBox = 5;
+	private int BlacklistSize = 0;
+	private int WhiteboxSize = 0;
+	private int AppointmentSize = 0;
 	
     @FXML
     void initialize() {
-    	System.out.println(str);
     	//Resize the background image
         Image_View.setLayoutX(screen.getMaxX());
         Image_View.setLayoutY(screen.getMaxY()); 
         
         //Import css file
         Anchor_Pane_2.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        
-        //Profile 
-        BorderPane profile = new BorderPane();
-        profile.setId("A_profile");
-        getProfilePane(profile, width, height);
-        
-        //Remainder
-        BorderPane remainder = new BorderPane();
-        remainder.setId("remainder");
-        getRemainderPane(remainder, width, height);
-        
-        //Status
-        BorderPane status = new BorderPane();
-        status.setId("status");
-        getStatusPane(status, width, height);
-        
-        //Friend
-        SplitPane friend = new SplitPane(new Pane(), new Pane());
-        friend.setId("friend");
-        getFriendPane(friend, width, height);
-        
-        //History
-        Pane history = new Pane();
-        history.setId("history");
-        getHistoryPane(history, width, height);
-        
-        
-        //Change output pane
-        Profile.setOnAction(e-> {
-        	if(Anchor_Pane_2.getChildren().size() > 2)
-        		Anchor_Pane_2.getChildren().remove(2);
-        	Anchor_Pane_2.getChildren().add(profile);
-        });
-        Remainder.setOnAction(e-> {      	
-        	if(Anchor_Pane_2.getChildren().size() > 2)
-        		Anchor_Pane_2.getChildren().remove(2);
-        	Anchor_Pane_2.getChildren().add(remainder);
-        });
-        Status.setOnAction(e-> {
-        	if(Anchor_Pane_2.getChildren().size() > 2)
-        		Anchor_Pane_2.getChildren().remove(2);
-        	Anchor_Pane_2.getChildren().add(status);
-        });
-        Friend.setOnAction(e->{
-        	if(Anchor_Pane_2.getChildren().size() > 2)
-        		Anchor_Pane_2.getChildren().remove(2);
-        	Anchor_Pane_2.getChildren().add(friend);
-        });
-        History.setOnAction(e->{
-        	if(Anchor_Pane_2.getChildren().size() > 2)
-        		Anchor_Pane_2.getChildren().remove(2);
-        	Anchor_Pane_2.getChildren().add(history);
-        });
     }
     
     //Return to the homepage
@@ -182,11 +137,13 @@ public class AccountpageController {
     private void homePage(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Home");
     	HomepageController hc = Loader.getController();
-    	hc.AccountToHome(this.userList, this.Info_List);
+    	hc.AccountToHome(this.userList, this.Info_List, this.target);
     }
 
     //Create remainder contents
     private void getRemainderPane(BorderPane remainder, double width, double height) {
+    	this.UserIndex = getUserIndex(); //Refresh 
+    	
     	contentPane(remainder, width, height);
     	remainder.setPadding(new Insets(10,10,10,10));
     	//Create scroll pane
@@ -207,22 +164,30 @@ public class AccountpageController {
     	title.setAlignment(Pos.CENTER);
     	title.setFont(Font.font("Verdana",30));
     	title.setStyle("-fx-background-color: #FFA07A;");
-    	
+    	    	
     	//List all avaliable appointments
-    	for(int i = 0; i < 10; ++i) {
-    		//Labels of appointments
-    		Label appointments = new Label("Meeting time\nXXXX/XX/XX");
-    		getSetting(appointments, width, height*0.1, 0, 0);
-    		appointments.setAlignment(Pos.CENTER);
-    		GridPane.setHalignment(appointments, HPos.CENTER);
-    		gridPane.add(appointments, 0, i);
-    		
-    		//separator
-        	Separator appSeparator = new Separator();
-        	appSeparator.setMaxWidth(width*0.5);
-        	GridPane.setValignment(appSeparator, VPos.BOTTOM);
-        	GridPane.setHalignment(appSeparator, HPos.CENTER);
-        	gridPane.add(appSeparator, 0, i);
+    	for(int i = 0; i < this.AppointmentSize; ++i) {
+    		//Check if appointment is expired then remove it.
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDate().compareTo(getCurrentTime()) < 0) {
+    			this.Info_List.removeAppointment(this.target.getID(), this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i));
+    		}
+    		else {
+    			//Labels of appointments
+    			String str = "Meeting time: " + this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDate() +
+    					"\nDuration: " + Double.toString(this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDuration()) + " hours.";
+    			Label appointments = new Label(str);
+    			getSetting(appointments, width, height*0.1, 0, 0);
+    			appointments.setAlignment(Pos.CENTER);
+    			GridPane.setHalignment(appointments, HPos.CENTER);
+    			gridPane.add(appointments, 0, i);
+    			
+    			//separator
+    			Separator appSeparator = new Separator();
+    			appSeparator.setMaxWidth(width*0.5);
+    			GridPane.setValignment(appSeparator, VPos.BOTTOM);
+    			GridPane.setHalignment(appSeparator, HPos.CENTER);
+    			gridPane.add(appSeparator, 0, i);	
+    		}
     	}
     	
     	scrollPane.setContent(gridPane);
@@ -263,8 +228,6 @@ public class AccountpageController {
     	Button add = new Button("Add");
     	getSetting(add, width*0.1, 30, 10, height-50);
     	getStyle(add,"-fx-border-color:#000000;");
-    	//Add button event
-    	add.setOnAction(e-> addFriend());
     	
     	GridPane gridPane = new GridPane();	//Firend gridpane
     	GridPane gridPane_2 = new GridPane(); //Blacklist gridpane
@@ -274,19 +237,14 @@ public class AccountpageController {
     	//Blacklist
     	ScrollPane scrollPane_2 = getScrollPane(gridPane_2, width, height);
     	
-    	//Get whitebox 
-    	getWhiteBox(gridPane, 0);
     	//Get blackList
     	getBlackList(gridPane_2, 0);
+
+    	//Get whitebox 
+    	getWhiteBox(gridPane, gridPane_2, 0);
     	
-    	for(int i = 0; i < gridPane.getChildren().size(); ++i) {
-    		Label label= (Label) gridPane.getChildren().get(i);
-    			label.getContextMenu().getItems().get(1).setOnAction(e->{
-    				++blackList; --whiteBox;
-    				getBlackList(gridPane_2, gridPane_2.getChildren().size());
-    				gridPane.getChildren().remove(label);
-    		});
-    	}
+    	//Add button event
+    	add.setOnAction(e-> addFriend(gridPane, gridPane_2));
     	
     	scrollPane.setContent(gridPane);
     	scrollPane_2.setContent(gridPane_2);
@@ -325,13 +283,19 @@ public class AccountpageController {
     		GridPane.setValignment(separator, VPos.BOTTOM);
     		gridPane.add(separator, 1, i);
     		//set numbers
-    		Label number = new Label("Unknown" + i);
-    		number.setFont(Font.font(null, FontWeight.BOLD, 14));
-    		getSetting(number, width*0.1, height*0.05, 0, 0);
-    		number.setStyle("-fx-background-color: #00ffff;" 
-    						+ "-fx-border-color: #00ffff;");
+    		Label number = new Label();
+    		number.setFont(Font.font(null, FontWeight.BOLD, 14));    		
     		GridPane.setHalignment(number, HPos.CENTER);
     		gridPane.add(number, 1, i);
+    		
+    		//Load data from the database
+    		if(i == 0)	 	number.setText(Integer.toString(this.target.getTotal_Project_Completed()));
+    		else if(i == 1) number.setText(Integer.toString(this.target.getTotal_Group_Engaged()));
+    		else if(i == 2) number.setText(Integer.toString(this.target.getTotal_Penalty_Received()));
+    		else if(i == 3) number.setText(Integer.toString(this.target.getReputationScore()));
+    		else if(i == 4) number.setText(this.target.getStatus());
+    		else if(i == 5) number.setText(this.target.getEvaluation());
+    		else 	   		number.setText(this.target.getDate_Of_Join());
     	}
     	
     	status.setCenter(gridPane);
@@ -352,11 +316,21 @@ public class AccountpageController {
     	Rectangle rectangle = new Rectangle(0,0,width*0.35,height*0.35);
     	rectangle.setArcWidth(40);
     	rectangle.setArcHeight(40);
+    	
     	//Get the image from the folder
-    	File f = new File("@../../Images/Image_of_none.png");
+    	File f;
+    	
+    	//Check whether the user setup the protrait
+    	if(this.target.getImageURL().isEmpty()) {
+    		f = new File("@../../Images/Image_of_none.png");    		
+    	}
+    	else
+    		f = new File(this.target.getImageURL());
+    	
         Image image = new Image(f.toURI().toString());
         //Set image to the imagview
     	ImageView Image_View = new ImageView(image);
+    	
     	Image_View.setFitWidth(width*0.35);
     	Image_View.setFitHeight(height*0.35);
     	Image_View.setClip(rectangle);
@@ -412,13 +386,17 @@ public class AccountpageController {
     		GridPane.setHalignment(tag, HPos.CENTER);
     		gridPane2.add(tag, 0, i);
     		
-    		Label val = new Label("Unknown");
+    		Label val = new Label();		
     		val.setStyle("-fx-border-color:#fffaf0");
     		val.setFont(Font.font(null, FontWeight.BOLD, 14));
-    		val.setStyle("-fx-background-color: #00ffff;" 
-					+ "-fx-border-color: #00ffff;");
     		GridPane.setHalignment(val, HPos.CENTER);
     		gridPane2.add(val, 1, i);
+    		
+    		//Display user information on the profile
+    		if(i == 0) val.setText(this.target.getName());
+    		else if(i == 1) val.setText(this.target.getID());
+    		else if(i == 2) val.setText(this.target.getEmail());
+    		else 			val.setText(this.target.getPosition());
     		
     		//separator
         	Separator appSeparator = new Separator();
@@ -485,10 +463,14 @@ public class AccountpageController {
     		if(((PasswordField) gridpane.getChildren().get(1)).getText().isEmpty() || 
     				((PasswordField) gridpane.getChildren().get(3)).getText().isEmpty() ||
         			((PasswordField) gridpane.getChildren().get(1)).getText().compareTo(
-        					((PasswordField) gridpane.getChildren().get(3)).getText()) != 0) {
-        		getAlert(AlertType.ERROR, "Something wrong.", ButtonType.OK, "Error");
+        					((PasswordField) gridpane.getChildren().get(3)).getText()) != 0 ||
+        					this.target.getPassword().compareTo(((PasswordField) gridpane.getChildren().get(3)).getText()) == 0) {
+        		getAlert(AlertType.ERROR, "Password reset failed.", ButtonType.OK, "Error");
         	}
     		else {
+    			//Save password to the database
+    			this.target.setPassword(((PasswordField) gridpane.getChildren().get(3)).getText());
+    			//Confirmation alert
     			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
     			newWindow.close();
     		}
@@ -515,7 +497,9 @@ public class AccountpageController {
     		 iv.setImage(image);
     		 //Save new protrait to the source folder
     		 Path from = Paths.get(selectedFile.toURI());
-    	        Path to = Paths.get("@../../Images/" + selectedFile.getName());
+    	        Path to = Paths.get(this.ImagePath + selectedFile.getName());
+    	        //Save new image to the database
+    	        this.target.setImageURL(this.ImagePath + selectedFile.getName());
     	        CopyOption[] options = new CopyOption[]{
     	                StandardCopyOption.REPLACE_EXISTING,
     	                StandardCopyOption.COPY_ATTRIBUTES
@@ -525,7 +509,8 @@ public class AccountpageController {
     }
     
     //Add friend
-    private void addFriend() {
+    private void addFriend(GridPane whitebox, GridPane blacklist) {
+    	this.UserIndex = getUserIndex();    	
     	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
     	Pane pane = new Pane();
     	pane.setPrefSize(300,150);
@@ -565,19 +550,31 @@ public class AccountpageController {
     	gridPane.add(add, 0, 1);
     	add.setVisible(false);
     	
-    	Label name = new Label("Unknown");
+    	Label name = new Label();
     	name.setAlignment(Pos.CENTER);
     	getSetting(name, 200, 30, 0, 0);
     	gridPane.add(name, 1, 1);
     	name.setVisible(false);
     	
     	search.setOnAction(e->{
-    		if(textField.getText().isEmpty()) {
+    		if(!textField.getText().isEmpty() && isValidID(textField.getText())) {
+    			name.setText(textField.getText());
     			add.setVisible(true);
     			name.setVisible(true);
     			invalidId.setVisible(false);
     			getStyle(add, "-fx-background-color:#7cfc00;");
     			add.setOnAction(a->{
+    				//Add new friend to the whitebox
+    				for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    					if(this.userList.getAll_User().get(i).getID().compareTo(textField.getText()) == 0) {
+    						this.Info_List.addFriend(this.target.getID(), this.userList.getAll_User().get(i));
+    						break;
+    					}
+    				}
+    				//refresh whitebox 
+    				whitebox.getChildren().clear();
+    				whitebox.getRowConstraints().clear();
+    				getWhiteBox(whitebox, blacklist, 0);
     				getStyle(add, "-fx-background-color:#dcdcdc;");
     			});
     		}
@@ -592,45 +589,55 @@ public class AccountpageController {
     }
    
     //Inspect content
-    private void inspectContent(double w, double h) {
-    	Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
-    	Pane pane = new Pane();
-    	pane.setPrefSize(w, h);
-    	Scene secondScene = new Scene(pane, w, h);
-    	Stage newWindow = new Stage();
-    	
-   	 	//GridPane
-   	 	GridPane gridPane = new GridPane();
-   	 	gridPane.setPadding(new Insets(10,5,10,5));
-   	 	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.3));
-   	 	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.7));
-   	 	gridPane.setVgap(10);    	 
-   	 	String[] tags = {"Name:", "ID:", "Position:", "Email:"};
-   	 	//list member's informations
-   	 	for(int i = 0; i < tags.length; ++i) {
-   	 		Label tag = new Label(tags[i]);
-   	 		GridPane.setHalignment(tag, HPos.CENTER);
-   	 		gridPane.getRowConstraints().add(new RowConstraints(h*0.2));
-   	 		gridPane.add(tag, 0, i);
-   		 
-   	 		Label value = new Label("Unknown");
-    		value.setStyle("-fx-background-color: #00ffff;" 
-					+ "-fx-border-color: #00ffff;");
-   	 		GridPane.setHalignment(value, HPos.CENTER);
-   	 		gridPane.add(value, 1, i);
-   	 	}
-   	 	
-   	 	pane.getChildren().add(gridPane);
-   	 	//Call new window
-    	NewWindow(newWindow, secondScene, mainScene, "Information");  
+    private void inspectContent(ContextMenu contentMenu, int j, double w, double h) {
+		contentMenu.getItems().get(0).setOnAction(e-> {
+			Stage mainScene = (Stage) Scroll_Pane.getScene().getWindow();
+			Pane pane = new Pane();
+			pane.setPrefSize(w, h);
+			Scene secondScene = new Scene(pane, w, h);
+			Stage newWindow = new Stage();
+			
+			//GridPane
+			GridPane gridPane = new GridPane();
+			gridPane.setPadding(new Insets(10,5,10,5));
+			gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.3));
+			gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.7));
+			gridPane.setVgap(10);    	 
+			String[] tags = {"Name:", "ID:", "Position:", "Email:"};
+			//list member's informations
+			for(int i = 0; i < tags.length; ++i) {
+				Label tag = new Label(tags[i]);
+				GridPane.setHalignment(tag, HPos.CENTER);
+				gridPane.getRowConstraints().add(new RowConstraints(h*0.2));
+				gridPane.add(tag, 0, i);
+				
+				Label value = new Label();
+				value.setStyle("-fx-background-color: #00ffff;" 
+						+ "-fx-border-color: #00ffff;");
+				GridPane.setHalignment(value, HPos.CENTER);
+				gridPane.add(value, 1, i);
+				
+				if(i == 0) value.setText(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(j).getName());
+				else if(i == 1) value.setText(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(j).getID());
+				else if(i == 2) value.setText(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(j).getPosition());
+				else			value.setText(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(j).getEmail());
+			}	
+			
+			pane.getChildren().add(gridPane);
+			//Call new window
+			NewWindow(newWindow, secondScene, mainScene, "Information");  
+		});
     }
     
     //Blacklist member
     //---------------------------------Friend Pane-----------------------------------------
     private void getBlackList(GridPane gridPane, int start) {
-    	for(int j = start; j < blackList; ++j) {
+    	//Get the user index in the user list
+    	this.UserIndex = getUserIndex();
+    	
+    	for(int j = start; j < this.BlacklistSize; ++j) {
     		//MenuButton for each friend
-    		Label blacklister = new Label("Unknown");
+    		Label blacklister = new Label(this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().get(j).getName());
     		blacklister.setAlignment(Pos.CENTER);
     		getSetting(blacklister, width*0.5, 40, 0, 0);
     		
@@ -648,14 +655,17 @@ public class AccountpageController {
     		gridPane.add(blacklister, 0, j);
     		
     		//Remove event
-    		contentMenu.getItems().get(0).setOnAction(e-> gridPane.getChildren().remove(blacklister));
+    		deleteBlacklistMember(gridPane, blacklister, contentMenu, this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().get(j));
     	}
     }
      
-    private void getWhiteBox(GridPane gridPane, int start) {
-    	for(int i = start; i < whiteBox; ++i) {
+    private void getWhiteBox(GridPane gridPane, GridPane gridPane_2, int start) {
+    	//Get the user index in the user list
+    	this.UserIndex = getUserIndex();
+    	
+    	for(int i = 0; i < this.WhiteboxSize; ++i) {
     		//MenuButton for each friend
-    		Label friendName = new Label("Unknown" + i);
+    		Label friendName = new Label(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(i).getName());
     		friendName.setAlignment(Pos.CENTER);
     		getSetting(friendName, width/2, 40, 0, 0);
     		
@@ -672,14 +682,69 @@ public class AccountpageController {
     		
     		//Set to each column
     		GridPane.setHalignment(friendName, HPos.CENTER);
+    		
     		gridPane.add(friendName, 0, i);
     		
+    		//Target client
+    		Client client = this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(i);
     		//Delete event
-    		contentMenu.getItems().get(2).setOnAction(e-> gridPane.getChildren().remove(friendName));
+    		deleteWhiteboxMember(gridPane, friendName, contentMenu, client);
+    		
+        	//Blacklist event
+        	WhiteboxToBlacklist(gridPane, gridPane_2, friendName, contentMenu, client);
     		
     		//Inspect event
-    		contentMenu.getItems().get(0).setOnAction(e->inspectContent(width*0.4, height*0.4));
+    		inspectContent(contentMenu, i, width*0.4, height*0.4);
     	}
+    }
+    
+    private void deleteWhiteboxMember(GridPane gridPane, Label friendName, ContextMenu contentMenu, Client client) {
+		contentMenu.getItems().get(2).setOnAction(e-> {
+			this.Info_List.removeFriend(this.target.getID(), client);
+			friendName.getContextMenu().getItems().clear();
+			gridPane.getChildren().remove(friendName);
+		});
+    }
+    
+    private void deleteBlacklistMember(GridPane gridPane, Label blacklister, ContextMenu contentMenu, Client client) {
+    	contentMenu.getItems().get(0).setOnAction(e-> {
+    		this.Info_List.removeBlacklist(this.target.getID(), client);
+    		blacklister.getContextMenu().getItems().clear();
+    		gridPane.getChildren().remove(blacklister);
+    	});
+    }
+    
+    private void WhiteboxToBlacklist(GridPane whitebox, GridPane blacklist, Label friendName, ContextMenu contentMenu, Client client) {
+		contentMenu.getItems().get(1).setOnAction(e->{
+			this.Info_List.addBlacklist(this.target.getID(), client);
+			
+			//Remove from the whitebox
+			this.Info_List.removeFriend(this.target.getID(), client);
+			friendName.getContextMenu().getItems().clear();
+			whitebox.getChildren().remove(friendName);
+			
+			getBlackList(blacklist, 0); //Refresh
+		});
+    }
+    
+    private boolean isValidID(String id) {
+    	boolean result = false;
+    	//Check is valid id
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    		if(this.userList.getAll_User().get(i).getID().compareTo(id) == 0)
+    			result = true;
+    	}
+    	//Check if the already existed in the whitebox
+    	for(int i = 0; i < this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getWhitebox().get(i).getID().compareTo(id) == 0)
+    			result = false;
+    	}
+    	//Check that the blacklist doesn't contain the new friend
+    	for(int i = 0; i < this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().get(i).getID().compareTo(id) == 0)
+    			result = false;
+    	}
+    	return result;
     }
     
     private ScrollPane getScrollPane(GridPane gridPane, double w, double h) {
@@ -753,9 +818,85 @@ public class AccountpageController {
     	n.setFocusTraversable(false);
     }
 
-	public void HomeToAccount(UserList userList, Information_List info_List) {
+    private int getUserIndex() {
+    	int result = 0;
+    	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
+    		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
+    			this.WhiteboxSize = this.Info_List.getInfo_Con().get(i).getWhitebox().size();
+    			this.BlacklistSize = this.Info_List.getInfo_Con().get(i).getPersonal_Blacklist().size();
+    			this.AppointmentSize = this.Info_List.getInfo_Con().get(i).getAppointment().size();
+    			result = i;
+    			break;
+    		}
+    	}
+    	return result;
+    }
+    
+    //Get the current time
+    private String getCurrentTime() {
+    	DateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd hh:mm");
+  		Calendar cal = Calendar.getInstance();
+  		String currentDate = dateFormat.format(cal.getTime()).toString();
+  		return currentDate;
+    }
+    
+	public void HomeToAccount(UserList userList, Information_List info_List, Client client) {
 		this.userList = userList;
 		this.Info_List = info_List;
+		this.target = client;
+		
+        //Profile 
+        BorderPane profile = new BorderPane();
+        profile.setId("A_profile");
+        getProfilePane(profile, width, height);
+        
+        //Remainder
+        BorderPane remainder = new BorderPane();
+        remainder.setId("remainder");
+        getRemainderPane(remainder, width, height);
+        
+        //Status
+        BorderPane status = new BorderPane();
+        status.setId("status");
+        getStatusPane(status, width, height);
+        
+        //Friend
+        SplitPane friend = new SplitPane(new Pane(), new Pane());
+        friend.setId("friend");
+        getFriendPane(friend, width, height);
+        
+        //History
+        Pane history = new Pane();
+        history.setId("history");
+        getHistoryPane(history, width, height);
+        
+        
+        //Change output pane
+        Profile.setOnAction(e-> {
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(profile);
+        });
+        Remainder.setOnAction(e-> {      	
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(remainder);
+        });
+        Status.setOnAction(e-> {
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(status);
+        });
+        Friend.setOnAction(e->{
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(friend);
+        });
+        History.setOnAction(e->{
+        	if(Anchor_Pane_2.getChildren().size() > 2)
+        		Anchor_Pane_2.getChildren().remove(2);
+        	Anchor_Pane_2.getChildren().add(history);
+        });
 	}  
 	
 	private FXMLLoader sceneSwitch(String url, String title) throws IOException {

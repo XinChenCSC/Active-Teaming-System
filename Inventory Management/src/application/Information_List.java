@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 
+import Appointment.Appointment;
 import Clients.Client;
 import Clients.Information_Container;
 import Email.Email;
@@ -11,7 +12,8 @@ import application.Notification.Notification;
 public class Information_List {
 	private ArrayList<Information_Container> Info_Con = new ArrayList<Information_Container>();
 	
-	public Information_List() {}
+//	----------------------------Constructor-----------------------------	
+	public Information_List() {}	
 	
 //	----------------------------Email-----------------------------
 	public void CreateEmail(String id, Email email) {
@@ -121,7 +123,25 @@ public class Information_List {
 		this.Info_Con.get(i).removeSystemBlacklist(client);;
 	}
 
-	//	---------------------------------------------------------------
+//	----------------------------Appointment---------------------------------------
+	public void addAppointment(String id, Appointment appointment) {
+		int i = isExist(id);
+		if(i > -1) {
+			this.Info_Con.get(i).addAppointment(appointment);
+		}
+		else {
+			Information_Container ic = new Information_Container(id);
+			ic.addAppointment(appointment);
+			this.Info_Con.add(ic);
+		}
+	}
+	
+	public void removeAppointment(String id, Appointment appointment) {
+		int i = isExist(id);
+		this.Info_Con.get(i).removeAppointment(appointment);
+	}
+	
+//	--------------------------------------------------------------------------------
 	public ArrayList<Information_Container> getInfo_Con(){
 		return this.Info_Con;
 	}
