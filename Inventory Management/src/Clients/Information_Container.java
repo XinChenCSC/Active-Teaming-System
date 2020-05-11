@@ -57,6 +57,16 @@ public class Information_Container {
 	
 	public void addFriend(Client Name) {Whitebox.add(Name);}
 	
+	public Client findFriend(String name) {
+		Client client = null;
+		for(int i = 0; i < this.Whitebox.size(); ++i) {
+			if(this.Whitebox.get(i).getName().compareTo(name) == 0) {
+				client = this.Whitebox.get(i);
+			}
+		}
+		return client;
+	}
+	
 //	-----------------------------------Personal blacklist----------------------------------------
 	public void removeBLMember(Client Name) {Personal_Blacklist.remove(Name);}
 	

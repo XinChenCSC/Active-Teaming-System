@@ -169,6 +169,7 @@ public class Main extends Application {
 		System.out.println(userList.getVIP_Size());
 		System.out.println(userList.getSU_Size());
 		System.out.println(userList.getVip_User().get(0).isCreatingGroup());
+		System.out.println(this.gl.getGroup_List().size());
 	}
 	
 	@SuppressWarnings("unchecked")

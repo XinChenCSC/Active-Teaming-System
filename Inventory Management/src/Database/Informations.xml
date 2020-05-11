@@ -2,16 +2,68 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container0">
     <void property="ID">
      <string>23333</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Lia</string>
+       </void>
+       <void property="subject">
+        <string>ggggg</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+    </void>
+    <void property="message_Content">
+     <void method="add">
+      <object class="Message.Message_Container" id="Message_Container0">
+       <void property="ID">
+        <string>77777</string>
+       </void>
+       <void id="StringArrayArray0" property="content">
+        <void index="0">
+         <void index="0">
+          <string>0</string>
+         </void>
+         <void index="1">
+          <string>Gooooooo</string>
+         </void>
+        </void>
+       </void>
+       <void property="position">
+        <int>1</int>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container0">
+   <object class="Clients.Information_Container" id="Information_Container1">
     <void property="ID">
      <string>77777</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Lia</string>
+       </void>
+       <void property="subject">
+        <string>ggggg</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
     </void>
     <void property="notification">
      <void method="add">
@@ -20,23 +72,7 @@
         <string>11111</string>
        </void>
        <void property="message">
-        <string>Message2</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="application.Notification.Notification">
-       <void property="date">
-        <string>11111</string>
-       </void>
-       <void property="message">
         <string>Message4</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
        </void>
       </object>
      </void>
@@ -44,44 +80,152 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container2">
     <void property="ID">
      <string>55555</string>
     </void>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+    </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container3">
     <void property="ID">
      <string>13579</string>
     </void>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+    </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container4">
     <void property="ID">
      <string>24680</string>
     </void>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+    </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container5">
     <void property="ID">
      <string>98374</string>
     </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="Clients.Information_Container">
-    <void property="ID">
-     <string>43754</string>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container6">
+    <void property="ID">
+     <string>43754</string>
+    </void>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container" id="Information_Container7">
     <void property="ID">
      <string>29384</string>
+    </void>
+    <void property="notification">
+     <void method="add">
+      <object class="application.Notification.Notification">
+       <void property="date">
+        <string>05/11/2020</string>
+       </void>
+       <void property="invitation">
+        <boolean>true</boolean>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group. You will join in the group by click the confirm button.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>

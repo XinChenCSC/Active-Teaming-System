@@ -8,7 +8,14 @@
    <object class="Clients.OU" id="OU0"/>
   </void>
   <void method="add">
-   <object class="Clients.VIP" id="VIP0"/>
+   <object class="Clients.VIP" id="VIP0">
+    <void property="creatingGroup">
+     <boolean>true</boolean>
+    </void>
+    <void property="imageURL">
+     <string>@../../Images/photography-of-person-walking-on-road-1236701.jpg</string>
+    </void>
+   </object>
   </void>
   <void method="add">
    <object class="Clients.OU" id="OU1">
@@ -136,7 +143,14 @@
    </object>
   </void>
  </object>
- <object class="Clients.Guest"/>
+ <object class="Clients.Guest">
+  <void property="login">
+   <boolean>true</boolean>
+  </void>
+  <void property="password">
+   <string>66666</string>
+  </void>
+ </object>
  <object class="java.util.ArrayList">
   <void method="add">
    <object idref="OU0"/>
@@ -152,6 +166,40 @@
   </void>
   <void method="add">
    <object idref="OU4"/>
+  </void>
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>123456</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/11/2020</string>
+    </void>
+    <void property="email">
+     <null/>
+    </void>
+    <void property="interest">
+     <null/>
+    </void>
+    <void property="name">
+     <null/>
+    </void>
+    <void property="recommender">
+     <null/>
+    </void>
+    <void property="reputationScore">
+     <int>0</int>
+    </void>
+    <void property="total_Group_Engaged">
+     <int>0</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+    <void property="total_Project_Completed">
+     <int>0</int>
+    </void>
+   </object>
   </void>
  </object>
  <object class="java.util.ArrayList">

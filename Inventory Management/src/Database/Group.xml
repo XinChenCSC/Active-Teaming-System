@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
- <object class="java.util.ArrayList"/>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="Group.Group" id="Group0">
+    <void property="a_Group">
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.VIP">
+         <void property="creatingGroup">
+          <boolean>true</boolean>
+         </void>
+         <void property="imageURL">
+          <string>@../../Images/photography-of-person-walking-on-road-1236701.jpg</string>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+    </void>
+    <void property="description">
+     <string>ddd</string>
+    </void>
+    <void property="group_ID">
+     <string>6880</string>
+    </void>
+    <void property="title">
+     <string>ddd</string>
+    </void>
+   </object>
+  </void>
+ </object>
 </java>

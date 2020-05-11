@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 
 import Clients.Client;
+import Group.Group_List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -105,6 +106,8 @@ public class AccountpageController {
     private Information_List Info_List = new Information_List();
     //User
     private Client target;
+    //Group list
+    private Group_List group_List = new Group_List();
     //Image path
     private String ImagePath = "@../../Images/";
 	// Target index in the user list
@@ -137,7 +140,7 @@ public class AccountpageController {
     private void homePage(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Home");
     	HomepageController hc = Loader.getController();
-    	hc.AccountToHome(this.userList, this.Info_List, this.target);
+    	hc.AccountToHome(this.userList, this.Info_List, this.target, this.group_List);
     }
 
     //Create remainder contents
@@ -838,10 +841,11 @@ public class AccountpageController {
   		return currentDate;
     }
     
-	public void HomeToAccount(UserList userList, Information_List info_List, Client client) {
+	public void HomeToAccount(UserList userList, Information_List info_List, Client client, Group_List gl) {
 		this.userList = userList;
 		this.Info_List = info_List;
 		this.target = client;
+		this.group_List = gl;
 		
         //Profile 
         BorderPane profile = new BorderPane();

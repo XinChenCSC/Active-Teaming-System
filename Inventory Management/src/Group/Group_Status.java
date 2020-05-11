@@ -24,6 +24,8 @@ public class Group_Status {
 	
 	//Constructor
 	public Group_Status() {}
+	
+	public Group_Status(Client client) { this.user = client;}
 
 //	------------------------------------------User-------------------------------------------
 	public Client getUser() {return user;}

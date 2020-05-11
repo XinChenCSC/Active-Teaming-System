@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import Group.Group;
 import Clients.Client;
 import Clients.OU;
 import Clients.SU;
@@ -24,6 +25,7 @@ import Clients.VIP;
 import Clients.Guest;
 import Email.Email;
 import Group.Group_List;
+import Group.Group_Status;
 import Message.Message_Container;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -175,7 +177,7 @@ public class HomepageController{
 	//Target
 	private Client target;
 	//Group container
-	private Group_List G_List;
+	private Group_List G_List = new Group_List();
 
 	
     @FXML
@@ -228,6 +230,7 @@ public class HomepageController{
     @SuppressWarnings("unused")
 	@FXML
     void Group_Click(ActionEvent event) throws IOException {
+    	findGroupIndex(); //Refresh
     	//--------------------------Main Scene-----------------------
         //Get the main scene size
         Stage mainScene = (Stage) Profile.getScene().getWindow();
@@ -240,9 +243,17 @@ public class HomepageController{
         	((Button)scene.getChildren().get(2)).setVisible(false);
         	((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
         }
+        //SU are not allowed to create a group
         else if((this.target instanceof OU && !((OU) this.target).NeedAppeal()) ||
         		(this.target instanceof VIP && !((VIP) this.target).NeedAppeal())) {
         	((Button)scene.getChildren().get(2)).setVisible(false);
+        }
+        
+//      Check whether the cancel button needs to disable 
+        if(this.GroupIndex != -1) {
+        	System.out.println(this.GroupIndex);
+        	if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 4) 
+        		((Button)scene.getChildren().get(3)).setVisible(true);        	
         }
         
         Scene secondScene = new Scene(scene, width, height);
@@ -301,7 +312,8 @@ public class HomepageController{
             
             //Confirmed button click event
             ((Button)pane.getChildren().get(3)).setOnAction(c->{
-            	if(((TextField)pane.getChildren().get(0)).getText().isEmpty() || ((TextField)pane.getChildren().get(1)).getText().isEmpty()) {
+            	if(((TextField)pane.getChildren().get(0)).getText().isEmpty() || ((TextField)pane.getChildren().get(1)).getText().isEmpty() || 
+            			!sendInvitation((GridPane)((ScrollPane)pane.getChildren().get(2)).getContent())) {
 					getAlert(AlertType.WARNING, "Wrong inputs existed.", ButtonType.OK, "Caution!");
             	}
             	else {
@@ -309,13 +321,42 @@ public class HomepageController{
         			this.userList.setCreatingGroup(this.target.getID(), true);
         			//Disable the create button
         			((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
-                	Alert alert = getAlert(AlertType.INFORMATION, "Please wait for the final decision", ButtonType.OK, "Grouop confirmation");
+            		//Create a un-open group 
+            		getNewGroup(((TextField) pane.getChildren().get(0)).getText(), ((TextField) pane.getChildren().get(1)).getText());
+            		//Automatic add to the group if the invitee is in your whitebox
+            		automaticAdd((GridPane)((ScrollPane)pane.getChildren().get(2)).getContent());
+            		//Activate the cancel create button
+            		if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 4)
+            			//If the current group >= 4 members, the cancel button will appear.
+            			((Button)scene.getChildren().get(3)).setVisible(true);
+            		//Set confirmation alert
+                	Alert alert = getAlert(AlertType.INFORMATION, "Please wait for the final decision", ButtonType.OK, "Confirmation");
                 	if (alert.getResult() == ButtonType.OK)
                     	newWindow_2.close();
             	}
             });
         });
-        //-----------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------
+//        //Cancel group
+        ((Button)scene.getChildren().get(3)).setOnAction(e->{
+        	Alert alert = getAlert(AlertType.WARNING, "Are you sure to cancel the recruiting?", ButtonType.YES, "Warning");
+        	if(alert.getResult() == ButtonType.YES) {
+        		//Remove the recruiting group
+        		for(int i = 0; i < this.G_List.getGroup_List().get(GroupIndex).getA_Group().size(); ++i) {
+        			if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof VIP)
+        				((VIP)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setCreatingGroup(false);
+        			else if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof OU)
+        				((OU)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setCreatingGroup(false);       
+        		}
+        		//Remove the group
+        		this.G_List.removeGroup(this.G_List.getGroup_List().get(GroupIndex));
+
+        		//Enable the create button
+        		((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(false);
+        		//Disable the cancel group button
+        		((Button)scene.getChildren().get(3)).setVisible(false);
+        	}
+        });
     }
     
 	@FXML
@@ -564,7 +605,7 @@ public class HomepageController{
     
     //----------------------------Group main scene------------------------------
     private StackPane groupMainScene(double w, double h) throws IOException {
-    	findGroupIndex();
+    	findGroupIndex();	//Refresh
         StackPane subScene = new StackPane();
         subScene.setPadding(new Insets(h*0.1,w*0.05,h*0.05,w*0.05));
         //Create label
@@ -572,14 +613,15 @@ public class HomepageController{
         lb.setFocusTraversable(false);
 		
         // Display group status
-        if(this.GroupIndex == -1) {
+        if(this.GroupIndex == -1 || isCreatingGroup()) {
             lb.setDisable(true);
             lb.setOpacity(1);
             lb.setText("You don't have a group."); 
             lb.setStyle("-fx-background-color: #F0F8FF;"
             		+ "-fx-border-color: #F0F8FF;");
         }
-        else {
+        //If the group has enough users to open
+        else if(isInGroup()){
         	lb.setText("Move to group page.");
         	//Switch to group page
         	lb.setOnAction(e->{
@@ -595,10 +637,11 @@ public class HomepageController{
         }
         
         HBox hbox = new HBox();
-        hbox.setPrefSize(w, h*0.4);
+        
         //Move to target group button
         Button go = new Button("Go");
         getSetting(go, w*0.2, h*0.08, 0, 0);
+        
         //Serach for group id
         TextField groupId = new TextField();
         groupId.setPromptText("Group ID");
@@ -620,7 +663,14 @@ public class HomepageController{
 		}
         
         hbox.setAlignment(Pos.TOP_CENTER);
-        hbox.getChildren().addAll(createButton, go,groupId);
+        hbox.getChildren().addAll(createButton, go, groupId);
+        
+        //Cancel creating group
+        Button cancelButton = new Button();
+        cancelButton.setText("Cancel group");
+        cancelButton.setStyle("-fx-text-fill: #FF0000;");
+        cancelButton.setFocusTraversable(false);
+        cancelButton.setVisible(false);    
         
         //Appeal button
         Button appeal = new Button("Appeal");
@@ -629,8 +679,26 @@ public class HomepageController{
         //set the position
         StackPane.setAlignment(appeal, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(hbox, Pos.TOP_CENTER);
-        subScene.getChildren().addAll(lb, hbox, appeal);
+        StackPane.setAlignment(cancelButton, Pos.BOTTOM_CENTER);
+        
+        subScene.getChildren().addAll(lb, hbox, appeal, cancelButton);
         return subScene;
+    }
+    
+    private boolean isCreatingGroup() {
+    	if(this.target instanceof VIP)
+    		return ((VIP)this.target).isCreatingGroup();
+    	else if(this.target instanceof OU)
+    		return ((OU)this.target).isCreatingGroup();
+    	return false;
+    }
+    
+    private boolean isInGroup() {
+    	if(this.target instanceof VIP)
+    		return ((VIP)this.target).isInGroup();
+    	else if(this.target instanceof OU)
+    		return ((OU)this.target).isInGroup();
+    	return false;
     }
     
     //Appeal scene
@@ -686,21 +754,30 @@ public class HomepageController{
     	
     	//Show all avaliable friends
     	for(int i = 0, j = 0; i < this.userList.getAll_Size(); ++i) {
-        	//Label names
-        	Label Name = new Label();
-        	Name.setFont(new Font(16));
-    		GridPane.setHalignment(Name, HPos.CENTER);
-        	friend_grid.add(Name, 0, j);
         	if(this.target.getID().compareTo(this.userList.getAll_User().get(i).getID()) != 0 &&
         			!this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().contains(this.userList.getAll_User().get(i)) &&
         			!(this.userList.getAll_User().get(i) instanceof SU)) {
+        		//Label names
+        		Label Name = new Label();
+        		Name.setFont(new Font(16));
+        		GridPane.setHalignment(Name, HPos.CENTER);
+        		friend_grid.add(Name, 0, j);
+        		int k = i;
         		//set up invite button
         		Name.setText(this.userList.getAll_User().get(i).getName());
         		Button invite = new Button("Invite");
         		invite.setFocusTraversable(false);
         		getStyle(invite);
         		GridPane.setHalignment(invite, HPos.CENTER);
-        		friend_grid.add(invite, 1, j++);        		
+        		friend_grid.add(invite, 1, j++);   
+        		
+        		//Each user can be invited only once.
+        		invite.setOnAction(e->{
+        			invite.setDisable(true);
+        			Notification notification = new Notification(true, getCurrentTime(), 
+        					this.target.getName() + " invite you to join his/her group. You will join in the group by click the confirm button.", true);
+        			this.Info_List.CreateNotification(this.userList.getAll_User().get(k).getID(), notification);
+        		});
         	}
     	}
     	//Confirmed button
@@ -712,6 +789,36 @@ public class HomepageController{
     	return pane;
     }
        
+    private boolean sendInvitation(GridPane gridPane) {
+    	int total = 0;
+    	for(int i = 1; i < gridPane.getChildren().size(); i+=2) {
+    		if(((Button)gridPane.getChildren().get(i)).isDisable()) {
+    			++total;
+    		}
+    	}
+    	if(total >= 5) 
+    		return true;
+    	return false;
+    }
+    
+	//Automatic add to the group if the invitee is in your whitebox
+    private void automaticAdd(GridPane gridPane) {
+    	for(int i = 1; i < gridPane.getChildren().size(); i+=2) {
+    		if(((Button)gridPane.getChildren().get(i)).isDisable()) {
+    			//Search for the target user, null will return if no result
+    			Client client = this.Info_List.getInfo_Con().get(UserIndex).findFriend(((Label)gridPane.getChildren().get(i-1)).getText());
+    			if(client != null) {
+    				if(client instanceof VIP)
+    					((VIP)client).setCreatingGroup(true);
+    				else if(client instanceof OU)
+    					((OU)client).setCreatingGroup(true);
+    		    	Group_Status GS = new Group_Status(client); //Create a group member object
+    				this.G_List.getGroup_List().get(GroupIndex).addGroupMember(GS);	//Add the group member to the object
+    			}
+    		}
+    	}
+    }
+    
     //----------------------------Evaluation Tab Pane---------------------------
     //Set up evaluation tab content
     private void EvaluationTabContent(Tab tab, double w, double h, Stage stage) {
@@ -979,15 +1086,18 @@ public class HomepageController{
     	//Create random id and temporary password.
     	((Button)((HBox)pane.getBottom()).getChildren().get(0)).setOnAction(e->{
     		Random rand = new Random();
-    		String id = "";
     		String password = "";
-    		//Seven digits password
-    		for(int i = 0; i < 7; ++i) {
-    			int digit = rand.nextInt(10);
+    		String id = "";
+    		for(int i = 0; i < 5; ++i) {
     			int character = rand.nextInt(94)+33;
-    			id += Integer.toString(digit);
-    			password += (char)character;
+    			password += (char)character;    			
     		}
+    		
+    		do {
+    			id = "";
+    			int digit = rand.nextInt(100000) + 10000;
+    			id = Integer.toString(digit);	
+    		}while(!newIDCheck(id));
     	});
     }
     
@@ -1476,7 +1586,6 @@ public class HomepageController{
     		
     		//Content label
     		Label content = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).getMessage());
-    		content.setWrapText(true);
     		content.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(content, HPos.CENTER);
     		GridPane.setValignment(content, VPos.CENTER);
@@ -1495,25 +1604,35 @@ public class HomepageController{
     		gridPane.add(pane, 0, j);
     		//Delete event
     		pane.setOnMouseClicked(e->{
+    			//Remove new after the first click
+    			if(temp.isNewIcon())
+    			{
+    				temp.setNewIcon(false);
+    				getNotificationPane(); //Refresh the notification pane    				
+    			}   			
+    			
     			//Set up alert
     			ButtonType confirm = new ButtonType("Confirm", ButtonData.OK_DONE);
     			ButtonType delete = new ButtonType("Delete", ButtonData.FINISH);
     			Alert alert = new Alert(AlertType.INFORMATION,
-    			        content.getText(),
+    					content.getText(),
     			        confirm,
     			        delete);
 
-    			alert.setTitle(content.getText());
+    			alert.setTitle("Invitation");
     			alert.setHeaderText(null);
     			alert.setX(screen.getWidth()*0.7);
     			alert.setY(screen.getHeight()*0.2);
     			Optional<ButtonType> result = alert.showAndWait();
-    			if (result.orElse(confirm) == delete) {
+    			if (result.get() == delete) {
 //    				gridPane.getChildren().removeAll(unread, content, time, pane);
     				this.Info_List.removeNotification(this.target.getID(), temp);
     				gridPane.getChildren().clear();
     				gridPane.getRowConstraints().clear();
     				getNotificationPane(); //Refresh the notification pane
+    			}
+    			else if(result.get() == confirm) {
+    				
     			}
     		});
     	}
@@ -1535,10 +1654,9 @@ public class HomepageController{
     private void moveToAccount(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Accountpage.fxml", "Account");
     	AccountpageController apc = Loader.getController();
-    	apc.HomeToAccount(this.userList, this.Info_List, this.target);
+    	apc.HomeToAccount(this.userList, this.Info_List, this.target, this.G_List);
     }
     //**************************************************************************
-
     
     //-------------------------------Message---------------------------------------------
     //Messaging scene
@@ -2382,13 +2500,55 @@ public class HomepageController{
     }
     
     private void findGroupIndex() {
-    	for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
-    		if(this.G_List.getGroup_List().get(i).isGroupMember(this.target.getID())) {
-    			this.GroupIndex = i;
-    		}
+    	if(this.G_List.getGroup_List().size() == 0)
+    		this.GroupIndex = -1;
+    	else {
+    		for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
+    			if(this.G_List.getGroup_List().get(i).isGroupMember(this.target.getID())) {
+    				this.GroupIndex = i;
+    				break;
+    			}
+    		}    		
     	}
     }
-   
+
+    private boolean newIDCheck(String id) {
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    		if(this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    
+    private void getNewGroup(String title, String description) {
+    	Random rand = new Random();
+    	String newID;
+    	boolean result;
+    	do {
+    		newID = "";
+    		result = true;
+    		for(int i = 0; i < 4; ++i) {
+    			int digit = rand.nextInt(10);
+    			newID += Integer.toString(digit);	
+    		}
+    		for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
+    			if(this.G_List.getGroup_List().get(i).getGroup_ID().compareTo(newID) == 0)
+    				result = false;
+    		}
+    	}while(!result);
+    	
+    	//Create a new group
+    	Group group = new Group();
+    	Group_Status GS = new Group_Status(this.target); //Save user to the group
+    	group.addGroupMember(GS);
+    	group.setGroup_ID(newID);
+    	group.setTitle(title);
+    	group.setDescription(description);
+    	this.G_List.addGroup(group);
+    	findGroupIndex(); //Refresh
+    }
+    
     //Get ID using Email address
     private String getUserID(String email) {
     	for(int i = 0; i < userList.getAll_Size(); ++i) {
@@ -2407,11 +2567,11 @@ public class HomepageController{
         return Loader;
 	}
 	
-
-	public void AccountToHome(UserList ul, Information_List il, Client client) {
+	public void AccountToHome(UserList ul, Information_List il, Client client, Group_List gl) {
 		this.userList = ul;
 		this.Info_List = il;
 		this.target = client;
+		this.G_List = gl;
 		if(this.target instanceof SU)
 			SUMode();
 	}

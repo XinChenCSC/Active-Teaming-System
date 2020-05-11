@@ -2,12 +2,12 @@ package Group;
 
 import java.util.ArrayList;
 
+import Clients.Client;
+
 public class Group_List {
 
 	private ArrayList<Group> Group_List = new ArrayList<>();
 
-	
-	
 	//Constructor
 	public Group_List() {}
 	
@@ -24,4 +24,19 @@ public class Group_List {
 		}
 	}
 	
+	public void removeGroup(Group group) {
+		this.Group_List.remove(group);
+	}
+	
+	public void addUserToGroup(String ID, Group_Status client) {
+		for(int i = 0; i < this.Group_List.size(); ++i) {
+			if(this.Group_List.get(i).getGroup_ID().compareTo(ID) == 0) {
+				this.Group_List.get(i).addGroupMember(client);
+			}
+		}
+	}
+	
+	public void addGroup(Group group) {
+		this.Group_List.add(group);
+	}
 }

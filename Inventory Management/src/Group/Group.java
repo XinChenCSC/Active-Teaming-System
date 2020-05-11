@@ -18,6 +18,8 @@ public class Group {
 	
 	private String Description = "";
 	
+	private boolean Open = false;
+	
 	private boolean Close = false;
 	
 	//Constructor
@@ -40,21 +42,17 @@ public class Group {
 
 	public void setA_Group(ArrayList<Group_Status> a_Group) {A_Group = a_Group;}
 	
-	public void addGroupMember(Group_Status client) {this.A_Group.add(client);}
+	public void addGroupMember(Group_Status client) {
+		this.A_Group.add(client);
+		setSize(1);
+		}
 	
 	public void removeGroupMember(Group_Status client) {this.A_Group.remove(client);}
 
-//	--------------------------------------------Buffer-----------------------------------------
-	public void removeBufferMember(Group_Status client) {
-		--this.totalMember;
-	}
-
-
 //	--------------------------------------------Total member-----------------------------------------
-	public int size() {return totalMember;}
 
-	public void setSize(int totalMember) {
-		this.totalMember = totalMember;
+	private void setSize(int totalMember) {
+		this.totalMember += totalMember;
 		this.pollStatus = new int[6][this.totalMember];
 		for(int i = 0; i < 6; ++i) {
 			for(int j = 0; j < this.totalMember; ++j) {
@@ -84,7 +82,6 @@ public class Group {
 	
 //	--------------------------------------------Title-----------------------------------------
 	public String getTitle() {return Title;}
-
 	
 	public void setTitle(String title) {Title = title;}
 
@@ -98,10 +95,15 @@ public class Group {
 	public void setClose(boolean close) {Close = close;}
 	
 	public boolean isGroupMember(String ID) {
-		for(int i = 0; i < this.totalMember; ++i) {
+		for(int i = 0; i < this.A_Group.size(); ++i) {
 			if(A_Group.get(i).getUser().getID().compareTo(ID) == 0)
 				return true;
 		}
 		return false;
 	}
+	
+//	--------------------------------------------Open-----------------------------------------
+	public boolean isOpen() {return Open;}
+
+	public void setOpen(boolean open) {Open = open;}
 }

@@ -4,15 +4,24 @@ public class Notification {
 
 	private boolean NewIcon;
 	
-	private String date;
+	private String Date;
 	
-	private String message;
+	private String Message;
+	
+	private boolean Invitation = false;
 	
 	//Constructor
 	public Notification(boolean newIcon, String date, String message) {
 		this.NewIcon = newIcon;
-		this.date = date;
-		this.message = message;
+		this.Date = date;
+		this.Message = message;
+	}
+	
+	public Notification(boolean newIcon, String date, String message, boolean invitation) {
+		this.NewIcon = newIcon;
+		this.Date = date;
+		this.Message = message;
+		this.Invitation = invitation;
 	}
 
 	public Notification() {}
@@ -28,18 +37,27 @@ public class Notification {
 	//-------------------------------------
 	//Date 
 	public String getDate() {
-		return date;
+		return Date;
 	}
 	public void setDate(String date) {
-		this.date = date;
+		this.Date = date;
 	}
 	//--------------------------------------
 	//Message
 	public String getMessage() {
-		return message;
+		return Message;
 	}
 
 	public void setMessage(String message) {
-		this.message = message;
+		this.Message = message;
+	}
+
+	//Invitation
+	public boolean isInvitation() {
+		return Invitation;
+	}
+
+	public void setInvitation(boolean invitation) {
+		this.Invitation = invitation;
 	}
 }
