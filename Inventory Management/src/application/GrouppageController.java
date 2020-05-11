@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import Clients.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -88,7 +89,7 @@ public class GrouppageController {
     private final double width = screen.getWidth()*0.2;
     private final double height = screen.getHeight()*0.5;
     //Vote types
-    private final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit", "Schedule"};
+    private final String[] voting_tags = {"Dismissal", "Warning", "Praise", "Closure", "Eva. exit"};
     //Your vote
     private boolean[] votingStatus = {true, true, true, true, true, true};
     
@@ -708,6 +709,11 @@ public class GrouppageController {
   		String currentDate = dateFormat.format(cal.getTime()).toString();
   		return currentDate;
     }
+
+	public void HomeToGroup(Client target, Group.Group group2, Information_List info_List) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

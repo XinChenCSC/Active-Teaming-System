@@ -12,6 +12,10 @@ public class OU extends Client{
 	
 	private boolean needAppeal = false;
 	
+	private boolean inGroup = false;
+	
+	private boolean CreatingGroup = false;
+	
 	//Constructor	
 	public OU(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
 			int reputation_score, int total_project_completed, int total_group_engaged, int total_penalty_received,
@@ -29,8 +33,6 @@ public class OU extends Client{
 	
 	public void setPresentee(ArrayList<Guest> presentee) {this.presentee = presentee;}
 	//*****************************************************************************************
-
-	//**************************************************************************
 	
 	//Return Evaluation score Range
 	public static int getEvaluationScoreRange() {return Evaluation_Score_Range;}
@@ -54,5 +56,15 @@ public class OU extends Client{
 	public boolean NeedAppeal() {return needAppeal;}
 
 	
-	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}	
+	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}
+	
+//	----------------------------------Need appeal getter and setter------------------------------
+	public boolean isInGroup() {return inGroup;}
+
+	public void setInGroup(boolean inGroup) {this.inGroup = inGroup;}	
+	
+//	----------------------------------Creating group getter and setter------------------------------
+	public boolean isCreatingGroup() {return this.CreatingGroup;}
+	
+	public void setCreatingGroup(boolean creatingGroup) {this.CreatingGroup = creatingGroup;}
 }

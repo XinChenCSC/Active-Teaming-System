@@ -8,6 +8,7 @@ import Message.Message_Container;
 import application.Notification.Notification;
 
 public class Information_Container {
+		
 	//Messages
 	private ArrayList<Message_Container> Message_Content = new ArrayList<Message_Container>(); 
 	
@@ -19,9 +20,6 @@ public class Information_Container {
 	
 	//whitebox
 	private ArrayList<Client> Whitebox = new ArrayList<Client>();
-	
-	//System blacklist
-	private ArrayList<Client> System_Blacklist = new ArrayList<Client>();
 	
 	//Notification
 	private ArrayList<Notification> Notification = new ArrayList<Notification>();
@@ -86,14 +84,6 @@ public class Information_Container {
 
 	public void setEmail_Content(ArrayList<Email> email_Content) {Email_Content = email_Content;}
 	
-//	-----------------------------------System Blacklist----------------------------------------
-	public void addSystemBlacklist(Client client) {this.System_Blacklist.add(client);}
-	
-	public void removeSystemBlacklist(Client client) {this.System_Blacklist.remove(client);}
-	
-	public ArrayList<Client> getSystem_Blacklist() {return System_Blacklist;}
-
-	public void setSystem_Blacklist(ArrayList<Client> system_Blacklist) {System_Blacklist = system_Blacklist;}
 	
 //	-----------------------------------Appointment----------------------------------------
 	public ArrayList<Appointment> getAppointment() {return Appointment;}

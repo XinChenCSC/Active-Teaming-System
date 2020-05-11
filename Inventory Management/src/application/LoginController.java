@@ -3,6 +3,7 @@ package application;
 import java.io.*;
 import java.util.ResourceBundle;
 
+import Group.Group_List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,6 +67,8 @@ public class LoginController{
     
 	private Information_List Info_List = new Information_List();
     
+	private Group_List G_List = new Group_List();
+	
     //Username for checkbox
     private String CB_username;
 
@@ -110,8 +113,8 @@ public class LoginController{
         			}
         		HomepageController hc = Loader.getController();
         		//para1: eavluation; para2: password change; para3: transit userList; para4: specific user
-        		hc.carryingInformation(evaluation, false, userList,
-        				userList.getAll_User().get(i), Info_List);        			
+        		hc.carryingInformation(evaluation, false, this.userList,
+        				userList.getAll_User().get(i), this.Info_List, this.G_List);        			
         	}
         }
     	wrong_info.setVisible(true); // display incorrect notification 
@@ -153,7 +156,7 @@ public class LoginController{
     private void Guest_Mode(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");
     	HomepageController hc = Loader.getController();
-    	hc.GuestMode();
+    	hc.GuestMode(this.G_List);
     }
 
     //If your registration passed, a popup alert will notice you.
@@ -170,7 +173,7 @@ public class LoginController{
     		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
     		HomepageController hc = Loader.getController();
 			hc.carryingInformation(false, true, userList,
-					userList.getGuest(), Info_List);   
+					userList.getGuest(), this.Info_List, this.G_List);   
     	}
     }
 	
@@ -194,9 +197,10 @@ public class LoginController{
 	}
 	    
 	//Carry information from the main class
-	void signupAlert(UserList ul, Information_List il) throws IOException{
+	void signupAlert(UserList ul, Information_List il, Group_List gl) throws IOException{
 		this.userList = ul; //set database
 		this.Info_List = il;
+		this.G_List = gl;
 		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivated())
 			FailedSignupAlert();	
 		else if(userList.getGuest().getNumRegister() != 0 && !userList.getGuest().isActivated())
@@ -212,9 +216,10 @@ public class LoginController{
         return Loader;
 	}
 
-	public void HomeToLogin(UserList ul, Information_List il) {
+	public void HomeToLogin(UserList ul, Information_List il, Group_List gl) {
 		this.userList = ul;
 		this.Info_List = il;
+		this.G_List = gl;
 	}
 
 	public void SignupToLogin(UserList ul, Information_List il) {

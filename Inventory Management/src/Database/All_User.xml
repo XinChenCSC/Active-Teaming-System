@@ -2,16 +2,16 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="Clients.SU"/>
+   <object class="Clients.SU" id="SU0"/>
   </void>
   <void method="add">
-   <object class="Clients.OU"/>
+   <object class="Clients.OU" id="OU0"/>
   </void>
   <void method="add">
-   <object class="Clients.VIP"/>
+   <object class="Clients.VIP" id="VIP0"/>
   </void>
   <void method="add">
-   <object class="Clients.OU">
+   <object class="Clients.OU" id="OU1">
     <void property="ID">
      <string>13579</string>
     </void>
@@ -30,32 +30,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.OU">
-    <void property="ID">
-     <string>24680</string>
-    </void>
-    <void property="date_Of_Join">
-     <string>05/03/2019</string>
-    </void>
-    <void property="email">
-     <string>JuanCarlos@gmail.com</string>
-    </void>
-    <void property="interest">
-     <string>Hike</string>
-    </void>
-    <void property="name">
-     <string>Juan Carlos</string>
-    </void>
-    <void property="reputationScore">
-     <int>31</int>
-    </void>
-    <void property="total_Penalty_Received">
-     <int>0</int>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="Clients.OU">
+   <object class="Clients.OU" id="OU2">
     <void property="ID">
      <string>43754</string>
     </void>
@@ -80,7 +55,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.OU">
+   <object class="Clients.OU" id="OU3">
     <void property="ID">
      <string>98374</string>
     </void>
@@ -105,7 +80,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.OU">
+   <object class="Clients.OU" id="OU4">
     <void property="ID">
      <string>29384</string>
     </void>
@@ -128,6 +103,68 @@
      <int>0</int>
     </void>
    </object>
+  </void>
+  <void method="add">
+   <object class="Clients.VIP" id="VIP1">
+    <void property="ID">
+     <string>24680</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/03/2019</string>
+    </void>
+    <void property="email">
+     <string>JuanCarlos@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Hike</string>
+    </void>
+    <void property="name">
+     <string>Juan Carlos</string>
+    </void>
+    <void property="reputationScore">
+     <int>31</int>
+    </void>
+    <void property="status">
+     <string>Good</string>
+    </void>
+    <void property="total_Group_Engaged">
+     <int>2</int>
+    </void>
+    <void property="total_Project_Completed">
+     <int>2</int>
+    </void>
+   </object>
+  </void>
+ </object>
+ <object class="Clients.Guest"/>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object idref="OU0"/>
+  </void>
+  <void method="add">
+   <object idref="OU1"/>
+  </void>
+  <void method="add">
+   <object idref="OU2"/>
+  </void>
+  <void method="add">
+   <object idref="OU3"/>
+  </void>
+  <void method="add">
+   <object idref="OU4"/>
+  </void>
+ </object>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object idref="SU0"/>
+  </void>
+ </object>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object idref="VIP0"/>
+  </void>
+  <void method="add">
+   <object idref="VIP1"/>
   </void>
  </object>
 </java>

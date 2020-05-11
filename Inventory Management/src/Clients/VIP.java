@@ -2,7 +2,8 @@ package Clients;
 
 import java.util.ArrayList;
 
-import application.Group;
+import Group.Group;
+
 
 public class VIP extends Client{
 	
@@ -17,6 +18,10 @@ public class VIP extends Client{
 	private int numCompliment = 0;
 	
 	private boolean needAppeal = false;
+	
+	private boolean inGroup = false;
+	
+	private boolean CreatingGroup = false;
 	
 	//Constructor
 	public VIP(String Name, String ID, String Email, String Position, String Interest, String Recommender, String Password,
@@ -68,5 +73,15 @@ public class VIP extends Client{
 //	----------------------------------Need appeal getter and setter------------------------------
 	public boolean NeedAppeal() {return needAppeal;}
 
-	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}	
+	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}
+	
+//	----------------------------------Need appeal getter and setter------------------------------
+	public boolean isInGroup() {return inGroup;}
+
+	public void setInGroup(boolean inGroup) {this.inGroup = inGroup;}	
+	
+//	----------------------------------Creating group getter and setter------------------------------
+	public boolean isCreatingGroup() {return this.CreatingGroup;}
+	
+	public void setCreatingGroup(boolean creatingGroup) {this.CreatingGroup = creatingGroup;}
 }

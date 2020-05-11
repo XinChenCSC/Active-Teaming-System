@@ -27,17 +27,6 @@ public class Guest extends Client{
 	
 	
 	//-----------------------------------Getters-------------------------------------------  
-	public String getName() {return super.getName();}
-	
-	public String Interest() {return super.getInterest();} 
-	 
-	public String recommender() {return super.getRecommender(); }
-	
-	public String Email() {return super.getEmail();}
-	
-	public String getID() {return super.ID;}
-	
-	public String getPassword() {return super.Password;}
 	
 	public boolean isActivated() {return Activate;}
 
@@ -47,17 +36,6 @@ public class Guest extends Client{
 	//**************************************************************************************
 	
 	//-----------------------------------Setters-----------------------------------------------
-	public void setID(String ID) {super.setID(ID);}
-	
-	public void setPassword(String Password) {super.setPassword(Password);}
-	
-	public void setInterest(String Interest) {super.setInterest(Interest);}
-
-	public void setEmail(String Email) {super.setEmail(Email);}
-	
-	public void setName(String Name) {super.setName(Name);}
-	
-	public void setRecommender(String Recommender) {super.setRecommender(Recommender);}
 	
 	public void setActivate(boolean Activate) {this.Activate = Activate;}
 

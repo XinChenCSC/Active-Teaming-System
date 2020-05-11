@@ -10,6 +10,10 @@ import Message.Message_Container;
 import application.Notification.Notification;
 
 public class Information_List {
+	
+	//Static variable System blacklist
+	private ArrayList<Client> System_Blacklist = new ArrayList<Client>();
+	
 	private ArrayList<Information_Container> Info_Con = new ArrayList<Information_Container>();
 	
 //	----------------------------Constructor-----------------------------	
@@ -105,23 +109,6 @@ public class Information_List {
 		this.Info_Con.get(i).removeBLMember(client);
 	}
 
-//	----------------------------System Blacklist-----------------------------
-	public void addSystem(String id, Client client) {
-		int i = isExist(id);
-		if(i > -1) {
-			this.Info_Con.get(i).addSystemBlacklist(client);		
-		}
-		else {
-			Information_Container ic = new Information_Container(id);
-			ic.addSystemBlacklist(client);;
-			this.Info_Con.add(ic);
-		}
-	}
-	
-	public void removeSystem(String id, Client client) {
-		int i = isExist(id);
-		this.Info_Con.get(i).removeSystemBlacklist(client);;
-	}
 
 //	----------------------------Appointment---------------------------------------
 	public void addAppointment(String id, Appointment appointment) {
@@ -140,6 +127,15 @@ public class Information_List {
 		int i = isExist(id);
 		this.Info_Con.get(i).removeAppointment(appointment);
 	}
+	
+//	-----------------------------------System Blacklist----------------------------------------
+	public void addSystemBlacklist(Client client) {System_Blacklist.add(client);}
+	
+	public void removeSystemBlacklist(Client client) {System_Blacklist.remove(client);}
+	
+	public ArrayList<Client> getSystem_Blacklist() {return System_Blacklist;}
+
+	public void setSystem_Blacklist(ArrayList<Client> system_Blacklist) {System_Blacklist = system_Blacklist;}
 	
 //	--------------------------------------------------------------------------------
 	public ArrayList<Information_Container> getInfo_Con(){

@@ -10,14 +10,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Appointment.Appointment;
 import Clients.Client;
 import Clients.Guest;
 import Clients.Information_Container;
 import Clients.OU;
 import Clients.SU;
 import Clients.VIP;
-import Email.Email;
+import Group.Group;
+import Group.Group_List;
+import application.Notification.Notification;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -31,14 +32,14 @@ import javafx.scene.Scene;
 public class Main extends Application {	
 	private UserList userList = new UserList();	
 
-	private final String[] xmlFile = {"@../../src/Database/All_User.xml",
-			"@../../src/Database/Guest.xml",
-			"@../../src/Database/OU.xml",
-			"@../../src/Database/SU.xml",
-			"@../../src/Database/VIP.xml",
-			"@../../src/Database/Informations.xml"};
-	
 	private Information_List il = new Information_List();
+
+	private Group_List gl = new Group_List();
+	
+	private final String[] xmlFile = {"@../../src/Database/All_User.xml",
+			"@../../src/Database/Informations.xml",
+			"@../../src/Database/Group.xml"};
+	
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -73,7 +74,7 @@ public class Main extends Application {
 	        
 	        //Transfer userList to other scene
 	        LoginController login = firstLoader.getController();
-	        login.signupAlert(userList, il);
+	        login.signupAlert(userList, il, gl);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -97,6 +98,8 @@ public class Main extends Application {
 //				17, 2, 2, 0, "Good", "On", "05/05/2019");
 //		OU ou5 = new OU("Carmen Gabriela", "29384", "CarmenGabriela@gmail.com", "OU", "Swimming", "Qichen You", "66666",
 //				18, 2, 2, 0, "Good", "On", "05/06/2019");	
+//		OU ou6 = new OU("Ever Imre", "65428", "EverImre@gmail.com", "OU", "TaiChi", "Qichen You", "66666",
+//				18, 2, 2, 0, "Good", "On", "05/06/2019");
 //		userList.addSU_User(su);
 //		userList.addAll_User(su);
 //		userList.addOU_User(ou);
@@ -113,6 +116,7 @@ public class Main extends Application {
 //		userList.addAll_User(ou4);
 //		userList.addOU_User(ou5);
 //		userList.addAll_User(ou5);
+//		
 //		il.addInfo_Con(new Information_Container("23333"));
 //		il.addInfo_Con(new Information_Container("77777"));
 //		il.addInfo_Con(new Information_Container("55555"));
@@ -121,24 +125,39 @@ public class Main extends Application {
 //		il.addInfo_Con(new Information_Container("98374"));
 //		il.addInfo_Con(new Information_Container("43754"));
 //		il.addInfo_Con(new Information_Container("29384"));
+//		
+//		//Add to system blacklist
+//		il.addSystemBlacklist(ou6);
+//		
+//		Notification no1 = new Notification(true, "11111", "Message1");
+//		Notification no2 = new Notification(true, "11111", "Message2");
+//		Notification no3 = new Notification(true, "11111", "Message3");
+//		Notification no4 = new Notification(true, "11111", "Message4");
+//		
+//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no1);
+//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no2);
+//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no3);
+//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no4);
 		
 		//read file
 		for(int i = 0; i < xmlFile.length; ++i) {
 			try {
             	XMLEncoder file = new XMLEncoder(new BufferedOutputStream
             			(new FileOutputStream(xmlFile[i])));          	
-            	if(i == 0)
+            	if(i == 0) {
             		file.writeObject(userList.getAll_User());
-            	else if(i == 1)
             		file.writeObject(userList.getGuest());
-            	else if(i == 2)
             		file.writeObject(userList.getOU_User());
-            	else if(i == 3)
             		file.writeObject(userList.getSU_User());
-            	else if(i == 4)
             		file.writeObject(userList.getVip_User());
-            	else
+            	}
+            	else if (i == 1){
             		file.writeObject(il.getInfo_Con());
+            		file.writeObject(il.getSystem_Blacklist());
+            	}
+            	else {
+            		file.writeObject(gl.getGroup_List());
+            	}
             	file.close();
         	}
         	catch (IOException e) {
@@ -146,6 +165,10 @@ public class Main extends Application {
         	} 
 		}
 		System.out.println(userList.getAll_Size());
+		System.out.println(userList.getOU_Size());
+		System.out.println(userList.getVIP_Size());
+		System.out.println(userList.getSU_Size());
+		System.out.println(userList.getVip_User().get(0).isCreatingGroup());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -153,18 +176,20 @@ public class Main extends Application {
     	for(int i = 0; i < xmlFile.length; ++i) {
     		XMLDecoder file = new XMLDecoder(new BufferedInputStream
         			(new FileInputStream(xmlFile[i])));
-    		if(i == 0)
+    		if(i == 0) {
     			userList.setAll_User((ArrayList<Client>) file.readObject());
-    		else if(i == 1)
     			userList.setGuest((Guest) file.readObject());
-    		else if (i == 2)
     			userList.setOU_User((ArrayList<OU>) file.readObject());
-    		else if (i == 3)
     			userList.setSU_User((ArrayList<SU>) file.readObject());
-    		else if (i == 4)
     			userList.setVIP_User((ArrayList<VIP>) file.readObject());
-    		else
+    		}
+    		else if(i == 1){
     			il.setInfo_Con((ArrayList<Information_Container>) file.readObject());
+    			il.setSystem_Blacklist((ArrayList<Client>) file.readObject());
+    		}
+    		else {
+    			gl.setGroup_List((ArrayList<Group>) file.readObject());
+    		}
     		file.close();
     	}
     	int remove[] = new int[this.userList.getOU_Size()];
@@ -187,6 +212,7 @@ public class Main extends Application {
 						this.userList.getOU_User().get(i).getDate_Of_Join());
 				remove[j++] = i;
 				this.userList.addVIP_User(new_vip);
+				this.userList.addAll_User(new_vip);
 			}
 		}
 		for(int i = 0; i < this.userList.getOU_Size(); ++i) {

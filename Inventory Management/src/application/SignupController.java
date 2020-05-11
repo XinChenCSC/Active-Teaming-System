@@ -187,7 +187,7 @@ public class SignupController {
         	Email_Error.setVisible(false);
         	em.removeAll(Collections.singleton("error"));
         }
-        //Save pre-OU informations
+        //Save Visitor informations
         if(result) {
         	String str = "Name: " + Firstname.getText().toString() + " " + Lastname.getText().toString() + "\n" +
         				"Interest: " + Interest.getText().toString() + "\n" +
@@ -218,15 +218,20 @@ public class SignupController {
     }
   
     private boolean isUsedEmail() {
-    	boolean result = false;
     	//Email can't be used.
     	for(int i = 0; i < userList.getAll_Size(); ++i) {
     		if(userList.getAll_User().get(i).getEmail().compareTo(Email.getText()) == 0) {
-    			result = true;
-    			break;
+    			return true;
     		}
     	}
-    	return result;
+		//Check whether the Guest email and name is in the system blacklist
+    	for(int i = 0; i < this.Info_List.getSystem_Blacklist().size(); ++i) {
+    		if(this.Info_List.getSystem_Blacklist().get(i).getEmail().compareTo(Email.getText()) == 0 ||
+    				this.Info_List.getSystem_Blacklist().get(i).getName().compareTo(Firstname.getText() + " " + Lastname.getText()) == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     private boolean isInvalidReferer() {

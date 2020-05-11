@@ -5,6 +5,7 @@ import javafx.animation.Transition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 
+import application.Notification.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import Clients.SU;
 import Clients.VIP;
 import Clients.Guest;
 import Email.Email;
+import Group.Group_List;
 import Message.Message_Container;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -156,8 +158,12 @@ public class HomepageController{
 	private int emailNum = 0;
 	// Number of existing messages
 	private int messageNum = 0;
-	// Target index in the user list
+	// Number of existing notification
+	private int notificationNum;
+	// Target index in the infomation list
 	private int UserIndex = 0;
+	// Group index which the user belongs to
+	private int GroupIndex = -1;
     //Window size
 	private final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 	//is guest
@@ -168,6 +174,9 @@ public class HomepageController{
 	private Information_List Info_List = new Information_List();
 	//Target
 	private Client target;
+	//Group container
+	private Group_List G_List;
+
 	
     @FXML
     void initialize() throws IOException, InterruptedException {
@@ -218,7 +227,7 @@ public class HomepageController{
 
     @SuppressWarnings("unused")
 	@FXML
-    void Group_Click(ActionEvent event) {
+    void Group_Click(ActionEvent event) throws IOException {
     	//--------------------------Main Scene-----------------------
         //Get the main scene size
         Stage mainScene = (Stage) Profile.getScene().getWindow();
@@ -245,24 +254,14 @@ public class HomepageController{
         //Move to group
         ((Button)((HBox)scene.getChildren().get(1)).getChildren().get(1)).setOnAction(group->{
         	//Search group
-        	if(((TextField)((HBox)scene.getChildren().get(1)).getChildren().get(2)).getText().isEmpty()) {
-        		FXMLLoader loader = new FXMLLoader(getClass().getResource("GroupPage.fxml"));
-        		Parent group_page;
+        	if(isValidGroupID(((TextField)((HBox)scene.getChildren().get(1)).getChildren().get(2)).getText())) {
         		try {
         			newWindow.close();
-        			group_page = loader.load();
-        			//AccountPageController account = loader.getController();
-        			Stage account_scene = (Stage) Profile.getScene().getWindow();
-        			account_scene.setScene(new Scene(group_page));
-        			account_scene.setTitle("Group page");
-        			account_scene.show();
-        		} catch (IOException e1) {
-        			// TODO Auto-generated catch block
-        			e1.printStackTrace();
-        		}
+					FXMLLoader loader = sceneSwitch("GroupPage.fxml", "Group");
+				} catch (IOException e1) {e1.printStackTrace();}
         	}
         	else {
-        		Alert alert = getAlert(AlertType.ERROR, "Wrong group ID.", ButtonType.OK, "Error");
+        		getAlert(AlertType.ERROR, "Wrong group ID.", ButtonType.OK, "Error");
         	}
         });
         //----------------------Get appeal scene--------------------------
@@ -275,7 +274,7 @@ public class HomepageController{
         	//If text area is empty, submission fail. 
         	((Button)AppealScene.getChildren().get(2)).setOnAction(h->{
         		if(((TextArea)AppealScene.getChildren().get(1)).getText().isEmpty()) {
-        			Alert alert = getAlert(AlertType.ERROR, "Can't be Empty.", ButtonType.OK, "Error");
+        			getAlert(AlertType.ERROR, "Can't be Empty.", ButtonType.OK, "Error");
         		}
         		else {
         			//Submission completed, appeal button sets to invisible
@@ -303,9 +302,13 @@ public class HomepageController{
             //Confirmed button click event
             ((Button)pane.getChildren().get(3)).setOnAction(c->{
             	if(((TextField)pane.getChildren().get(0)).getText().isEmpty() || ((TextField)pane.getChildren().get(1)).getText().isEmpty()) {
-					Alert warning = getAlert(AlertType.WARNING, "Wrong inputs existed.", ButtonType.OK, "Caution!");
+					getAlert(AlertType.WARNING, "Wrong inputs existed.", ButtonType.OK, "Caution!");
             	}
             	else {
+            		//Disable the create button because you can't create two group at the same time
+        			this.userList.setCreatingGroup(this.target.getID(), true);
+        			//Disable the create button
+        			((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
                 	Alert alert = getAlert(AlertType.INFORMATION, "Please wait for the final decision", ButtonType.OK, "Grouop confirmation");
                 	if (alert.getResult() == ButtonType.OK)
                     	newWindow_2.close();
@@ -560,15 +563,16 @@ public class HomepageController{
     //**************************************************************************
     
     //----------------------------Group main scene------------------------------
-    private StackPane groupMainScene(double w, double h) {
-    	boolean group_status = false;
+    private StackPane groupMainScene(double w, double h) throws IOException {
+    	findGroupIndex();
         StackPane subScene = new StackPane();
         subScene.setPadding(new Insets(h*0.1,w*0.05,h*0.05,w*0.05));
         //Create label
         Button lb = new Button();
+        lb.setFocusTraversable(false);
+		
         // Display group status
-        if(!group_status) {
-            lb.setFocusTraversable(false);
+        if(this.GroupIndex == -1) {
             lb.setDisable(true);
             lb.setOpacity(1);
             lb.setText("You don't have a group."); 
@@ -577,8 +581,19 @@ public class HomepageController{
         }
         else {
         	lb.setText("Move to group page.");
-        	lb.setFocusTraversable(false);
+        	//Switch to group page
+        	lb.setOnAction(e->{
+        		FXMLLoader Loader;
+				try {
+					Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
+					GrouppageController gc = Loader.getController();
+					gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);        		
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+        	});
         }
+        
         HBox hbox = new HBox();
         hbox.setPrefSize(w, h*0.4);
         //Move to target group button
@@ -588,10 +603,21 @@ public class HomepageController{
         TextField groupId = new TextField();
         groupId.setPromptText("Group ID");
         getSetting(groupId, w*0.4, h*0.08, 0, 0);
+        
         //Create a button
         Button createButton = new Button();
         createButton.setText("Create");
         createButton.setFocusTraversable(false);
+        
+        //Check whether the create button needs to disable
+		if(this.target instanceof OU) {
+			if(((OU) this.target).isCreatingGroup())
+				createButton.setDisable(true);
+		}
+		else if(this.target instanceof VIP) {
+			if(((VIP) this.target).isCreatingGroup())
+				createButton.setDisable(true);
+		}
         
         hbox.setAlignment(Pos.TOP_CENTER);
         hbox.getChildren().addAll(createButton, go,groupId);
@@ -657,6 +683,7 @@ public class HomepageController{
     	ColumnConstraints column1 = new ColumnConstraints(170);
     	ColumnConstraints column2 = new ColumnConstraints(100);
     	friend_grid.getColumnConstraints().addAll(column1, column2);
+    	
     	//Show all avaliable friends
     	for(int i = 0, j = 0; i < this.userList.getAll_Size(); ++i) {
         	//Label names
@@ -898,8 +925,8 @@ public class HomepageController{
     	gridPane.setPadding(new Insets(0, w*0.35, h*0.1, w*0.35));
     	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.28));
     	//Make a list
-    	for(int i = 0; i < 15; ++i){
-    		Label member = new Label("Unknown" + i);
+    	for(int i = 0; i < this.Info_List.getSystem_Blacklist().size(); ++i){
+    		Label member = new Label(this.Info_List.getSystem_Blacklist().get(i).getName());
     		gridPane.getRowConstraints().add(new RowConstraints(h*0.07));
     		GridPane.setHalignment(member, HPos.CENTER);
     		GridPane.setValignment(member, VPos.CENTER);
@@ -1424,56 +1451,70 @@ public class HomepageController{
     //--------------------------------Notification------------------------------
     //set up Notification pane
     private void getNotificationPane() {
+    	this.UserIndex = getUserIndex(); //Refresh
+    	
+    	((ScrollPane) NotificationPane.getChildren().get(1)).prefWidthProperty().bind(this.NotificationPane.prefWidthProperty());
     	GridPane gridPane = new GridPane();
-    	getSetting(gridPane, NotificationPane.getPrefWidth()-15, NotificationPane.getPrefHeight(),
-    			0, NotificationPane.getLayoutY());
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(285));
-    	gridPane.setPadding(new Insets(5,5,5,5));
+    	ColumnConstraints column = new ColumnConstraints();
+    	column.prefWidthProperty().bind(this.NotificationPane.prefWidthProperty());
+    	gridPane.getColumnConstraints().add(column);
     	gridPane.setGridLinesVisible(true);
+    	
     	//Set up each row
-    	for(int i = 0; i < 5; ++i) {
+    	for(int i = this.notificationNum-1, j = 0; i >= 0; --i, ++j) {
+        	//Temp
+        	Notification temp = this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j);
     		//Unread notification
-    		Label unread = new Label("New");
+    		Label unread = new Label();
     		unread.setId("unread");
     		unread.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(unread, HPos.LEFT);
     		GridPane.setValignment(unread, VPos.TOP);
-    		gridPane.add(unread, 0, i);
+    		gridPane.add(unread, 0, j);
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).isNewIcon())
+    			unread.setText("New");
+    		
     		//Content label
-    		Label content = new Label("Unknown" + i);
+    		Label content = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).getMessage());
+    		content.setWrapText(true);
     		content.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(content, HPos.CENTER);
     		GridPane.setValignment(content, VPos.CENTER);
-    		gridPane.add(content, 0, i);
+    		gridPane.add(content, 0, j);
+    		
     		//Time 
-    		String currentTime = getCurrentTime();
-    		Label time = new Label(currentTime);
+    		Label time = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).getDate());
     		time.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(time, HPos.RIGHT);
     		GridPane.setValignment(time, VPos.BOTTOM);
-    		gridPane.add(time, 0, i);
+    		gridPane.add(time, 0, j);
     		//Back pane
     		Pane pane = new Pane();
     		getSetting(pane, 285, 70, 0, 0);
     		pane.setId("back_pane");
-    		gridPane.add(pane, 0, i);
+    		gridPane.add(pane, 0, j);
     		//Delete event
     		pane.setOnMouseClicked(e->{
     			//Set up alert
-    			ButtonType delete = new ButtonType("Delete", ButtonData.OK_DONE);
-    			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+    			ButtonType confirm = new ButtonType("Confirm", ButtonData.OK_DONE);
+    			ButtonType delete = new ButtonType("Delete", ButtonData.FINISH);
     			Alert alert = new Alert(AlertType.INFORMATION,
     			        content.getText(),
-    			        delete,
-    			        cancel);
+    			        confirm,
+    			        delete);
 
-    			alert.setTitle("Important");
+    			alert.setTitle(content.getText());
     			alert.setHeaderText(null);
     			alert.setX(screen.getWidth()*0.7);
     			alert.setY(screen.getHeight()*0.2);
     			Optional<ButtonType> result = alert.showAndWait();
-    			if (result.orElse(cancel) == delete)
-    				gridPane.getChildren().removeAll(unread, content, time, pane);
+    			if (result.orElse(confirm) == delete) {
+//    				gridPane.getChildren().removeAll(unread, content, time, pane);
+    				this.Info_List.removeNotification(this.target.getID(), temp);
+    				gridPane.getChildren().clear();
+    				gridPane.getRowConstraints().clear();
+    				getNotificationPane(); //Refresh the notification pane
+    			}
     		});
     	}
     	((ScrollPane) NotificationPane.getChildren().get(1)).setContent(gridPane);
@@ -1486,7 +1527,7 @@ public class HomepageController{
     private void Logout(ActionEvent event)throws IOException {
     	FXMLLoader loader = sceneSwitch("LoginPage.fxml", "Login");
     	LoginController lc = loader.getController();
-    	lc.HomeToLogin(userList, Info_List);
+    	lc.HomeToLogin(this.userList, this.Info_List, this.G_List);
     }
     
     //Move to the account page
@@ -2037,10 +2078,11 @@ public class HomepageController{
         NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
     }
     
-    void carryingInformation(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il) {
+    void carryingInformation(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il, Group_List g_List) {
     	this.userList = ul;	//set userList
     	this.target = target; //set target user
     	this.Info_List = il; //set user information
+    	this.G_List = g_List;
     	if(evaluation)
     		recommenderEvaluation();
     	if(passwordChange)
@@ -2057,7 +2099,7 @@ public class HomepageController{
     	this.Claim.setVisible(false);
     }
     
-    void GuestMode() {
+    void GuestMode(Group_List g_List2) {
     	this.Edit.setDisable(true);
     	this.Evaluation.setDisable(true);
     	this.Notification.setDisable(true);
@@ -2065,6 +2107,7 @@ public class HomepageController{
     	this.Profile.getItems().get(2).setDisable(true);
     	this.Profile.getItems().get(3).setDisable(true);
     	this.isGuest = true;
+    	this.G_List = g_List2;
     }
 //  ******************************************************************************************************************
     
@@ -2275,11 +2318,17 @@ public class HomepageController{
     //Check invalid ID
     private boolean isValidID(String id) {
     	boolean result = false;
-    	for(int i = 0; i < userList.getAll_Size(); ++i) {
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
     		//The target ID can't be your own id.
     		if(this.target.getID().compareTo(id) != 0 && this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
     			result = true;
+    			break;
     		}
+    	}
+    	//Check whether the target id is in your blacklist
+    	for(int i = 0; i < this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().size(); ++i) {
+    		if(id.compareTo(this.Info_List.getInfo_Con().get(UserIndex).getPersonal_Blacklist().get(i).getID()) == 0)
+    			result = false;
     	}
     	return result;
     }
@@ -2305,6 +2354,7 @@ public class HomepageController{
     		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
     			this.emailNum = this.Info_List.getInfo_Con().get(i).getEmail_Content().size();
     			this.messageNum = this.Info_List.getInfo_Con().get(i).getMessage_Content().size();
+    			this.notificationNum = this.Info_List.getInfo_Con().get(i).getNotification().size();
     			result = i;
     			break;
     		}
@@ -2323,6 +2373,22 @@ public class HomepageController{
     	return false;
     }
     
+    private boolean isValidGroupID(String ID) {
+    	for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
+    		if(this.G_List.getGroup_List().get(i).getGroup_ID().compareTo(ID) == 0)
+    			return true;
+    	}
+    	return false;
+    }
+    
+    private void findGroupIndex() {
+    	for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
+    		if(this.G_List.getGroup_List().get(i).isGroupMember(this.target.getID())) {
+    			this.GroupIndex = i;
+    		}
+    	}
+    }
+   
     //Get ID using Email address
     private String getUserID(String email) {
     	for(int i = 0; i < userList.getAll_Size(); ++i) {
