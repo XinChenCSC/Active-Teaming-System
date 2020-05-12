@@ -45,6 +45,8 @@ public class VIP extends Client{
 	//Add presentee if your presentee needs you to provide them an initial scores
 	public void addPresentee(Guest Name) {presentee.add(Name);}
 	
+	public void setPresentee(ArrayList<Guest> guest) {this.presentee = guest;}
+	
 	public ArrayList<Guest> getPresenteeList() {return presentee;}
 	//***************************************************************
 

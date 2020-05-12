@@ -7,7 +7,7 @@ import Clients.Client;
 import Clients.Information_Container;
 import Email.Email;
 import Message.Message_Container;
-import application.Notification.Notification;
+import Notice.Notice;
 
 public class Information_List {
 	
@@ -56,21 +56,21 @@ public class Information_List {
 	}
 	
 //	----------------------------Notification-----------------------------
-	public void CreateNotification(String id, Notification notification) {
+	public void CreateNotice(String id, Notice notification) {
 		int i = isExist(id);
 		if(i > -1) {
-			Info_Con.get(i).addNotification(notification);
+			Info_Con.get(i).addNotice(notification);
 		}
 		else {
 			Information_Container ic = new Information_Container(id);
-			ic.addNotification(notification);;
+			ic.addNotice(notification);;
 			this.Info_Con.add(ic);			
 		}
 	}
 	
-	public void removeNotification(String id, Notification notification) {
+	public void removeNotice(String id, Notice notification) {
 		int i = isExist(id);
-		this.Info_Con.get(i).removeNotification(notification);
+		this.Info_Con.get(i).removeNotice(notification);
 	}
 	
 //	----------------------------Friend-----------------------------

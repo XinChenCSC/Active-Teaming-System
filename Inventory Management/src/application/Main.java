@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Notice.Notice;
 import Clients.Client;
 import Clients.Guest;
 import Clients.Information_Container;
@@ -18,7 +19,6 @@ import Clients.SU;
 import Clients.VIP;
 import Group.Group;
 import Group.Group_List;
-import application.Notification.Notification;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -99,7 +99,7 @@ public class Main extends Application {
 //		OU ou5 = new OU("Carmen Gabriela", "29384", "CarmenGabriela@gmail.com", "OU", "Swimming", "Qichen You", "66666",
 //				18, 2, 2, 0, "Good", "On", "05/06/2019");	
 //		OU ou6 = new OU("Ever Imre", "65428", "EverImre@gmail.com", "OU", "TaiChi", "Qichen You", "66666",
-//				18, 2, 2, 0, "Good", "On", "05/06/2019");
+//				-1, 2, 2, 0, "Good", "On", "05/06/2019");
 //		userList.addSU_User(su);
 //		userList.addAll_User(su);
 //		userList.addOU_User(ou);
@@ -116,6 +116,8 @@ public class Main extends Application {
 //		userList.addAll_User(ou4);
 //		userList.addOU_User(ou5);
 //		userList.addAll_User(ou5);
+//		userList.addOU_User(ou6);
+//		userList.addAll_User(ou6);
 //		
 //		il.addInfo_Con(new Information_Container("23333"));
 //		il.addInfo_Con(new Information_Container("77777"));
@@ -125,19 +127,20 @@ public class Main extends Application {
 //		il.addInfo_Con(new Information_Container("98374"));
 //		il.addInfo_Con(new Information_Container("43754"));
 //		il.addInfo_Con(new Information_Container("29384"));
+//		il.addInfo_Con(new Information_Container("65428"));
 //		
 //		//Add to system blacklist
-//		il.addSystemBlacklist(ou6);
+////		il.addSystemBlacklist(ou6);
 //		
-//		Notification no1 = new Notification(true, "11111", "Message1");
-//		Notification no2 = new Notification(true, "11111", "Message2");
-//		Notification no3 = new Notification(true, "11111", "Message3");
-//		Notification no4 = new Notification(true, "11111", "Message4");
+//		Notice no1 = new Notice(true, "11111", "Message1");
+//		Notice no2 = new Notice(true, "11111", "Message2");
+//		Notice no3 = new Notice(true, "11111", "Message3");
+//		Notice no4 = new Notice(true, "11111", "Message4");
 //		
-//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no1);
-//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no2);
-//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no3);
-//		this.il.CreateNotification(this.userList.getVip_User().get(0).getID(), no4);
+//		this.il.CreateNotice(this.userList.getVip_User().get(0).getID(), no1);
+//		this.il.CreateNotice(this.userList.getVip_User().get(0).getID(), no2);
+//		this.il.CreateNotice(this.userList.getVip_User().get(0).getID(), no3);
+//		this.il.CreateNotice(this.userList.getVip_User().get(0).getID(), no4);
 		
 		//read file
 		for(int i = 0; i < xmlFile.length; ++i) {
@@ -164,12 +167,14 @@ public class Main extends Application {
         		e.printStackTrace();
         	} 
 		}
-		System.out.println(userList.getAll_Size());
-		System.out.println(userList.getOU_Size());
-		System.out.println(userList.getVIP_Size());
-		System.out.println(userList.getSU_Size());
-		System.out.println(userList.getVip_User().get(0).isCreatingGroup());
-		System.out.println(this.gl.getGroup_List().size());
+//		System.out.println(userList.getAll_Size());
+//		System.out.println(userList.getOU_Size());
+//		System.out.println(userList.getVIP_Size());
+//		System.out.println(userList.getSU_Size());
+//		System.out.println(userList.getOU_User().get(0).isCreatingGroup());
+		System.out.println(this.gl.getGroup_List().get(0).getA_Group().size());
+//		System.out.println(this.gl.getGroup_List().get(0).getGroup_ID());
+//		System.out.println(this.il.getInfo_Con().get(4).getNotice().get(0).getIndex());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -193,9 +198,9 @@ public class Main extends Application {
     		}
     		file.close();
     	}
-    	int remove[] = new int[this.userList.getOU_Size()];
+    	
 		//Check if any OU has a chance to promote up.
-		for(int i = 0, j = 0; i < this.userList.getOU_Size(); ++i) {
+		for(int i = 0; i < this.userList.getOU_Size(); ++i) {
 			if(this.userList.getOU_User().get(i).getReputationScore() >= 30) {
 				VIP new_vip = new VIP(this.userList.getOU_User().get(i).getName(),
 						this.userList.getOU_User().get(i).getID(),
@@ -211,14 +216,51 @@ public class Main extends Application {
 						this.userList.getOU_User().get(i).getStatus(),
 						this.userList.getOU_User().get(i).getEvaluation(),
 						this.userList.getOU_User().get(i).getDate_Of_Join());
-				remove[j++] = i;
+				
+				new_vip.setCreatingGroup(((OU)this.userList.getOU_User().get(i)).isCreatingGroup());
+				new_vip.setInGroup((((OU)this.userList.getOU_User().get(i)).isInGroup()));
+				new_vip.setImageURL((((OU)this.userList.getOU_User().get(i)).getImageURL()));
+				new_vip.setNumCompliment((((OU)this.userList.getOU_User().get(i)).getNumCompliment()));
+				new_vip.setNeedAppeal((((OU)this.userList.getOU_User().get(i)).NeedAppeal()));
+				new_vip.setPresentee((((OU)this.userList.getOU_User().get(i)).getPresenteeList()));
+				
+				this.userList.removeOU_User(this.userList.getOU_User().get(i));
 				this.userList.addVIP_User(new_vip);
 				this.userList.addAll_User(new_vip);
 			}
+			else if(this.userList.getOU_User().get(i).getReputationScore() < 0) {
+				this.il.addSystemBlacklist(this.userList.getOU_User().get(i));	//Move to the system blacklist
+				this.userList.removeOU_User(this.userList.getOU_User().get(i));	
+			}
 		}
-		for(int i = 0; i < this.userList.getOU_Size(); ++i) {
-			if(remove[i] > 0) {
-				this.userList.removeOU_User(this.userList.getOU_User().get(remove[i]));
+		//Check if any VIP needs to demote 
+		for(int i = 0; i < this.userList.getVIP_Size(); ++i) {
+			if(this.userList.getVip_User().get(i).getReputationScore() < 30) {
+				OU new_ou = new OU(this.userList.getVip_User().get(i).getName(),
+						this.userList.getVip_User().get(i).getID(),
+						this.userList.getVip_User().get(i).getEmail(),
+						"OU", 
+						this.userList.getVip_User().get(i).getInterest(),
+						this.userList.getVip_User().get(i).getRecommender(),
+						this.userList.getVip_User().get(i).getPassword(),
+						this.userList.getVip_User().get(i).getReputationScore(),
+						this.userList.getVip_User().get(i).getTotal_Project_Completed(),
+						this.userList.getVip_User().get(i).getTotal_Group_Engaged(),
+						this.userList.getVip_User().get(i).getTotal_Penalty_Received(),
+						this.userList.getVip_User().get(i).getStatus(),
+						this.userList.getVip_User().get(i).getEvaluation(),
+						this.userList.getVip_User().get(i).getDate_Of_Join());
+				
+				new_ou.setCreatingGroup(((VIP)this.userList.getVip_User().get(i)).isCreatingGroup());
+				new_ou.setInGroup((((VIP)this.userList.getVip_User().get(i)).isInGroup()));
+				new_ou.setImageURL((((VIP)this.userList.getVip_User().get(i)).getImageURL()));
+				new_ou.setNumCompliment((((VIP)this.userList.getVip_User().get(i)).getNumCompliment()));
+				new_ou.setNeedAppeal((((VIP)this.userList.getVip_User().get(i)).NeedAppeal()));
+				new_ou.setPresentee((((VIP)this.userList.getVip_User().get(i)).getPresenteeList()));
+				
+				this.userList.removeVIP_User(this.userList.getVip_User().get(i));
+				this.userList.addOU_User(new_ou);
+				this.userList.addAll_User(new_ou);
 			}
 		}
      }

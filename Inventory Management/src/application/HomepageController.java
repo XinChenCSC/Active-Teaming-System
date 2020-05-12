@@ -5,7 +5,7 @@ import javafx.animation.Transition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 
-import application.Notification.*;
+import Notice.Notice;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -231,17 +231,24 @@ public class HomepageController{
 	@FXML
     void Group_Click(ActionEvent event) throws IOException {
     	findGroupIndex(); //Refresh
+    	
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        
     	//--------------------------Main Scene-----------------------
         //Get the main scene size
         Stage mainScene = (Stage) Profile.getScene().getWindow();
+        
         double height = screen.getHeight()/3;
         double width = screen.getWidth()/5;
-        StackPane scene = groupMainScene(width, height);
+        
+        StackPane scene = groupMainScene(newWindow, width, height);
         
         //Is guest?
         if(this.isGuest || this.target instanceof SU) {        	
         	((Button)scene.getChildren().get(2)).setVisible(false);
         	((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
+        	((Button)scene.getChildren().get(0)).setVisible(false);
         }
         //SU are not allowed to create a group
         else if((this.target instanceof OU && !((OU) this.target).NeedAppeal()) ||
@@ -250,15 +257,18 @@ public class HomepageController{
         }
         
 //      Check whether the cancel button needs to disable 
-        if(this.GroupIndex != -1) {
-        	System.out.println(this.GroupIndex);
-        	if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 4) 
-        		((Button)scene.getChildren().get(3)).setVisible(true);        	
+        if(this.GroupIndex != -1 && !this.isOpen()) {
+    		if(this.target instanceof OU) {
+    			if(((OU)this.target).isCreatingGroup())
+    				((Button)scene.getChildren().get(3)).setVisible(true);        	
+    		}
+    		else if(this.target instanceof VIP && !this.isOpen()) {
+    			if(((VIP)this.target).isCreatingGroup())
+    				((Button)scene.getChildren().get(3)).setVisible(true);        	
+    		}
         }
         
         Scene secondScene = new Scene(scene, width, height);
-        // New window (Stage)
-        Stage newWindow = new Stage();
         // set new window
         NewWindow(newWindow, secondScene, mainScene, "Group");    
         
@@ -319,18 +329,45 @@ public class HomepageController{
             	else {
             		//Disable the create button because you can't create two group at the same time
         			this.userList.setCreatingGroup(this.target.getID(), true);
+        			
         			//Disable the create button
         			((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
-            		//Create a un-open group 
+            		
+        			//Create a un-open group 
             		getNewGroup(((TextField) pane.getChildren().get(0)).getText(), ((TextField) pane.getChildren().get(1)).getText());
+            		
             		//Automatic add to the group if the invitee is in your whitebox
             		automaticAdd((GridPane)((ScrollPane)pane.getChildren().get(2)).getContent());
+            		
             		//Activate the cancel create button
             		if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 4)
             			//If the current group >= 4 members, the cancel button will appear.
             			((Button)scene.getChildren().get(3)).setVisible(true);
+            		else {
+            			//Set open variable to true
+            			this.G_List.getGroup_List().get(GroupIndex).setOpen(true);
+            			
+            	       	((Button)scene.getChildren().get(0)).setDisable(false);
+            	       	((Button)scene.getChildren().get(0)).setText("Group Page");
+                    	//Switch to group page
+            	       	((Button)scene.getChildren().get(0)).setOnAction(w->{
+                    		FXMLLoader Loader;
+                    		try {
+                    			Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
+                    			GrouppageController gc = Loader.getController();
+                    			gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);     
+                    			newWindow.close();
+                    		} catch (IOException e1) {
+                    			e1.printStackTrace();
+                    		}
+                    	});
+            		}
+            		
             		//Set confirmation alert
-                	Alert alert = getAlert(AlertType.INFORMATION, "Please wait for the final decision", ButtonType.OK, "Confirmation");
+                	Alert alert = getAlert(AlertType.INFORMATION, "Recruiting users...", ButtonType.OK, "Confirmation");
+                	
+                	//Set move to group page button
+                	((Button)scene.getChildren().get(0)).setText("Recruiting");
                 	if (alert.getResult() == ButtonType.OK)
                     	newWindow_2.close();
             	}
@@ -342,17 +379,16 @@ public class HomepageController{
         	Alert alert = getAlert(AlertType.WARNING, "Are you sure to cancel the recruiting?", ButtonType.YES, "Warning");
         	if(alert.getResult() == ButtonType.YES) {
         		//Remove the recruiting group
-        		for(int i = 0; i < this.G_List.getGroup_List().get(GroupIndex).getA_Group().size(); ++i) {
-        			if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof VIP)
-        				((VIP)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setCreatingGroup(false);
-        			else if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof OU)
-        				((OU)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setCreatingGroup(false);       
-        		}
+        		freeAll();
+        		
         		//Remove the group
         		this.G_List.removeGroup(this.G_List.getGroup_List().get(GroupIndex));
 
+        		((Button)scene.getChildren().get(0)).setText("You don't have a group");
+        		
         		//Enable the create button
         		((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(false);
+        		
         		//Disable the cancel group button
         		((Button)scene.getChildren().get(3)).setVisible(false);
         	}
@@ -604,39 +640,42 @@ public class HomepageController{
     //**************************************************************************
     
     //----------------------------Group main scene------------------------------
-    private StackPane groupMainScene(double w, double h) throws IOException {
+    private StackPane groupMainScene(Stage stage, double w, double h) throws IOException {
     	findGroupIndex();	//Refresh
         StackPane subScene = new StackPane();
         subScene.setPadding(new Insets(h*0.1,w*0.05,h*0.05,w*0.05));
         //Create label
         Button lb = new Button();
         lb.setFocusTraversable(false);
-		
+        
+        //If the group has enough users to open
+        if(this.GroupIndex != -1 && isOpen()){
+        	lb.setDisable(false);
+        	lb.setText("Group Page");
+        	//Switch to group page
+        	lb.setOnAction(e->{
+        		FXMLLoader Loader;
+        		try {
+        			Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
+        			GrouppageController gc = Loader.getController();
+        			gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);  
+        			stage.close();
+        		} catch (IOException e1) {
+        			e1.printStackTrace();
+        		}
+        	});
+        }
         // Display group status
-        if(this.GroupIndex == -1 || isCreatingGroup()) {
+        else {
             lb.setDisable(true);
             lb.setOpacity(1);
             lb.setText("You don't have a group."); 
             lb.setStyle("-fx-background-color: #F0F8FF;"
             		+ "-fx-border-color: #F0F8FF;");
         }
-        //If the group has enough users to open
-        else if(isInGroup()){
-        	lb.setText("Move to group page.");
-        	//Switch to group page
-        	lb.setOnAction(e->{
-        		FXMLLoader Loader;
-				try {
-					Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
-					GrouppageController gc = Loader.getController();
-					gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);        		
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-        	});
-        }
         
         HBox hbox = new HBox();
+        hbox.setMaxSize(w, h*0.2);
         
         //Move to target group button
         Button go = new Button("Go");
@@ -654,23 +693,23 @@ public class HomepageController{
         
         //Check whether the create button needs to disable
 		if(this.target instanceof OU) {
-			if(((OU) this.target).isCreatingGroup())
+			if(((OU) this.target).isCreatingGroup() || ((OU)this.target).isInGroup())
 				createButton.setDisable(true);
 		}
 		else if(this.target instanceof VIP) {
-			if(((VIP) this.target).isCreatingGroup())
+			if(((VIP) this.target).isCreatingGroup() || ((VIP)this.target).isInGroup())
 				createButton.setDisable(true);
 		}
-        
-        hbox.setAlignment(Pos.TOP_CENTER);
-        hbox.getChildren().addAll(createButton, go, groupId);
         
         //Cancel creating group
         Button cancelButton = new Button();
         cancelButton.setText("Cancel group");
         cancelButton.setStyle("-fx-text-fill: #FF0000;");
         cancelButton.setFocusTraversable(false);
-        cancelButton.setVisible(false);    
+        cancelButton.setVisible(false);  
+        
+        hbox.setAlignment(Pos.TOP_CENTER);
+        hbox.getChildren().addAll(createButton, go, groupId);  
         
         //Appeal button
         Button appeal = new Button("Appeal");
@@ -678,29 +717,19 @@ public class HomepageController{
         
         //set the position
         StackPane.setAlignment(appeal, Pos.BOTTOM_LEFT);
-        StackPane.setAlignment(hbox, Pos.TOP_CENTER);
         StackPane.setAlignment(cancelButton, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(hbox, Pos.TOP_CENTER);
         
         subScene.getChildren().addAll(lb, hbox, appeal, cancelButton);
         return subScene;
     }
     
-    private boolean isCreatingGroup() {
-    	if(this.target instanceof VIP)
-    		return ((VIP)this.target).isCreatingGroup();
-    	else if(this.target instanceof OU)
-    		return ((OU)this.target).isCreatingGroup();
+    private boolean isOpen() {
+    	if(this.G_List.getGroup_List().get(GroupIndex).isOpen())
+    		return true;
     	return false;
     }
-    
-    private boolean isInGroup() {
-    	if(this.target instanceof VIP)
-    		return ((VIP)this.target).isInGroup();
-    	else if(this.target instanceof OU)
-    		return ((OU)this.target).isInGroup();
-    	return false;
-    }
-    
+        
     //Appeal scene
     private void groupAppealScene(StackPane pane, double w, double h) {
     	pane.setPadding(new Insets(h*0.05, w*0.1, h*0.05, w*0.1));
@@ -762,7 +791,6 @@ public class HomepageController{
         		Name.setFont(new Font(16));
         		GridPane.setHalignment(Name, HPos.CENTER);
         		friend_grid.add(Name, 0, j);
-        		int k = i;
         		//set up invite button
         		Name.setText(this.userList.getAll_User().get(i).getName());
         		Button invite = new Button("Invite");
@@ -774,9 +802,6 @@ public class HomepageController{
         		//Each user can be invited only once.
         		invite.setOnAction(e->{
         			invite.setDisable(true);
-        			Notification notification = new Notification(true, getCurrentTime(), 
-        					this.target.getName() + " invite you to join his/her group. You will join in the group by click the confirm button.", true);
-        			this.Info_List.CreateNotification(this.userList.getAll_User().get(k).getID(), notification);
         		});
         	}
     	}
@@ -809,14 +834,42 @@ public class HomepageController{
     			Client client = this.Info_List.getInfo_Con().get(UserIndex).findFriend(((Label)gridPane.getChildren().get(i-1)).getText());
     			if(client != null) {
     				if(client instanceof VIP)
-    					((VIP)client).setCreatingGroup(true);
+    					((VIP)client).setInGroup(true);
     				else if(client instanceof OU)
-    					((OU)client).setCreatingGroup(true);
+    					((OU)client).setInGroup(true);
     		    	Group_Status GS = new Group_Status(client); //Create a group member object
     				this.G_List.getGroup_List().get(GroupIndex).addGroupMember(GS);	//Add the group member to the object
+    				//Send the confirmation notification
+    				Notice notification = new Notice(true, getCurrentTime(), 
+        					"You have been joined to " + this.target.getName() + "'s group.");
+    				this.Info_List.CreateNotice(client.getID(), notification);
+    			}
+    			else {
+    				//Send the invitation notification
+    				Notice notification2 = new Notice(Integer.parseInt(this.G_List.getGroup_List().get(GroupIndex).getGroup_ID()), getCurrentTime(), 
+        					this.target.getName() + " invite you to join his/her group.", true);
+        			client = this.userList.findUser(((Label)gridPane.getChildren().get(i-1)).getText());
+        			this.Info_List.CreateNotice(client.getID(), notification2);
     			}
     		}
     	}
+    }
+    
+    private void freeAll() {
+		if(this.target instanceof OU) {
+			((OU)this.target).setCreatingGroup(false);
+		}
+		else if(this.target instanceof VIP) {
+			((VIP)this.target).setCreatingGroup(false);
+		}
+		for(int i = 0; i < this.G_List.getGroup_List().get(GroupIndex).getA_Group().size(); ++i) {
+			if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof OU) {
+				((OU)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setInGroup(false);
+			}
+			else if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof VIP) {
+				((VIP)this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser()).setInGroup(false);
+			}
+		}
     }
     
     //----------------------------Evaluation Tab Pane---------------------------
@@ -1573,7 +1626,7 @@ public class HomepageController{
     	//Set up each row
     	for(int i = this.notificationNum-1, j = 0; i >= 0; --i, ++j) {
         	//Temp
-        	Notification temp = this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j);
+    		Notice temp = this.Info_List.getInfo_Con().get(UserIndex).getNotice().get(i);
     		//Unread notification
     		Label unread = new Label();
     		unread.setId("unread");
@@ -1581,27 +1634,29 @@ public class HomepageController{
     		GridPane.setHalignment(unread, HPos.LEFT);
     		GridPane.setValignment(unread, VPos.TOP);
     		gridPane.add(unread, 0, j);
-    		if(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).isNewIcon())
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getNotice().get(i).isNewIcon())
     			unread.setText("New");
     		
     		//Content label
-    		Label content = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).getMessage());
+    		Label content = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotice().get(i).getMessage());
     		content.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(content, HPos.CENTER);
     		GridPane.setValignment(content, VPos.CENTER);
     		gridPane.add(content, 0, j);
     		
     		//Time 
-    		Label time = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotification().get(j).getDate());
+    		Label time = new Label(this.Info_List.getInfo_Con().get(UserIndex).getNotice().get(i).getDate());
     		time.setPadding(new Insets(5,5,5,5));
     		GridPane.setHalignment(time, HPos.RIGHT);
     		GridPane.setValignment(time, VPos.BOTTOM);
     		gridPane.add(time, 0, j);
+    		
     		//Back pane
     		Pane pane = new Pane();
     		getSetting(pane, 285, 70, 0, 0);
     		pane.setId("back_pane");
     		gridPane.add(pane, 0, j);
+    		    		
     		//Delete event
     		pane.setOnMouseClicked(e->{
     			//Remove new after the first click
@@ -1612,32 +1667,74 @@ public class HomepageController{
     			}   			
     			
     			//Set up alert
-    			ButtonType confirm = new ButtonType("Confirm", ButtonData.OK_DONE);
+    	    	ButtonType confirm = new ButtonType("Confirm", ButtonData.OK_DONE);
     			ButtonType delete = new ButtonType("Delete", ButtonData.FINISH);
-    			Alert alert = new Alert(AlertType.INFORMATION,
-    					content.getText(),
-    			        confirm,
-    			        delete);
-
-    			alert.setTitle("Invitation");
-    			alert.setHeaderText(null);
-    			alert.setX(screen.getWidth()*0.7);
-    			alert.setY(screen.getHeight()*0.2);
+    			Alert alert = getAlert(AlertType.CONFIRMATION, content.getText(), confirm, delete, "Invitation");
+    			
     			Optional<ButtonType> result = alert.showAndWait();
     			if (result.get() == delete) {
-//    				gridPane.getChildren().removeAll(unread, content, time, pane);
-    				this.Info_List.removeNotification(this.target.getID(), temp);
+    				this.Info_List.removeNotice(this.target.getID(), temp);
     				gridPane.getChildren().clear();
     				gridPane.getRowConstraints().clear();
     				getNotificationPane(); //Refresh the notification pane
     			}
-    			else if(result.get() == confirm) {
-    				
+    			//Is a invitatinoal notification
+    			else if(result.get() == confirm && temp.getIndex() > -1) {
+    				String id = Integer.toString(temp.getIndex());
+    				//Check whether the group exist
+    				if(!isValidGroup(id)){
+						getAlert(AlertType.ERROR, "The group is no longer exist.", ButtonType.OK, "Error");
+    				}
+    				else {
+    					ButtonType accept = new ButtonType("Accept", ButtonData.FINISH);
+    					ButtonType later = new ButtonType("Later", ButtonData.CANCEL_CLOSE);
+    					Alert in_alert = getAlert(AlertType.CONFIRMATION, "Accept or Reject.", accept, later, "Important");
+    					
+    					Optional<ButtonType> result2 = in_alert.showAndWait();
+    					if(result2.get() == accept) {
+    						for(int r = 0 ; r < this.G_List.getGroup_List().size(); ++r) {
+    							if(this.G_List.getGroup_List().get(r).getGroup_ID().compareTo(id) == 0) {
+    								//If the member of group is greater than 7, can't join anymore
+    								if(this.G_List.getGroup_List().get(r).getA_Group().size() > 7)
+    									getAlert(AlertType.ERROR, "The group is already full.", ButtonType.OK, "Error");
+    								else if(this.G_List.getGroup_List().get(r).isGroupMember(this.target.getID()))
+    									getAlert(AlertType.WARNING, "You already in the group.", ButtonType.OK, "Warning");
+    								else {
+    									Group_Status GS = new Group_Status(this.target);	//New group member object
+    									
+    									if(this.target instanceof OU)
+    										((OU)this.target).setInGroup(true);
+    									else if(this.target instanceof VIP)
+    										((VIP)this.target).setInGroup(true);
+    									
+    									this.G_List.getGroup_List().get(r).addGroupMember(GS);	//Add the group member to the object 
+    									
+    									//Open group if the total members are greater than or equals 4
+    									if(this.G_List.getGroup_List().get(r).getA_Group().size() >= 4)
+    										this.G_List.getGroup_List().get(r).setOpen(true);
+    									
+    									getAlert(AlertType.INFORMATION, "You are in the group now.", ButtonType.OK, "Important"); //Alert
+    									
+    								}
+    							}
+    						}
+    					}
+    				}
     			}
     		});
     	}
     	((ScrollPane) NotificationPane.getChildren().get(1)).setContent(gridPane);
     }
+    
+    private boolean isValidGroup(String ID) {
+    	for(Group group : this.G_List.getGroup_List()) {
+    		if(group.getGroup_ID().compareTo(ID) == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     //**************************************************************************
 
     //-------------------------------Scene Transition---------------------------
@@ -1770,12 +1867,11 @@ public class HomepageController{
             	//Save message
             	int userIndex = getTargetIndex(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
             	int messIndex = getTargetMessageIndex(this.target.getID(), userIndex);
-            	System.out.println(messIndex);
             	//Create a new chat board for target user
             	if(messIndex == -1) {
             		Message_Container mc = new Message_Container(this.target.getID());
             		mc.addContent("1", text.getText());
-            		this.Info_List.CreateMessage(this.userList.getAll_User().get(userIndex).getID(), mc);
+            		this.Info_List.CreateMessage(this.Info_List.getInfo_Con().get(userIndex).getID(), mc);
             	}
             	else
             		this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(messIndex).addContent("1", text.getText());
@@ -1787,15 +1883,16 @@ public class HomepageController{
     
     private int getTargetMessageIndex(String id, int userIndex) {
     	for(int i = 0; i < this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().size(); ++i) {
-    		if(this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(i).getID().compareTo(id) == 0)
+    		if(this.Info_List.getInfo_Con().get(userIndex).getMessage_Content().get(i).getID().compareTo(id) == 0) {
     			return i;
+    		}
     	}
     	return -1;
     }
     
     private int getTargetIndex(String id) {
-    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
-    		if(this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
+    	for(int i = 0; i < this.Info_List.getInfo_Con().size(); ++i) {
+    		if(this.Info_List.getInfo_Con().get(i).getID().compareTo(id) == 0) {
     			return i;
     		}
     	}
@@ -1864,8 +1961,8 @@ public class HomepageController{
     			Message_Container mc = new Message_Container(search.getText());
     			this.Info_List.CreateMessage(this.target.getID(), mc);
     			//Save message for the target user
-    			Message_Container mc2 = new Message_Container(this.target.getID());
-    			this.Info_List.CreateMessage(search.getText(), mc2);
+//    			Message_Container mc2 = new Message_Container(this.target.getID());
+//    			this.Info_List.CreateMessage(search.getText(), mc2);
     			
     			search.clear();
     			search.setStyle("-fx-border-color: #000000;" + "-fx-border-radius: 20;" + "-fx-background-radius: 20;");
@@ -2028,9 +2125,6 @@ public class HomepageController{
         	
         	//Set the ID of target user
         	((Label) ((GridPane) chatContent.getChildren().get(0)).getChildren().get(0)).setText(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
-        	
-        	//Change Label
-        	((Label)((GridPane)chatContent.getChildren().get(0)).getChildren().get(0)).setText(this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getID());
         	
         	//Get previous messages container
         	String[][] container = this.Info_List.getInfo_Con().get(UserIndex).getMessage_Content().get(i).getContent();
@@ -2339,6 +2433,20 @@ public class HomepageController{
     	return alert;
     }
    
+    //Get optional alert
+    private Alert getAlert(AlertType at, String content, ButtonType bt1, ButtonType bt2, String title) {
+		Alert alert = new Alert(AlertType.INFORMATION,
+				content,
+		        bt1,
+		        bt2);
+
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setX(screen.getWidth()*0.7);
+		alert.setY(screen.getHeight()*0.2);
+		return alert;
+    }
+    
     //Get the current time
     private String getCurrentTime() {
     	DateFormat dateFormat =  new SimpleDateFormat("MM/dd/yyyy");
@@ -2472,9 +2580,8 @@ public class HomepageController{
     		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
     			this.emailNum = this.Info_List.getInfo_Con().get(i).getEmail_Content().size();
     			this.messageNum = this.Info_List.getInfo_Con().get(i).getMessage_Content().size();
-    			this.notificationNum = this.Info_List.getInfo_Con().get(i).getNotification().size();
-    			result = i;
-    			break;
+    			this.notificationNum = this.Info_List.getInfo_Con().get(i).getNotice().size();
+    			return i;
     		}
     	}
     	return result;

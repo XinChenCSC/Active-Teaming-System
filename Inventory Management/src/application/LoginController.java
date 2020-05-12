@@ -203,7 +203,7 @@ public class LoginController{
 		this.G_List = gl;
 		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivated())
 			FailedSignupAlert();	
-//		else if(userList.getGuest().getNumRegister() != 0 && !userList.getGuest().isActivated())
+		else if(userList.getGuest().getNumRegister() != 0 && !userList.getGuest().isActivated())
 			SuccessedSignupAlert();
 	}
 	

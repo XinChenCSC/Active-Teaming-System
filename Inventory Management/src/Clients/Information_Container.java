@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import Appointment.Appointment;
 import Email.Email;
 import Message.Message_Container;
-import application.Notification.Notification;
+import Notice.Notice;
 
 public class Information_Container {
 		
@@ -21,8 +21,8 @@ public class Information_Container {
 	//whitebox
 	private ArrayList<Client> Whitebox = new ArrayList<Client>();
 	
-	//Notification
-	private ArrayList<Notification> Notification = new ArrayList<Notification>();
+	//Notice
+	private ArrayList<Notice> Notice = new ArrayList<Notice>();
 	
 	//Appointment
 	private ArrayList<Appointment> Appointment = new ArrayList<Appointment>();
@@ -39,14 +39,14 @@ public class Information_Container {
 
 	public void setID(String ID) {this.ID = ID;}
 	
-//	-----------------------------------Notification----------------------------------------
-	public ArrayList<Notification> getNotification() {return Notification;}
+//	-----------------------------------Notice----------------------------------------
+	public ArrayList<Notice> getNotice() {return this.Notice;}
 
-	public void setNotification(ArrayList<Notification> notification) {Notification = notification;}
+	public void setNotice(ArrayList<Notice> notice) {this.Notice = notice;}
 	
-	public void addNotification(Notification notification) {Notification.add(notification);}
+	public void addNotice(Notice notice) {this.Notice.add(notice);}
 	
-	public void removeNotification(Notification notification) {Notification.remove(notification);}
+	public void removeNotice(Notice notice) {this.Notice.remove(notice);}
 	
 //	-----------------------------------Whitebox----------------------------------------
 	public ArrayList<Client> getWhitebox() {return Whitebox;}

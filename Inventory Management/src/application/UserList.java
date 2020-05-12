@@ -124,7 +124,17 @@ public class UserList {
 			if(this.getAll_User().get(i).getID().compareTo(id) == 0 && this.getAll_User().get(i) instanceof OU) {
 				((OU)this.getAll_User().get(i)).setCreatingGroup(bool); break;}
 			else if(this.getAll_User().get(i).getID().compareTo(id) == 0 && this.getAll_User().get(i) instanceof VIP) {
-				((VIP)this.getAll_User().get(i)).setCreatingGroup(bool); break;}
+				((VIP)this.getAll_User().get(i)).setCreatingGroup(bool); break;
+			}
 		}
+	}	
+	
+	public Client findUser(String name) {
+		for(int i = 0; i < this.getAll_Size(); ++i) {
+			if(this.getAll_User().get(i).getName().compareTo(name) == 0) {
+				return this.getAll_User().get(i);
+			}
+		}
+		return null;
 	}
 }

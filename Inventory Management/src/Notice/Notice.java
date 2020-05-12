@@ -1,30 +1,31 @@
-package application.Notification;
+package Notice;
 
-public class Notification {
-
+public class Notice {
+	
 	private boolean NewIcon;
 	
 	private String Date;
 	
 	private String Message;
 	
-	private boolean Invitation = false;
-	
+	private int index;
+		
 	//Constructor
-	public Notification(boolean newIcon, String date, String message) {
+	public Notice(int index, String date, String message, boolean newIcon) {
 		this.NewIcon = newIcon;
 		this.Date = date;
 		this.Message = message;
-	}
-	
-	public Notification(boolean newIcon, String date, String message, boolean invitation) {
-		this.NewIcon = newIcon;
-		this.Date = date;
-		this.Message = message;
-		this.Invitation = invitation;
+		this.setIndex(index);
 	}
 
-	public Notification() {}
+	public Notice(boolean newIcon, String date, String message) {
+		this.NewIcon = newIcon;
+		this.Date = date;
+		this.Message = message;
+		this.setIndex(-1);
+	}
+
+	public Notice() {}
 	
 	//Icon 
 	public boolean isNewIcon() {
@@ -52,12 +53,11 @@ public class Notification {
 		this.Message = message;
 	}
 
-	//Invitation
-	public boolean isInvitation() {
-		return Invitation;
+	public int getIndex() {
+		return index;
 	}
 
-	public void setInvitation(boolean invitation) {
-		this.Invitation = invitation;
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }
