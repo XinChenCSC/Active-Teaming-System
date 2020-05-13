@@ -1191,10 +1191,16 @@ public class HomepageController{
     	TextField searchField = new TextField();
     	searchField.setPromptText("Enter member ID");
     	getSetting(searchField, w*0.3, h*0.05, 0, 0);
-    	//Get member information board
-    	memberBoard(pane, w, h);
-    	//Get member management board
-    	memberManage(pane, w, h);
+
+    	Search.setOnAction(e->{
+    		if(isValidID(searchField.getText())) {
+    			//Get member information board
+    			int index = getOtherIndex(searchField.getText());
+    			memberBoard(pane, w, h, index);    	
+    	    	//Get member management board
+    	    	memberManage(pane, w, h);
+    		}
+    	});
     	//Get new member registration board
     	newMemberBoard(pane, w, h);
     	//Set chidlren
@@ -1204,7 +1210,6 @@ public class HomepageController{
     	tab.setContent(pane);
     }
     
-    @SuppressWarnings("unused")
 	private String generalTabEvent() {
     	//Create random id and temporary password.
 		Random rand = new Random();
@@ -1316,7 +1321,7 @@ public class HomepageController{
     }
     
     //Member information board
-    private void memberBoard(BorderPane pane, double w, double h) {
+    private void memberBoard(BorderPane pane, double w, double h, int index) {
     	//Frame
     	GridPane gridPane = new GridPane();
     	gridPane.setStyle("-fx-background-color: #F5F5DC;");
@@ -1331,10 +1336,16 @@ public class HomepageController{
     		GridPane.setHalignment(tag, HPos.CENTER);
     		gridPane.add(tag, 0, i);
     		//Value
-    		Label value = new Label("Unknown"+i);
+    		Label value = new Label();
     		value.setStyle("-fx-background-color: #00FFFF;");
     		GridPane.setHalignment(value, HPos.CENTER);
     		gridPane.add(value, 1, i);
+
+    		if(i == 0) value.setText(this.userList.getAll_User().get(index).getName());
+    		else if(i == 1) value.setText(this.userList.getAll_User().get(index).getID());
+    		else if(i == 2) value.setText(this.userList.getAll_User().get(index).getPosition());
+    		else if(i == 3)	value.setText(this.userList.getAll_User().get(index).getEmail());
+    		else 			value.setText(this.userList.getAll_User().get(index).getPassword());
     	}
     	pane.setLeft(gridPane);
     	BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
@@ -2754,7 +2765,8 @@ public class HomepageController{
     	return false;
     }
     
-    private boolean isValidBLEmail(String email) {
+    @SuppressWarnings("unused")
+	private boolean isValidBLEmail(String email) {
     	for(int i = 0; i < this.Info_List.getSystem_Blacklist().size(); ++i) {
     		if(this.Info_List.getSystem_Blacklist().get(i).getEmail().compareTo(email) != 0) {
     			return true;
@@ -2832,5 +2844,13 @@ public class HomepageController{
     	return "";
     }
 
-    
+    private int getOtherIndex(String id) {
+    	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
+    		//The target ID can't be your own id.
+    		if(this.target.getID().compareTo(id) != 0 && this.userList.getAll_User().get(i).getID().compareTo(id) == 0) {
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
 }

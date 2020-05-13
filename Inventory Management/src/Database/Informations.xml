@@ -131,5 +131,31 @@
    </object>
   </void>
  </object>
- <object class="java.util.ArrayList"/>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="Clients.OU">
+    <void property="ID">
+     <string>65428</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/06/2019</string>
+    </void>
+    <void property="email">
+     <string>EverImre@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>TaiChi</string>
+    </void>
+    <void property="name">
+     <string>Ever Imre</string>
+    </void>
+    <void property="reputationScore">
+     <int>-1</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+ </object>
 </java>
