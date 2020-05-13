@@ -39,7 +39,7 @@ public class OU extends Client{
 	
 	//Remove presentee if you have filled up the initial evaluation for your presentee
 	public void removePresentee(Guest Name) {presentee.remove(Name);}
-
+	
 	//Add presentee if your presentee needs you to provide them an initial scores
 	public void addPresentee(Guest Name) {presentee.add(Name);}
 	

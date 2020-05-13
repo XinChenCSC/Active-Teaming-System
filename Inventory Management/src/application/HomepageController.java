@@ -179,6 +179,8 @@ public class HomepageController{
 	private Client target;
 	//Group container
 	private Group_List G_List = new Group_List();
+	
+	private String guest_g = "";
 
 	
     @FXML
@@ -1200,28 +1202,19 @@ public class HomepageController{
     	hbox.getChildren().addAll(Search, searchField);
     	pane.setTop(hbox);
     	tab.setContent(pane);
-    	//All event
-    	generalTabEvent(pane);
     }
     
     @SuppressWarnings("unused")
-	private void generalTabEvent(BorderPane pane) {
+	private String generalTabEvent() {
     	//Create random id and temporary password.
-    	((Button)((HBox)pane.getBottom()).getChildren().get(0)).setOnAction(e->{
-    		Random rand = new Random();
-    		String password = "";
-    		String id = "";
-    		for(int i = 0; i < 5; ++i) {
-    			int character = rand.nextInt(94)+33;
-    			password += (char)character;    			
-    		}
-    		
-    		do {
-    			id = "";
-    			int digit = rand.nextInt(100000) + 10000;
-    			id = Integer.toString(digit);	
-    		}while(!newIDCheck(id));
-    	});
+		Random rand = new Random();
+		String id = "";
+		do {
+			id = "";
+			int digit = rand.nextInt(100000) + 10000;
+			id = Integer.toString(digit);	
+		}while(!newIDCheck(id));
+    	return id;
     }
     
     private void newMemberBoard(BorderPane pane, double w, double h) {
@@ -1229,12 +1222,38 @@ public class HomepageController{
     	HBox hbox = new HBox();
     	//Gather random password and random ID;
     	Button registration = new Button("Randomize");
+    	Button Blacklist = new Button("Blacklist");
+    	Button Reject = new Button("Reject");
+    	SU su = new SU();
+    
     	//Email adress
     	TextField address = new TextField();
     	address.setPromptText("Email address");
     	
+    	registration.setOnMouseClicked(e->{
+    		
+    		if(address.getText().compareTo(this.userList.getGuest().getEmail()) == 0) {
+    			
+//    			String account = su.Generate_Acc();
+    			
+    			String account = generalTabEvent();
+    			String password = su.Generate_Pass();
+    	
+    			this.userList.getGuest().setID(account);
+    			this.userList.getGuest().setPassword(password);
+    			this.userList.getGuest().setActivate(true);
+    			if(this.userList.getGuest().getNumRegister() < 3) {
+    				
+    				this.userList.getGuest().setNumRegister(1);
+    		
+    				getAlert(AlertType.INFORMATION, "New Guest register completed", ButtonType.OK, "Confirmaton");		
+    				this.userList.getGuest().setActivate(true);
+    		}
+    				
+    		}
+    	});
     	hbox.setAlignment(Pos.CENTER);
-    	hbox.getChildren().addAll(registration, address);
+    	hbox.getChildren().addAll(Reject,Blacklist,registration, address);
     	pane.setBottom(hbox);
     }
     
@@ -2279,13 +2298,14 @@ public class HomepageController{
     			((Guest) this.target).setLogin(true);
     			((Guest) this.target).setActivate(true);
     			//Promote the new user up to OU
-    			OU ou = new OU(this.target.getName(), "123456", this.target.getEmail(),
+    			OU ou = new OU(this.target.getName(), this.target.getID(), this.target.getEmail(),
     					"OU", this.target.getInterest(), this.target.getRecommender(),
     					this.target.getPassword(), 0, 0, 0, 0, "Good", "On", getCurrentTime());
     			userList.addOU_User(ou);
     			userList.addAll_User(ou);
     			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
-    			    			
+    			this.userList.getGuest().setLogin(true);
+    			
     			newWindow.close();
     		}
     	});
@@ -2297,13 +2317,12 @@ public class HomepageController{
     	pane.getChildren().add(gridpane);
     	//Call new window
     	NewWindow(newWindow, secondScene, mainScene, "Password change");    
-    	
     }
     //**************************************************************************************
     
 //    ---------------------------------------Scene Switch Method----------------------------------------------
     //New user evaluation by their recommender
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private void recommenderEvaluation() {
         Stage mainScene = (Stage) scrollPane.getScene().getWindow();       
         double height = screen.getHeight()*0.2;
@@ -2344,7 +2363,8 @@ public class HomepageController{
         		getAlert(AlertType.ERROR, "Scores can't be empty.", ButtonType.OK, "Error");
         	}
         	else {
-        		incScore(this.userList.getGuest().getName(), ((ComboBox<Integer>) scene.getChildren().get(1)).getSelectionModel().getSelectedItem());
+        		
+        		incScore(this.guest_g, ((ComboBox<Integer>) scene.getChildren().get(1)).getSelectionModel().getSelectedItem());
         		//Remove the presentee
         		if(this.target instanceof OU)
         			((OU)this.target).removePresentee(this.userList.getGuest());
@@ -2360,20 +2380,17 @@ public class HomepageController{
     		getAlert(AlertType.WARNING, "Please select a proper initial scores for your presentee.", ButtonType.OK, "Warning");
 			e.consume();
     	});
+    	this.userList.setGuest(null);
         // set new window
         NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
     }
     
-    void LoginToHome(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il, Group_List g_List) {
+    void LoginToHome(String name, boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il, Group_List g_List) {
     	this.userList = ul;	//set userList
     	this.target = target; //set target user
     	this.Info_List = il; //set user information
     	this.G_List = g_List;
-//    	((OU)this.userList.getAll_User().get(1)).setNeedAppeal(true);
-//    	this.G_List.getGroup_List().get(0).getA_Group().get(1).setCondition(false);
-//    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setPraises(2);
-//    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setisEvaluation(true);
-//    	this.userList.getGuest().setActivate(true);
+    	this.guest_g = name;
     	if(evaluation)
     		recommenderEvaluation();
     	if(passwordChange)

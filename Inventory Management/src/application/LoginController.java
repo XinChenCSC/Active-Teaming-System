@@ -105,14 +105,16 @@ public class LoginController{
         			userList.getAll_User().get(i).getPassword().compareTo(passwordF.getText()) == 0) {
         		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
         		boolean evaluation = false;
+        		String name = "";
         		//Chec whether anyone of your presentee needs to be evaluated.  
         		if(userList.getGuest().getRecommender() != null)
         			if(userList.getGuest().getRecommender().compareTo(userList.getAll_User().get(i).getName()) == 0 && userList.getGuest().isLogin()) {
         				evaluation = true;
+        				name = this.userList.getGuest().getName();
         			}
         		HomepageController hc = Loader.getController();
         		//para1: eavluation; para2: password change; para3: transit userList; para4: specific user
-        		hc.LoginToHome(evaluation, false, this.userList,
+        		hc.LoginToHome(name, evaluation, false, this.userList,
         				userList.getAll_User().get(i), this.Info_List, this.G_List);        			
         	}
         }
@@ -160,6 +162,7 @@ public class LoginController{
 
     //If your registration passed, a popup alert will notice you.
 	void SuccessedSignupAlert() throws IOException {
+		
     	ButtonType login = new ButtonType("Login", ButtonData.OK_DONE);
     	Alert alert = new Alert(AlertType.CONFIRMATION,"Account ID: " + userList.getGuest().getID() +
     			"\nYour password: " + userList.getGuest().getPassword(), login);
@@ -171,9 +174,9 @@ public class LoginController{
     	if(result.get() == login) {
     		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
     		HomepageController hc = Loader.getController();
-			hc.LoginToHome(false, true, userList,
+			hc.LoginToHome("", false, true, userList,
 					userList.getGuest(), this.Info_List, this.G_List);   
-    	}
+    	}	
     }
 	
 	//Fail for registration, an additional resumbit with a proper reason is required.
@@ -200,10 +203,14 @@ public class LoginController{
 		this.userList = ul; //set database
 		this.Info_List = il;
 		this.G_List = gl;
+		
+		
 		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivate())
 			FailedSignupAlert();	
-		else if(userList.getGuest().getNumRegister() != 0 && userList.getGuest().isActivate())
+		else if(userList.getGuest().getNumRegister() > 0 ){
 			SuccessedSignupAlert();
+			this.userList.getGuest().setNumRegister(0);
+		}
 	}
 	
 	private FXMLLoader	sceneSwitch(String url, String title) throws IOException {

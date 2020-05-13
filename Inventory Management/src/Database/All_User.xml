@@ -5,24 +5,10 @@
    <object class="Clients.SU" id="SU0"/>
   </void>
   <void method="add">
-   <object class="Clients.OU" id="OU0">
-    <void property="inGroup">
-     <boolean>true</boolean>
-    </void>
-    <void property="needAppeal">
-     <boolean>true</boolean>
-    </void>
-   </object>
+   <object class="Clients.OU" id="OU0"/>
   </void>
   <void method="add">
-   <object class="Clients.VIP" id="VIP0">
-    <void property="creatingGroup">
-     <boolean>true</boolean>
-    </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
-    </void>
-   </object>
+   <object class="Clients.VIP" id="VIP0"/>
   </void>
   <void method="add">
    <object class="Clients.OU" id="OU1">
@@ -31,9 +17,6 @@
     </void>
     <void property="email">
      <string>JohnSmith@gmail.com</string>
-    </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
     </void>
     <void property="interest">
      <string>Sing</string>
@@ -48,6 +31,31 @@
   </void>
   <void method="add">
    <object class="Clients.OU" id="OU2">
+    <void property="ID">
+     <string>24680</string>
+    </void>
+    <void property="date_Of_Join">
+     <string>05/03/2019</string>
+    </void>
+    <void property="email">
+     <string>JuanCarlos@gmail.com</string>
+    </void>
+    <void property="interest">
+     <string>Hike</string>
+    </void>
+    <void property="name">
+     <string>Juan Carlos</string>
+    </void>
+    <void property="reputationScore">
+     <int>31</int>
+    </void>
+    <void property="total_Penalty_Received">
+     <int>0</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.OU" id="OU3">
     <void property="ID">
      <string>43754</string>
     </void>
@@ -72,7 +80,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.OU" id="OU3">
+   <object class="Clients.OU" id="OU4">
     <void property="ID">
      <string>98374</string>
     </void>
@@ -97,7 +105,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.OU" id="OU4">
+   <object class="Clients.OU" id="OU5">
     <void property="ID">
      <string>29384</string>
     </void>
@@ -122,45 +130,32 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.VIP" id="VIP1">
+   <object class="Clients.OU" id="OU6">
     <void property="ID">
-     <string>24680</string>
+     <string>65428</string>
     </void>
     <void property="date_Of_Join">
-     <string>05/03/2019</string>
+     <string>05/06/2019</string>
     </void>
     <void property="email">
-     <string>JuanCarlos@gmail.com</string>
-    </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
+     <string>EverImre@gmail.com</string>
     </void>
     <void property="interest">
-     <string>Hike</string>
+     <string>TaiChi</string>
     </void>
     <void property="name">
-     <string>Juan Carlos</string>
+     <string>Ever Imre</string>
     </void>
     <void property="reputationScore">
-     <int>31</int>
+     <int>-1</int>
     </void>
-    <void property="status">
-     <string>Good</string>
-    </void>
-    <void property="total_Group_Engaged">
-     <int>2</int>
-    </void>
-    <void property="total_Project_Completed">
-     <int>2</int>
+    <void property="total_Penalty_Received">
+     <int>0</int>
     </void>
    </object>
   </void>
  </object>
- <object class="Clients.Guest">
-  <void property="activate">
-   <boolean>true</boolean>
-  </void>
- </object>
+ <object class="Clients.Guest"/>
  <object class="java.util.ArrayList">
   <void method="add">
    <object idref="OU0"/>
@@ -177,6 +172,12 @@
   <void method="add">
    <object idref="OU4"/>
   </void>
+  <void method="add">
+   <object idref="OU5"/>
+  </void>
+  <void method="add">
+   <object idref="OU6"/>
+  </void>
  </object>
  <object class="java.util.ArrayList">
   <void method="add">
@@ -186,9 +187,6 @@
  <object class="java.util.ArrayList">
   <void method="add">
    <object idref="VIP0"/>
-  </void>
-  <void method="add">
-   <object idref="VIP1"/>
   </void>
  </object>
 </java>

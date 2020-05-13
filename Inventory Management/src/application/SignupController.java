@@ -208,7 +208,7 @@ public class SignupController {
 
         	//Save referer
         	for(int i = 0; i < userList.getAll_Size(); ++i) {
-        		if(userList.getAll_User().get(i).getName().compareTo(userList.getGuest().getName()) == 0) {
+        		if(userList.getAll_User().get(i).getName().compareTo(userList.getGuest().getRecommender()) == 0) {
         			if(userList.getAll_User().get(i) instanceof OU)
         				((OU)userList.getAll_User().get(i)).addPresentee(userList.getGuest());
         			else if(userList.getAll_User().get(i) instanceof VIP)

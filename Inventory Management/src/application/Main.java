@@ -174,6 +174,7 @@ public class Main extends Application {
 //		System.out.println(this.userList.getOU_User().get(0).isNeedAppeal());
 //		System.out.println(this.gl.getGroup_List().get(0).getTarget()[2].getName());
 //		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get().getWarnings());
+//		System.out.println(this.userList.getAll_User().get(this.userList.getAll_Size()-1).getPassword());
 //		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).isEvaluation());
 //		System.out.println(this.userList.getGuest().isActivate());
 //		System.out.println(this.gl.getGroup_List().get(0).getVT(5));
@@ -269,20 +270,19 @@ public class Main extends Application {
 			}
 		}
 		
-		//If all user is not in group and the closure poll is passed, close the group
-		for(int i = 0; i < this.gl.getGroup_List().size(); ++i) {
-			int index = this.gl.getGroup_List().get(i).getA_Group().size();
-			for(int j = 0; j < this.gl.getGroup_List().get(i).getA_Group().size(); ++i) {
-				if(this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser() instanceof OU) {
-					if(!((OU)this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser()).isInGroup() && !this.gl.getGroup_List().get(i).isClose())
-						--index;
-				}
-			}
-			if(index == 0) {
-				this.gl.getGroup_List().get(i).setClose(true);
-				this.gl.getGroup_List().get(i).setOpen(false);
-			}
-		}
-		
+//		//If all user is not in group and the closure poll is passed, close the group
+//		for(int i = 0; i < this.gl.getGroup_List().size(); ++i) {
+//			int index = this.gl.getGroup_List().get(i).getA_Group().size();
+//			for(int j = 0; j < this.gl.getGroup_List().get(i).getA_Group().size(); ++i) {
+//				if(this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser() instanceof OU) {
+//					if(!((OU)this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser()).isInGroup() && !this.gl.getGroup_List().get(i).isClose())
+//						--index;
+//				}
+//			}
+//			if(index == 0) {
+//				this.gl.getGroup_List().get(i).setClose(true);
+//				this.gl.getGroup_List().get(i).setOpen(false);
+//			}
+//		}
      }
 }
