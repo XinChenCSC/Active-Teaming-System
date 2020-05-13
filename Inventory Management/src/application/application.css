@@ -1,0 +1,183 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+
+.text-field.error {
+  -fx-text-box-border: red ;
+  -fx-focus-color: red ;
+}
+
+.text-field.correct{
+	-fx-text-box-border: black ;
+	-fx-focus-color: black;
+}
+
+/* Menu button styles */
+#News > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Events > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Projects > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Members > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Vote > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#Group > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+#News, #Events, #Projects, #Members, #Vote, #Group {
+	-fx-border-color: #48D1CC;
+	-fx-background-color: #00BFFF;
+	-fx-border-radius: 20;
+	-fx-background-radius: 20;
+}
+
+.menu-item{
+	-fx-background-color: linear-gradient(transparent, #6495ED);
+	-fx-border-color: #7CFC00;
+	-fx-pref-height: 40;
+	-fx-pref-width: 140;
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-padding: 5px;
+}
+
+.menu-item:hover, .menu-item:focused{
+	-fx-background-color: #00FFFF;
+}
+
+#News:hover, #Events:hover, #Projects:hover, #Members:hover,
+#Vote:hover, #Group:hover{
+    -fx-background-color: #87CEFA;
+    -fx-border-color: #48D1CC;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+/*--------------------------------------------------------------------------- */
+
+#search_button, #filter_button{
+	-fx-background-color: #F5FFFA;
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+}
+
+#search_button:hover, #filter_button:hover{
+	-fx-background-color: #D3D3D3;
+	-fx-border-color: #D3D3D3;
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+}
+
+#search_field{
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-color: #48D1CC;
+}
+
+.check-box .box{
+	-fx-background-color: white;
+	-fx-border-color:grey;
+	-fx-background-radius:30px;
+	-fx-border-radius:30px;
+}
+
+.check-box .box:hover{
+	-fx-background-color: #FFFFE0;
+}
+
+#Filter_Ok{
+	-fx-background-radius: 30;
+	-fx-border-radius:30;
+	-fx-background-color: white;
+	-fx-border-color:black;
+}
+
+#Filter_Ok:hover{
+	-fx-background-color: #FFFFE0;
+}
+
+.Button {
+	-fx-background-radius: 20;
+	-fx-border-radius:20;
+	-fx-background-color: #87CEFA;
+    -fx-border-color: #48D1CC;
+}
+
+.Button:hover{
+	-fx-border-color: #48D1CC;
+	-fx-background-color: #00BFFF;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+#notification:hover {
+	-fx-border-color: #00FA9A;
+}
+
+#edit:hover, #evaluation:hover, #claim:hover {
+	-fx-border-color: #00FA9A;
+}
+
+#profile:hover {
+	-fx-border-color: #00FA9A;
+}
+
+/*Notification pane settings */
+#back_pane:hover{
+	-fx-border-color: #00FFFF;
+}
+
+#unread {
+	-fx-text-fill: #C71585;
+}
+
+/*Remove the border color of scrollpane */
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+/*Remove border focus and border line */
+#messageTextField {
+	-fx-focus-color: transparent;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-padding: 1 3 1 3;
+}
+.text-area {
+    -fx-focus-color: transparent;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-padding: 1 3 1 3;
+}
+/* Notification pane styling */
+.pane {
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-width:0.2;
+}
+
+/*Transparent focus for the borderpane in tab */
+.tab-pane {
+	-fx-focus-color: transparent;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-padding: 1 3 1 3;
+}
+
+/*Account page all menu panes */
+#A_profile, #status, #remainder, #friend, #history{
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+}

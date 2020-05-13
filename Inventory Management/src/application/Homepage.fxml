@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.HomepageController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="800.0" prefWidth="1400.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <AnchorPane fx:id="anchorPane_child" maxHeight="-1.0" maxWidth="-1.0" minHeight="1000.0" minWidth="-1.0" prefHeight="1030.0" prefWidth="1920.0">
+          <children>
+            <ImageView fx:id="Background" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <image>
+                <Image url="@../../Images/Homepage_background.jpg" />
+              </image>
+            </ImageView>
+            <Label layoutX="72.0" layoutY="14.0" minHeight="-1.0" prefHeight="205.0" prefWidth="1037.0" text="Research, what else?">
+              <font>
+                <Font name="Algerian" size="90.0" />
+              </font>
+            </Label>
+            <MenuButton fx:id="Events" alignment="CENTER" focusTraversable="false" layoutX="220.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Events">
+              <items>
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+            <MenuButton fx:id="News" alignment="CENTER" focusTraversable="false" layoutX="72.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button, container" text="News">
+              <items>
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+            <MenuButton fx:id="Group" alignment="CENTER" focusTraversable="false" layoutX="368.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Group">
+              <items>
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" text="More" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+            <MenuButton fx:id="Members" alignment="CENTER" focusTraversable="false" layoutX="516.0" layoutY="305.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" styleClass="arrow-button" text="Members">
+              <items>
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" styleClass="content-menu" text="Unspecified Action" />
+              </items>
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </MenuButton>
+            <MenuButton fx:id="Profile" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="1278.0" layoutY="0.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;&#10;" text="Profile">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#Group_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Group" />
+                <MenuItem mnemonicParsing="false" onAction="#Message_Click" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Message" />
+                <MenuItem mnemonicParsing="false" onAction="#Email_Click" style="-fx-padding: 7;&#10;-fx-pref-height:40;" text="Email" />
+                <MenuItem mnemonicParsing="false" onAction="#moveToAccount" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Account" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" onAction="#Logout" style="-fx-padding: 7;&#10;-fx-pref-height: 40;" text="Logout" />
+              </items>
+            </MenuButton>
+            <Button id="search_button" contentDisplay="RIGHT" layoutX="825.0" layoutY="313.0" minHeight="-1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Search">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Button>
+            <Button id="filter_button" fx:id="Filter_Button" layoutX="725.0" layoutY="313.0" mnemonicParsing="false" onAction="#Filter_Click" prefHeight="30.0" prefWidth="100.0" text="Filter">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </Button>
+            <TextField id="search_field" alignment="CENTER_LEFT" layoutX="925.0" layoutY="313.0" prefHeight="30.0" prefWidth="300.0" promptText="" text="">
+              <stylesheets>
+                <URL value="@application.css" />
+              </stylesheets>
+            </TextField>
+            <Pane id="Flipping_Pane" fx:id="Slipping_Pane" layoutX="72.0" layoutY="408.0" prefHeight="360.0" prefWidth="640.0" style="-fx-background-color: white;&#10;-fx-border-color: linear-gradient(transparent, black);&#10;-fx-border-width: 10;&#10;&#10;" visible="true">
+              <children>
+                <ImageView id="Flip" fx:id="Slipping_Image" fitHeight="352.6875" fitWidth="627.0" layoutX="7.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" scaleX="1.0" style="&#10;&#10;" visible="true">
+                  <image>
+                    <Image url="@../../Images/Book_1.jpg" />
+                  </image>
+                </ImageView>
+                <RadioButton id="" fx:id="R1" disable="false" focusTraversable="false" layoutX="535.0" layoutY="326.0" mnemonicParsing="false" opacity="1.0" prefWidth="19.0" selected="false" text="" />
+                <RadioButton id="" fx:id="R2" disable="false" focusTraversable="false" layoutX="554.0" layoutY="326.0" mnemonicParsing="false" opacity="1.0" prefWidth="19.0" text="" />
+                <RadioButton id="" fx:id="R3" disable="false" focusTraversable="false" layoutX="573.0" layoutY="326.0" mnemonicParsing="false" opacity="1.0" prefWidth="19.0" text="" visible="true" />
+                <RadioButton id="" fx:id="R4" focusTraversable="false" layoutX="592.0" layoutY="326.0" minHeight="5.0" mnemonicParsing="false" prefWidth="19.0001220703125" text="" />
+                <RadioButton id="" fx:id="R5" disable="false" focusTraversable="false" layoutX="611.0" layoutY="326.0" mnemonicParsing="false" opacity="1.0" prefHeight="15.0" prefWidth="15.0" text="" />
+              </children>
+            </Pane>
+            <GridPane id="Categories" fx:id="Filter_Categories" disable="false" gridLinesVisible="true" layoutX="599.0" layoutY="389.0" prefHeight="270.0" prefWidth="353.0" style="-fx-background-color: white;" visible="false">
+              <children>
+                <CheckBox mnemonicParsing="false" text="Computer" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                  <GridPane.margin>
+                    <Insets left="50.0" fx:id="x1" />
+                  </GridPane.margin>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Health" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="1">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Math" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="2">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Sport" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Chemistry" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="1">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Physics" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="2">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Society" GridPane.columnIndex="1" GridPane.margin="$x1" GridPane.rowIndex="3">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Politics" GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="3">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <CheckBox mnemonicParsing="false" text="Etc..." GridPane.columnIndex="0" GridPane.margin="$x1" GridPane.rowIndex="4">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </CheckBox>
+                <Button fx:id="Filter_Ok" focusTraversable="false" minHeight="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="61.0" style="&#10;" text="Ok" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                  <GridPane.margin>
+                    <Insets left="100.0" />
+                  </GridPane.margin>
+                </Button>
+              </children>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <Button fx:id="Notification" alignment="CENTER" layoutX="1158.0" layoutY="0.0" mnemonicParsing="false" onAction="#Notification_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color:#F0F8FF;&#10;" text="Notice">
+              <graphic>
+                <ImageView fitHeight="25.0" fitWidth="30.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" x="10.0" y="0.0">
+                  <image>
+                    <Image url="@../../Images/notification.png" />
+                  </image>
+                  <rotationAxis>
+                    <Point3D z="1.0" />
+                  </rotationAxis>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Pane fx:id="NotificationPane" disable="false" layoutX="1068.0" layoutY="80.0" prefHeight="450.0" prefWidth="300.0" style="-fx-background-radius:20;&#10;-fx-border-radius:20;" visible="false">
+              <children>
+                <Label layoutX="103.0" layoutY="14.0" text="Notification">
+                  <font>
+                    <Font size="18.0" />
+                  </font>
+                </Label>
+                <ScrollPane content="$null" fitToHeight="false" fitToWidth="false" hbarPolicy="NEVER" layoutX="0.0" layoutY="50.0" prefHeight="370.0" prefWidth="300.0" vbarPolicy="NEVER" />
+              </children>
+            </Pane>
+            <Button fx:id="Edit" layoutX="1038.0" layoutY="0.0" mnemonicParsing="false" onAction="#Edit_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Edit">
+              <graphic>
+                <ImageView fitHeight="25.0" fitWidth="30.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" x="0.0">
+                  <image>
+                    <Image url="@../../Images/Edic%20icon.png" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Button fx:id="Claim" layoutX="1038.0" layoutY="0.0" mnemonicParsing="false" onAction="#Claim_Click" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Claim" visible="true">
+              <graphic>
+                <ImageView fitHeight="25.0" fitWidth="30.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" x="0.0">
+                  <image>
+                    <Image url="@../../Images/Edic%20icon.png" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
+            <Button fx:id="Evaluation" focusTraversable="false" layoutX="888.0" layoutY="0.0" mnemonicParsing="false" onAction="#Evaluation_Click" prefHeight="45.0" prefWidth="150.0" style="-fx-background-color: #F0F8FF;" text="Evaluation" visible="true">
+              <graphic>
+                <ImageView fitHeight="25.0" fitWidth="30.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" x="0.0">
+                  <image>
+                    <Image url="@../../Images/Evaluation%20Icon.png" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
+          </children>
+        </AnchorPane>
+      </content>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </ScrollPane>
+  </children>
+</AnchorPane>

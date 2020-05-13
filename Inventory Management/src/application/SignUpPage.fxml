@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="parentPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="930.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.SignupController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="930.0" prefWidth="1400.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="930.0" prefWidth="1400.0">
+          <children>
+            <Label alignment="CENTER" contentDisplay="LEFT" ellipsisString="" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="910.0" prefWidth="300.0" text="* First. Last, and Interest name should &#10;        start with an uppercase letter&#10;        followed by at least two characters.&#10;&#10;* Referer should be the user of our&#10;        system.&#10;&#10;* E-mail address should looks like &#10;         (xxxx@xxx.xxx.xxx)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="950.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="0.0">
+              <font>
+                <Font name="System Bold" size="15.0" />
+              </font>
+            </Label>
+            <GridPane fx:id="Gridroot" alignment="CENTER" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="928.0" prefWidth="551.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="450.0" AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="0.0">
+              <children>
+                <TextField id="FirstnameF" fx:id="Firstname" alignment="CENTER_LEFT" cache="false" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="30.0" prefWidth="430.0" promptText="" styleClass="error, correct" text="" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                  <GridPane.margin>
+                    <Insets left="40.0" right="40.0" fx:id="x5" />
+                  </GridPane.margin>
+                </TextField>
+                <TextField id="lastnameF" fx:id="Lastname" alignment="CENTER_LEFT" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="30.0" prefWidth="430.0" promptText="" styleClass="error, correct" text="" GridPane.columnIndex="0" GridPane.margin="$x5" GridPane.rowIndex="4">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </TextField>
+                <TextField fx:id="Interest" alignment="CENTER_LEFT" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="30.0" prefWidth="430.0" promptText="" styleClass="correct, error" text="" GridPane.columnIndex="0" GridPane.margin="$x5" GridPane.rowIndex="6">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </TextField>
+                <TextField fx:id="Referer" alignment="CENTER_LEFT" focusTraversable="false" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="30.0" prefWidth="430.0" promptText="" styleClass="correct, error" text="" GridPane.columnIndex="0" GridPane.margin="$x5" GridPane.rowIndex="8">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </TextField>
+                <TextField fx:id="Email" alignment="CENTER_LEFT" focusTraversable="false" prefHeight="30.0" prefWidth="430.0" styleClass="correct, error" GridPane.columnIndex="0" GridPane.margin="$x5" GridPane.rowIndex="10">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </TextField>
+                <Label alignment="CENTER" contentDisplay="LEFT" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" text="Registration" textFill="#0066ff" underline="true" visible="true" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                  <font>
+                    <Font name="Arial Black" size="30.0" />
+                  </font>
+                  <GridPane.margin>
+                    <Insets left="40.0" right="40.0" fx:id="x5" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER" contentDisplay="RIGHT" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" text="First name" textFill="BLACK" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                  <font>
+                    <Font size="15.0" fx:id="x1" />
+                  </font>
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER" font="$x1" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" text="Last name" textFill="BLACK" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Label>
+                <Label alignment="CENTER_LEFT" font="$x1" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" text="Interest" textFill="BLACK" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="5" />
+                <Label alignment="CENTER_LEFT" font="$x1" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" text="Referer" textFill="BLACK" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="7" />
+                <Label font="$x1" text="E-mail address" textFill="BLACK" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Label>
+                <Button fx:id="signupButton" cache="false" defaultButton="false" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#Signup_Click" prefHeight="40.0" prefWidth="200.0" text="Create account" textFill="BLACK" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                  <font>
+                    <Font size="18.0" fx:id="x6" />
+                  </font>
+                  <GridPane.margin>
+                    <Insets left="260.0" />
+                  </GridPane.margin>
+                </Button>
+                <Label id="First_N_Error" fx:id="First_Error" alignment="CENTER_LEFT" prefWidth="20.0" text="*" textAlignment="LEFT" textFill="RED" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                    <Insets left="470.0" fx:id="x4" />
+                  </GridPane.margin>
+                </Label>
+                <Label id="Last_N_Error" fx:id="Last_Error" alignment="CENTER_LEFT" prefWidth="20.0" text="*" textAlignment="LEFT" textFill="RED" visible="false" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="4" />
+                <Label fx:id="Interest_Error" alignment="CENTER_LEFT" prefWidth="20.0" text="*" textAlignment="LEFT" textFill="RED" visible="false" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="6" />
+                <Label fx:id="Referer_Error" alignment="CENTER_LEFT" prefWidth="20.0" text="*" textAlignment="LEFT" textFill="RED" visible="false" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="8" />
+                <Label id="Email_A_Error" fx:id="Email_Error" alignment="CENTER_LEFT" prefWidth="20.0" text="*" textAlignment="LEFT" textFill="RED" visible="false" GridPane.columnIndex="0" GridPane.margin="$x4" GridPane.rowIndex="10" />
+                <Button fx:id="BackButton" focusTraversable="false" font="$x6" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#Back_Click" prefHeight="40.0" prefWidth="200.0" text="Back" textAlignment="LEFT" textFill="BLACK" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                  <GridPane.margin>
+                    <Insets left="40.0" fx:id="x2" />
+                  </GridPane.margin>
+                </Button>
+              </children>
+              <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" />
+              </columnConstraints>
+              <padding>
+                <Insets fx:id="x3" />
+              </padding>
+              <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="150.0" vgrow="NEVER" />
+              </rowConstraints>
+            </GridPane>
+          </children>
+        </AnchorPane>
+      </content>
+    </ScrollPane>
+  </children>
+  <padding>
+    <Insets fx:id="x3" />
+  </padding>
+</AnchorPane>

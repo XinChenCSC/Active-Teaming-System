@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_191" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="Group.Group" id="Group0">
+    <void property="a_Group">
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.VIP">
+         <void property="creatingGroup">
+          <boolean>true</boolean>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.OU">
+         <void property="inGroup">
+          <boolean>true</boolean>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.OU">
+         <void property="ID">
+          <string>13579</string>
+         </void>
+         <void property="email">
+          <string>JohnSmith@gmail.com</string>
+         </void>
+         <void property="inGroup">
+          <boolean>true</boolean>
+         </void>
+         <void property="interest">
+          <string>Sing</string>
+         </void>
+         <void property="name">
+          <string>John Smith</string>
+         </void>
+         <void property="total_Penalty_Received">
+          <int>0</int>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.OU">
+         <void property="ID">
+          <string>43754</string>
+         </void>
+         <void property="date_Of_Join">
+          <string>05/04/2019</string>
+         </void>
+         <void property="email">
+          <string>MikeJones@gmail.com</string>
+         </void>
+         <void property="inGroup">
+          <boolean>true</boolean>
+         </void>
+         <void property="interest">
+          <string>Ski</string>
+         </void>
+         <void property="name">
+          <string>Mike Jones</string>
+         </void>
+         <void property="reputationScore">
+          <int>16</int>
+         </void>
+         <void property="total_Penalty_Received">
+          <int>0</int>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Group.Group_Status">
+       <void property="user">
+        <object class="Clients.OU">
+         <void property="ID">
+          <string>29384</string>
+         </void>
+         <void property="date_Of_Join">
+          <string>05/06/2019</string>
+         </void>
+         <void property="email">
+          <string>CarmenGabriela@gmail.com</string>
+         </void>
+         <void property="inGroup">
+          <boolean>true</boolean>
+         </void>
+         <void property="interest">
+          <string>Swimming</string>
+         </void>
+         <void property="name">
+          <string>Carmen Gabriela</string>
+         </void>
+         <void property="reputationScore">
+          <int>18</int>
+         </void>
+         <void property="total_Penalty_Received">
+          <int>0</int>
+         </void>
+        </object>
+       </void>
+      </object>
+     </void>
+    </void>
+    <void property="description">
+     <string>This is about animal...</string>
+    </void>
+    <void property="group_ID">
+     <string>8098</string>
+    </void>
+    <void property="open">
+     <boolean>true</boolean>
+    </void>
+    <void property="title">
+     <string>Animal Research</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

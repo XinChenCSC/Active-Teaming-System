@@ -1,0 +1,32 @@
+/*TextArea styles */
+
+.text-area {
+    -fx-background-color: transparent;
+    -fx-border-color: #000000;
+}
+
+.text-area .scroll-pane{
+    -fx-background-color: transparent;
+    -fx-hbar-policy: NEVER;
+    -fx-vbar-policy: NEVER;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+#AgreeVotes {
+  -fx-text-box-border: forestgreen;
+  -fx-accent: #90EE90;
+}
+
+/*Remove the border color of scrollpane */
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}

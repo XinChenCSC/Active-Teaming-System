@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="Anchor_Pane" prefHeight="800.0" prefWidth="1400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.AccountpageController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <ScrollPane fx:id="Scroll_Pane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minHeight="-1.0" prefHeight="800.0" prefWidth="1400.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <content>
+        <SplitPane fx:id="Split_Pane" dividerPositions="0.07892004153686397" focusTraversable="false" minHeight="1010.0" minWidth="1920.0" orientation="HORIZONTAL" prefHeight="1010.0" prefWidth="1920.0">
+          <items>
+            <AnchorPane id="Pane_List" fx:id="Anchor_Pane_1" minHeight="1000.0" minWidth="150.0" prefHeight="1000.0" prefWidth="150.0" style="-fx-background-color: linear-gradient(#F0F8FF 0%, #F0FFFF 20%, #FFE4C4 80%, #DEB887 100%);">
+              <children>
+                <Button fx:id="Profile" focusTraversable="false" layoutX="215.0" layoutY="200.0" minHeight="-1.0" minWidth="-1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Profile" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+                <Button id="" fx:id="Remainder" focusTraversable="false" layoutX="215.0" layoutY="250.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Remainder" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+                <Button fx:id="Status" focusTraversable="false" layoutX="215.0" layoutY="300.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Status" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+                <Button fx:id="Friend" focusTraversable="false" layoutX="215.0" layoutY="350.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Friend" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+                <Button fx:id="History" focusTraversable="false" layoutX="215.0" layoutY="400.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="History" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+                <Button fx:id="Back" focusTraversable="false" layoutX="216.0" layoutY="14.0" mnemonicParsing="false" onAction="#homePage" prefHeight="30.0" prefWidth="120.0" styleClass="Button" text="Back" translateX="-200.0">
+                  <stylesheets>
+                    <URL value="@application.css" />
+                  </stylesheets>
+                </Button>
+              </children>
+            </AnchorPane>
+            <AnchorPane id="Pane_list_2" fx:id="Anchor_Pane_2" minHeight="1000.0" minWidth="1770.0" prefHeight="1000.0" prefWidth="1770.0" style=";">
+              <children>
+                <ImageView fx:id="Image_View" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <image>
+                    <Image url="@../../Images/Homepage_background.jpg" />
+                  </image>
+                </ImageView>
+                <Label alignment="CENTER_RIGHT" layoutX="-204.0" layoutY="-20.0" prefHeight="-1.0" prefWidth="-1.0" text="Information" translateX="300.0" translateY="50.0">
+                  <font>
+                    <Font name="Algerian" size="50.0" />
+                  </font>
+                </Label>
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
+      </content>
+    </ScrollPane>
+  </children>
+</AnchorPane>
