@@ -18,7 +18,6 @@ import Clients.OU;
 import Clients.SU;
 import Clients.VIP;
 import Group.Group;
-import Group.Group_List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -172,10 +171,11 @@ public class Main extends Application {
 //		System.out.println(userList.getVIP_Size());
 //		System.out.println(userList.getSU_Size());
 //		System.out.println(userList.getOU_User().get(0).isCreatingGroup());
-		System.out.println(((OU)this.gl.getGroup_List().get(0).getA_Group().get(1).getUser()).isNeedAppeal());
-//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).getAttendances());
-//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).getPraises());
+//		System.out.println(this.userList.getOU_User().get(0).isNeedAppeal());
+//		System.out.println(this.gl.getGroup_List().get(0).getTarget()[2].getName());
+//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get().getWarnings());
 //		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).isEvaluation());
+//		System.out.println(this.userList.getGuest().isActivate());
 //		System.out.println(this.gl.getGroup_List().get(0).getVT(5));
 //		System.out.println(this.gl.getGroup_List().get(0).getGroup_ID());
 //		System.out.println(this.gl.getGroup_List().get(0).getTotalMember());
@@ -268,5 +268,21 @@ public class Main extends Application {
 				this.userList.addAll_User(new_ou);
 			}
 		}
+		
+		//If all user is not in group and the closure poll is passed, close the group
+		for(int i = 0; i < this.gl.getGroup_List().size(); ++i) {
+			int index = this.gl.getGroup_List().get(i).getA_Group().size();
+			for(int j = 0; j < this.gl.getGroup_List().get(i).getA_Group().size(); ++i) {
+				if(this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser() instanceof OU) {
+					if(!((OU)this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser()).isInGroup() && !this.gl.getGroup_List().get(i).isClose())
+						--index;
+				}
+			}
+			if(index == 0) {
+				this.gl.getGroup_List().get(i).setClose(true);
+				this.gl.getGroup_List().get(i).setOpen(false);
+			}
+		}
+		
      }
 }

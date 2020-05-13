@@ -20,6 +20,9 @@
      </void>
      <void method="add">
       <object class="Group.Group_Status">
+       <void property="condition">
+        <boolean>false</boolean>
+       </void>
        <void property="user">
         <object class="Clients.OU">
          <void property="inGroup">
@@ -34,6 +37,9 @@
      </void>
      <void method="add">
       <object class="Group.Group_Status">
+       <void property="praises">
+        <int>2</int>
+       </void>
        <void property="user">
         <object class="Clients.OU">
          <void property="ID">
@@ -55,6 +61,9 @@
           <int>0</int>
          </void>
         </object>
+       </void>
+       <void property="warnings">
+        <int>1</int>
        </void>
       </object>
      </void>
@@ -105,6 +114,54 @@
     </void>
     <void property="open">
      <boolean>true</boolean>
+    </void>
+    <void id="intArrayArray0" property="pollStatus">
+     <void index="1">
+      <void index="0">
+       <int>-1</int>
+      </void>
+      <void index="1">
+       <int>-1</int>
+      </void>
+      <void index="2">
+       <int>-1</int>
+      </void>
+      <void index="3">
+       <int>-1</int>
+      </void>
+      <void index="4">
+       <int>-1</int>
+      </void>
+      <void index="5">
+       <int>-1</int>
+      </void>
+      <void index="6">
+       <int>-1</int>
+      </void>
+     </void>
+     <void index="2">
+      <void index="0">
+       <int>-1</int>
+      </void>
+      <void index="1">
+       <int>-1</int>
+      </void>
+      <void index="2">
+       <int>-1</int>
+      </void>
+      <void index="3">
+       <int>-1</int>
+      </void>
+      <void index="4">
+       <int>-1</int>
+      </void>
+      <void index="5">
+       <int>-1</int>
+      </void>
+      <void index="6">
+       <int>-1</int>
+      </void>
+     </void>
     </void>
     <void property="title">
      <string>Good</string>

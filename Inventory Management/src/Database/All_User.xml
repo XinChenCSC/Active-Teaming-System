@@ -9,6 +9,9 @@
     <void property="inGroup">
      <boolean>true</boolean>
     </void>
+    <void property="needAppeal">
+     <boolean>true</boolean>
+    </void>
    </object>
   </void>
   <void method="add">
@@ -153,7 +156,11 @@
    </object>
   </void>
  </object>
- <object class="Clients.Guest"/>
+ <object class="Clients.Guest">
+  <void property="activate">
+   <boolean>true</boolean>
+  </void>
+ </object>
  <object class="java.util.ArrayList">
   <void method="add">
    <object idref="OU0"/>

@@ -19,12 +19,11 @@ import java.util.ResourceBundle;
 
 import Group.Group;
 import Clients.Client;
+import Clients.Guest;
 import Clients.OU;
 import Clients.SU;
 import Clients.VIP;
-import Clients.Guest;
 import Email.Email;
-import Group.Group_List;
 import Group.Group_Status;
 import Message.Message_Container;
 import javafx.fxml.FXML;
@@ -249,17 +248,14 @@ public class HomepageController{
         StackPane scene = groupMainScene(newWindow, width, height);
         
         //Is guest?
-        if(this.isGuest || this.target instanceof SU) {        	
+        if(this.isGuest || this.target instanceof SU) {    
         	((Button)scene.getChildren().get(2)).setVisible(false);
         	((Button)((HBox)scene.getChildren().get(1)).getChildren().get(0)).setDisable(true);
         	((Button)scene.getChildren().get(0)).setVisible(false);
         }
         //SU are not allowed to create a group
-        else if((this.target instanceof OU && !((OU) this.target).isNeedAppeal()) ||
-        		(this.target instanceof VIP && !((VIP) this.target).isNeedAppeal())) {
-        	((Button)scene.getChildren().get(2)).setVisible(false);
-        }
-        else {
+        else if((this.target instanceof OU && ((OU) this.target).isNeedAppeal()) ||
+        		(this.target instanceof VIP && ((VIP) this.target).isNeedAppeal())) {
         	((Button)scene.getChildren().get(2)).setVisible(true);
         }
         
@@ -321,17 +317,20 @@ public class HomepageController{
         				((Button)scene.getChildren().get(2)).setVisible(false);
             			//set needappeal button to false
             	        if(this.target instanceof OU) {
-            	        	if(((OU)this.target).isNeedAppeal())
-            	        		((Button) scene.getChildren().get(2)).setVisible(false);}
-            	        else if(this.target instanceof VIP) {
-            	        	if(((VIP)this.target).isNeedAppeal())
-            	        		((Button) scene.getChildren().get(2)).setVisible(false);
+            	        	if(((OU)this.target).isNeedAppeal()) 
+            	        		((OU)this.target).setNeedAppeal(false);
             	        }
+            	        else if(this.target instanceof VIP) {
+            	        	if(((VIP)this.target).isNeedAppeal()) 
+            	        		((VIP)this.target).setNeedAppeal(false);
+            	        }
+            	        ((Button) scene.getChildren().get(2)).setVisible(false);
             	        findGroupIndex(); //Refresh
-            	        String str = "Group ID: " + this.G_List.getGroup_List().get(GroupIndex).getGroup_ID() + "\n My name is: " +
+            	        String str = "Group ID: " + this.G_List.getGroup_List().get(GroupIndex).getGroup_ID() + "\nMy name is: " +
             	        			this.target.getName();
                     	Email email = new Email("Group appeal", str, this.target.getEmail());
                     	this.Info_List.CreateEmail(userList.getSU_User().get(0).getID(), email);
+                    	
         			}
         		}
         	});
@@ -686,7 +685,7 @@ public class HomepageController{
         lb.setFocusTraversable(false);
         
         //If the group has enough users to open
-        if(this.GroupIndex != -1 && isOpen() && isInGroup()){
+        if(this.GroupIndex != -1 && isOpen() && isInGroup() && !checkAppeal()){
         	lb.setDisable(false);
         	lb.setText("Group Page");
         	//Switch to group page
@@ -753,13 +752,6 @@ public class HomepageController{
         Button appeal = new Button("Appeal");
         appeal.setVisible(false);
         appeal.setFocusTraversable(false);
-//        if(this.target instanceof OU) {
-//        	if(((OU)this.target).isNeedAppeal())
-//				appeal.setVisible(true);}
-//        else if(this.target instanceof VIP) {
-//        	if(((VIP)this.target).isNeedAppeal())
-//				appeal.setVisible(true);
-//        }
 			
         
         //set the position
@@ -778,13 +770,23 @@ public class HomepageController{
     	return false;
     }
     
-    //Check the group is closed or not
+    //Check the user is in a group or not;
     private boolean isInGroup() {
     	if(this.target instanceof OU) {
     		return ((OU)this.target).isInGroup();
     	}
         else if(this.target instanceof VIP) {
         	return ((VIP)this.target).isInGroup();
+        }
+    	return false;
+    }
+    
+    private boolean checkAppeal() {
+    	if(this.target instanceof OU) {
+    		return ((OU)this.target).isNeedAppeal();
+    	}
+        else if(this.target instanceof VIP) {
+        	return ((VIP)this.target).isNeedAppeal();
         }
     	return false;
     }
@@ -2281,7 +2283,9 @@ public class HomepageController{
     					"OU", this.target.getInterest(), this.target.getRecommender(),
     					this.target.getPassword(), 0, 0, 0, 0, "Good", "On", getCurrentTime());
     			userList.addOU_User(ou);
+    			userList.addAll_User(ou);
     			getAlert(AlertType.CONFIRMATION, "Your password has been resetted.", ButtonType.OK, "Information");
+    			    			
     			newWindow.close();
     		}
     	});
@@ -2365,10 +2369,11 @@ public class HomepageController{
     	this.target = target; //set target user
     	this.Info_List = il; //set user information
     	this.G_List = g_List;
-//    	((OU)this.G_List.getGroup_List().get(0).getA_Group().get(1).getUser()).setNeedAppeal(true);;
-//    	this.G_List.getGroup_List().get(0).getA_Group().get(1).setEvaluation("GOOD");
+//    	((OU)this.userList.getAll_User().get(1)).setNeedAppeal(true);
+//    	this.G_List.getGroup_List().get(0).getA_Group().get(1).setCondition(false);
 //    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setPraises(2);
 //    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setisEvaluation(true);
+//    	this.userList.getGuest().setActivate(true);
     	if(evaluation)
     		recommenderEvaluation();
     	if(passwordChange)
@@ -2424,10 +2429,10 @@ public class HomepageController{
 	
 	public void GroupToHome(Group_Status target2, Group group2, Information_List info_List2, UserList user_List,
 			Group_List g_List2) {
+		this.G_List = g_List2;
 		this.target = target2.getUser();
 		this.Info_List = info_List2;
 		this.userList = user_List;
-		this.G_List = g_List2;
 	}
 	
 	public void GroupToUser(Client visitor, UserList user_List, Group_List g_List2, Information_List info_List2) {
@@ -2728,7 +2733,7 @@ public class HomepageController{
     		this.GroupIndex = -1;
     	else {
     		for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
-    			if(this.G_List.getGroup_List().get(i).isGroupMember(this.target.getID())) {
+    			if(this.G_List.getGroup_List().get(i).isGroupMember(this.target.getID()) && !this.G_List.getGroup_List().get(i).isClose()) {
     				this.GroupIndex = i;
     				break;
     			}
@@ -2782,5 +2787,5 @@ public class HomepageController{
     	return "";
     }
 
-
+    
 }

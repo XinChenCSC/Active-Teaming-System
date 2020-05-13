@@ -2,14 +2,58 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container0">
     <void property="ID">
      <string>23333</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Group ID: 1740
+ My name is: Noah Lee</string>
+       </void>
+       <void property="subject">
+        <string>Group appeal</string>
+       </void>
+       <void property="target">
+        <string>NoahLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Group ID: 1740
+My name is: Noah Lee</string>
+       </void>
+       <void property="subject">
+        <string>Group appeal</string>
+       </void>
+       <void property="target">
+        <string>NoahLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Group ID: 1740
+My name is: Noah Lee</string>
+       </void>
+       <void property="subject">
+        <string>Group appeal</string>
+       </void>
+       <void property="target">
+        <string>NoahLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container0">
+   <object class="Clients.Information_Container" id="Information_Container1">
     <void property="ID">
      <string>77777</string>
     </void>
@@ -72,6 +116,166 @@
        </void>
        <void property="message">
         <string>Message4</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice0">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) activated.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice1">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) successfully passed!</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice2">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) activated.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice3">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) successfully passed!</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice4">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Praise poll) activated.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice5">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Praise poll) successfully passed!</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice6">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Praise poll) activated.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice7">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Praise poll) successfully passed!</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice8">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) activated.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Notice.Notice" id="Notice9">
+       <void property="date">
+        <string>2020-05-13</string>
+       </void>
+       <void property="index">
+        <int>-1</int>
+       </void>
+       <void property="message">
+        <string>(Warning poll) successfully passed!</string>
        </void>
        <void property="newIcon">
         <boolean>true</boolean>
@@ -147,7 +351,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container1">
+   <object class="Clients.Information_Container" id="Information_Container2">
     <void property="ID">
      <string>55555</string>
     </void>
@@ -172,7 +376,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container2">
+   <object class="Clients.Information_Container" id="Information_Container3">
     <void property="ID">
      <string>13579</string>
     </void>
@@ -193,11 +397,41 @@
        </void>
       </object>
      </void>
+     <void method="add">
+      <object idref="Notice0"/>
+     </void>
+     <void method="add">
+      <object idref="Notice1"/>
+     </void>
+     <void method="add">
+      <object idref="Notice2"/>
+     </void>
+     <void method="add">
+      <object idref="Notice3"/>
+     </void>
+     <void method="add">
+      <object idref="Notice4"/>
+     </void>
+     <void method="add">
+      <object idref="Notice5"/>
+     </void>
+     <void method="add">
+      <object idref="Notice6"/>
+     </void>
+     <void method="add">
+      <object idref="Notice7"/>
+     </void>
+     <void method="add">
+      <object idref="Notice8"/>
+     </void>
+     <void method="add">
+      <object idref="Notice9"/>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container3">
+   <object class="Clients.Information_Container" id="Information_Container4">
     <void property="ID">
      <string>24680</string>
     </void>
@@ -218,11 +452,41 @@
        </void>
       </object>
      </void>
+     <void method="add">
+      <object idref="Notice0"/>
+     </void>
+     <void method="add">
+      <object idref="Notice1"/>
+     </void>
+     <void method="add">
+      <object idref="Notice2"/>
+     </void>
+     <void method="add">
+      <object idref="Notice3"/>
+     </void>
+     <void method="add">
+      <object idref="Notice4"/>
+     </void>
+     <void method="add">
+      <object idref="Notice5"/>
+     </void>
+     <void method="add">
+      <object idref="Notice6"/>
+     </void>
+     <void method="add">
+      <object idref="Notice7"/>
+     </void>
+     <void method="add">
+      <object idref="Notice8"/>
+     </void>
+     <void method="add">
+      <object idref="Notice9"/>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container4">
+   <object class="Clients.Information_Container" id="Information_Container5">
     <void property="ID">
      <string>98374</string>
     </void>
@@ -247,7 +511,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container5">
+   <object class="Clients.Information_Container" id="Information_Container6">
     <void property="ID">
      <string>43754</string>
     </void>
@@ -272,7 +536,7 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container" id="Information_Container6">
+   <object class="Clients.Information_Container" id="Information_Container7">
     <void property="ID">
      <string>29384</string>
     </void>

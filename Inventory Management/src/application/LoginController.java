@@ -3,7 +3,6 @@ package application;
 import java.io.*;
 import java.util.ResourceBundle;
 
-import Group.Group_List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -201,9 +200,9 @@ public class LoginController{
 		this.userList = ul; //set database
 		this.Info_List = il;
 		this.G_List = gl;
-		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivated())
+		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivate())
 			FailedSignupAlert();	
-		else if(userList.getGuest().getNumRegister() != 0 && !userList.getGuest().isActivated())
+		else if(userList.getGuest().getNumRegister() != 0 && userList.getGuest().isActivate())
 			SuccessedSignupAlert();
 	}
 	

@@ -1,8 +1,9 @@
-package Group;
+package application;
 
 import java.util.ArrayList;
 
-import Clients.Client;
+import Group.Group;
+import Group.Group_Status;
 
 public class Group_List {
 

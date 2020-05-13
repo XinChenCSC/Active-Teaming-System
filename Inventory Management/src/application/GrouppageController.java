@@ -14,7 +14,6 @@ import Clients.Client;
 import Clients.Guest;
 import Clients.OU;
 import Clients.VIP;
-import Group.Group_List;
 import Group.Group_Status;
 import Notice.Notice;
 import javafx.event.ActionEvent;
@@ -121,6 +120,8 @@ public class GrouppageController {
     private int Active_Members = -1;
     
     private int Group_Index = -1;
+    
+    private int User_List_Index = -1;
     
     //window size
     private Rectangle2D screen = Screen.getPrimary().getVisualBounds(); 
@@ -339,8 +340,8 @@ public class GrouppageController {
      				}
      			}
      			else if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[1]) == 0) {
-     				if(getConfirmationAlert("Are you sure to issue a warning to UNKNOWN?", "Confirm", (Stage) gridPane.getScene().getWindow(),
-     						"Wait for the responds from other group members.")) {
+     				if(getConfirmationAlert("Are you sure to issue a warning to " + name.getSelectionModel().getSelectedItem() +
+     		     			"?", "Confirm", (Stage) gridPane.getScene().getWindow(), "Wait for the responds from other group members.")) {
            				
      					//Send a notification to all group member except kicked out member
      					Notice notification = new Notice(true, getCurrentDate(), "(" + voting_tags[1] + " poll) activated.");
@@ -358,7 +359,8 @@ public class GrouppageController {
      				}
      			}
      			else if(vote.getSelectionModel().getSelectedItem().toString().compareTo(voting_tags[2]) == 0) {
-     				if(getConfirmationAlert("Are you sure to give UNKNOWN a pat on the back?", "Confirm", (Stage) gridPane.getScene().getWindow(),
+     				if(getConfirmationAlert("Are you sure to give " + name.getSelectionModel().getSelectedItem()
+     							+ " a pat on the back?", "Confirm", (Stage) gridPane.getScene().getWindow(),
      						"Wait for the responds from other group members.")) {
            				
      					//Send a notification to all group member except kicked out member
@@ -887,9 +889,6 @@ public class GrouppageController {
                 				, ButtonType.OK, "Result");
                 		progress.setProgress(0);
                 		
-                		this.group.addVoteTypes(index, false); 	//Deactivate the vote 
-                		this.group.PollInitialization(index); //Reset all value to -1
-                		this.group.addTarget(index, null);    //Add the target to null
                 		//Send a notification to all group members 
                 		Notice notification = new Notice(true, getCurrentDate(), "(" + voting_tags[index] + " poll) successfully passed!");
                 		for(int i = 0; i < this.group.getA_Group().size(); ++i) 
@@ -923,6 +922,9 @@ public class GrouppageController {
                 			//Close his/her evaluation
                 			this.group.getA_Group().get(VoteeIndex(4)).setisEvaluation(false);
                 		}
+                		this.group.addVoteTypes(index, false); 	//Deactivate the vote 
+                		this.group.PollInitialization(index); //Reset all value to -1
+                		this.group.addTarget(index, null);    //Add the target to null
                 	}
         		}
         	}
@@ -970,7 +972,10 @@ public class GrouppageController {
     //Call homepage
     private void loadHomepage() throws IOException{
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");
-    	if(!this.isGuest && !this.isVisitor) {    		
+    	if(!this.isGuest && !this.isVisitor) {   
+    		this.group.getA_Group().set(User_Group_Index, this.target);
+    		this.G_List.getGroup_List().set(this.Group_Index, this.group);
+    		this.User_List.getAll_User().set(this.User_List_Index, this.target.getUser());
     		HomepageController HC = Loader.getController();
     		HC.GroupToHome(this.target, this.group, this.Info_List, this.User_List, this.G_List);
     	}
@@ -995,6 +1000,7 @@ public class GrouppageController {
 		findUserGroupIndex(); //Find the index of user in the group
 		getActiveMember(); 	//Get the active members
 		getGroupIndex(); //Get the index of group in the group list
+		getUserListIndex(); //Get the index of user in the user list 
 		displayProjectInformation();
 		displayMemberList();
 		
@@ -1068,12 +1074,12 @@ public class GrouppageController {
 	private void displayMemberList() {
 		getActiveMember();		//Refresh
 		//Member is leaving or kicked
-		for(int i = 0; i < this.group.getA_Group().size(); ++i) {
+		for(int i = 0, j = 0; i < this.group.getA_Group().size(); ++i) {
 			if(this.group.getA_Group().get(i).isCondition()) {
 				MenuItem menu = new MenuItem(this.group.getA_Group().get(i).getUser().getName());
 				Members.getItems().add(menu);
 				int k = i;				
-				Members.getItems().get(i).setOnAction(e-> {
+				Members.getItems().get(j++).setOnAction(e-> {
 					BorderPane border = infoDisplay(this.group.getA_Group().get(k));
 					this.group.getA_Group().get(k).setEvaluation(((TextArea)((GridPane)border.getCenter()).getChildren().get(7)).getText());
 				});			
@@ -1187,5 +1193,14 @@ public class GrouppageController {
 				return i;
 		}
 		return -1;
+    }
+    
+    private void getUserListIndex() {
+    	for(int i = 0; i < this.User_List.getAll_Size(); ++i) {
+    		if(this.User.getID().compareTo(this.User_List.getAll_User().get(i).getID()) == 0) {
+    			this.User_List_Index = i;
+    			break;
+    		}
+    	}
     }
 }
