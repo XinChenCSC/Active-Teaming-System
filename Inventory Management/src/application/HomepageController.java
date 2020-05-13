@@ -1231,27 +1231,47 @@ public class HomepageController{
     	address.setPromptText("Email address");
     	
     	registration.setOnMouseClicked(e->{
-    		
-    		if(address.getText().compareTo(this.userList.getGuest().getEmail()) == 0) {
-    			
-//    			String account = su.Generate_Acc();
-    			
+    		if(this.userList.getGuest().getName() == null) {
+    			getAlert(AlertType.ERROR, "No such user.", ButtonType.OK, "Error");		    			
+    		}
+    		else if(isValidEmail(address.getText())) {
+    			getAlert(AlertType.ERROR, "Repeated email.", ButtonType.OK, "Error");		    			
+    		}   
+    		else {
     			String account = generalTabEvent();
     			String password = su.Generate_Pass();
     	
     			this.userList.getGuest().setID(account);
     			this.userList.getGuest().setPassword(password);
     			this.userList.getGuest().setActivate(true);
+    			
     			if(this.userList.getGuest().getNumRegister() < 3) {
-    				
     				this.userList.getGuest().setNumRegister(1);
-    		
     				getAlert(AlertType.INFORMATION, "New Guest register completed", ButtonType.OK, "Confirmaton");		
     				this.userList.getGuest().setActivate(true);
-    		}
-    				
+    			}
     		}
     	});
+    	
+    	Reject.setOnMouseClicked(e->{
+    		this.userList.getGuest().setNumRegister(1);
+    		if(this.userList.getGuest().getNumRegister() > 2) {
+    			this.Info_List.addSystemBlacklist(this.userList.getGuest());
+        		this.userList.setGuest(new Guest());
+        		getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");
+    		}
+    		getAlert(AlertType.INFORMATION, "Action completed.", ButtonType.OK, "Confirmaton");
+    	});
+    	
+    	Blacklist.setOnMouseClicked(e->{
+    		this.Info_List.addSystemBlacklist(this.userList.getGuest());
+    		this.userList.setGuest(new Guest());
+    		if(!isValidEmail(address.getText()) && this.userList.getGuest().getName() != null)
+    			getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");	
+    		else 
+    			getAlert(AlertType.ERROR, "Already in the system blacklist.", ButtonType.OK, "Error");
+    	});
+    	
     	hbox.setAlignment(Pos.CENTER);
     	hbox.getChildren().addAll(Reject,Blacklist,registration, address);
     	pane.setBottom(hbox);
@@ -2363,7 +2383,6 @@ public class HomepageController{
         		getAlert(AlertType.ERROR, "Scores can't be empty.", ButtonType.OK, "Error");
         	}
         	else {
-        		
         		incScore(this.guest_g, ((ComboBox<Integer>) scene.getChildren().get(1)).getSelectionModel().getSelectedItem());
         		//Remove the presentee
         		if(this.target instanceof OU)
@@ -2729,6 +2748,15 @@ public class HomepageController{
     	for(int i = 0; i < this.userList.getAll_Size(); ++i) {
     		if(this.target.getEmail().compareTo(email) != 0 && 
     				this.userList.getAll_User().get(i).getEmail().compareTo(email) == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private boolean isValidBLEmail(String email) {
+    	for(int i = 0; i < this.Info_List.getSystem_Blacklist().size(); ++i) {
+    		if(this.Info_List.getSystem_Blacklist().get(i).getEmail().compareTo(email) != 0) {
     			return true;
     		}
     	}

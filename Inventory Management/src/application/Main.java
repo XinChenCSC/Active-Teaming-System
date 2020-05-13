@@ -271,18 +271,18 @@ public class Main extends Application {
 		}
 		
 //		//If all user is not in group and the closure poll is passed, close the group
-//		for(int i = 0; i < this.gl.getGroup_List().size(); ++i) {
-//			int index = this.gl.getGroup_List().get(i).getA_Group().size();
-//			for(int j = 0; j < this.gl.getGroup_List().get(i).getA_Group().size(); ++i) {
-//				if(this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser() instanceof OU) {
-//					if(!((OU)this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser()).isInGroup() && !this.gl.getGroup_List().get(i).isClose())
-//						--index;
-//				}
-//			}
-//			if(index == 0) {
-//				this.gl.getGroup_List().get(i).setClose(true);
-//				this.gl.getGroup_List().get(i).setOpen(false);
-//			}
-//		}
+		for(int i = 0; i < this.gl.getGroup_List().size(); ++i) {
+			int index = this.gl.getGroup_List().get(i).getA_Group().size();
+			for(int j = 0; j < this.gl.getGroup_List().get(i).getA_Group().size(); ++i) {
+				if(this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser() instanceof OU) {
+					if(!((OU)this.gl.getGroup_List().get(i).getA_Group().get(index-1).getUser()).isInGroup() && !this.gl.getGroup_List().get(i).isClose())
+						--index;
+				}
+			}
+			if(index == 0) {
+				this.gl.getGroup_List().get(i).setClose(true);
+				this.gl.getGroup_List().get(i).setOpen(false);
+			}
+		}
      }
 }

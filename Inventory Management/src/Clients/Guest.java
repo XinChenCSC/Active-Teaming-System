@@ -3,25 +3,25 @@ package Clients;
 public class Guest extends Client{
 	
 	//Total number of deny < 2
-	private int numRegister;
+	private int numRegister = 0;
 	
 //	//Check whether Activate has been approved
-	private boolean Activate;
+	private boolean Activate = false;
 	
 	//Check whether the guest make the first login attempt
-	private boolean isLogin;
+	private boolean isLogin = false;
 	
 	//Contructor
 	public Guest() {
 		this.numRegister = 0;
-//		this.Activate = false;
+		this.Activate = false;
 		this.setLogin(false);
 	}
 	
 	public Guest(String Name, String Interest, String recommender, String Email) {
 		super(Name, Interest, recommender, Email);
 		this.numRegister = 0;
-//		this.Activate = false;
+		this.Activate = false;
 		this.setLogin(false);
 	}
 	
@@ -41,7 +41,7 @@ public class Guest extends Client{
 
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 
-	public void setNumRegister(int numRegister) {this.numRegister = numRegister;}
+	public void setNumRegister(int numRegister) {++this.numRegister;}
 	//**************************************************************************************
 	
 

@@ -3,6 +3,7 @@ package application;
 import java.io.*;
 import java.util.ResourceBundle;
 
+import Email.Email;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -191,6 +192,17 @@ public class LoginController{
     	//check click button types
     	Optional<ButtonType> result = alert.showAndWait();
     	if(result.get() == submit) {
+    		String str = "Name: " + this.userList.getGuest().getName()  +
+    				"Interest: " + this.userList.getGuest().getInterest() + "\n" +
+    				"Recommender: " + this.userList.getGuest().getRecommender() + "\n" +
+    				"Email: " + this.userList.getGuest().getEmail() + "\n" + 
+    				"Number of registration: " + this.userList.getGuest().getNumRegister();
+        	//Copy registration information to SU
+        	Email email = new Email("(Re) Registration", str, this.userList.getGuest().getName());
+        	this.Info_List.CreateEmail(userList.getSU_User().get(0).getID(), email);
+        	
+        	this.userList.getGuest().setNumRegister(0);
+        	
     		Alert confirmAlert = new Alert(AlertType.CONFIRMATION, "Submission completed.", ButtonType.OK);
     		confirmAlert.setTitle("Confirmation");
         	confirmAlert.setHeaderText(null);
@@ -203,7 +215,6 @@ public class LoginController{
 		this.userList = ul; //set database
 		this.Info_List = il;
 		this.G_List = gl;
-		
 		
 		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivate())
 			FailedSignupAlert();	
