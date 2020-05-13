@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import Clients.OU;
 import Clients.VIP;
 import Email.Email;
+import Group.Group_List;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,6 +79,8 @@ public class SignupController {
     private UserList userList = new UserList();
     
 	private Information_List Info_List = new Information_List();
+	
+	private Group_List G_List = new Group_List();
     
     //Patterns for the registring fields
     //Start with an uppercase letter followed by at least two characters (includes Firstname, Lastname, and Interest)
@@ -95,7 +98,7 @@ public class SignupController {
     	//Move to the login page
     	FXMLLoader Loader = sceneSwitch("LoginPage.fxml", "Login");
     	LoginController lc = Loader.getController();
-    	lc.SignupToLogin(this.userList, this.Info_List);
+    	lc.SignupToLogin(this.userList, this.Info_List, this.G_List);
 	}
 
     @FXML
@@ -110,7 +113,7 @@ public class SignupController {
         	if (alert.getResult() == ButtonType.OK) {
             	FXMLLoader Loader = sceneSwitch("LoginPage.fxml", "Login");
             	LoginController lc = Loader.getController();
-            	lc.SignupToLogin(this.userList, this.Info_List);
+            	lc.SignupToLogin(this.userList, this.Info_List, this.G_List);
         	}	
     	}
     }
@@ -245,9 +248,10 @@ public class SignupController {
     	return result;
     }
     
-	public void LoginToSignup(UserList ul, Information_List il) {
+	public void LoginToSignup(UserList ul, Information_List il, Group_List gl) {
 		this.userList = ul;
 		this.Info_List = il;
+		this.G_List = gl;
 	}
 
 }

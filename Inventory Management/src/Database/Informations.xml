@@ -109,6 +109,40 @@
        </void>
       </object>
      </void>
+     <void method="add">
+      <object class="Clients.VIP">
+       <void property="ID">
+        <string>24680</string>
+       </void>
+       <void property="date_Of_Join">
+        <string>05/03/2019</string>
+       </void>
+       <void property="email">
+        <string>JuanCarlos@gmail.com</string>
+       </void>
+       <void property="inGroup">
+        <boolean>true</boolean>
+       </void>
+       <void property="interest">
+        <string>Hike</string>
+       </void>
+       <void property="name">
+        <string>Juan Carlos</string>
+       </void>
+       <void property="reputationScore">
+        <int>31</int>
+       </void>
+       <void property="status">
+        <string>Good</string>
+       </void>
+       <void property="total_Group_Engaged">
+        <int>2</int>
+       </void>
+       <void property="total_Project_Completed">
+        <int>2</int>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
@@ -121,23 +155,7 @@
      <void method="add">
       <object class="Notice.Notice">
        <void property="date">
-        <string>05/12/2020</string>
-       </void>
-       <void property="index">
-        <int>8226</int>
-       </void>
-       <void property="message">
-        <string>Liam Lee invite you to join his/her group.</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="Notice.Notice">
-       <void property="date">
-        <string>05/12/2020</string>
+        <string>05/13/2020</string>
        </void>
        <void property="index">
         <int>-1</int>
@@ -162,23 +180,7 @@
      <void method="add">
       <object class="Notice.Notice">
        <void property="date">
-        <string>05/12/2020</string>
-       </void>
-       <void property="index">
-        <int>8226</int>
-       </void>
-       <void property="message">
-        <string>Liam Lee invite you to join his/her group.</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="Notice.Notice">
-       <void property="date">
-        <string>05/12/2020</string>
+        <string>05/13/2020</string>
        </void>
        <void property="index">
         <int>-1</int>
@@ -203,29 +205,13 @@
      <void method="add">
       <object class="Notice.Notice">
        <void property="date">
-        <string>05/12/2020</string>
+        <string>05/13/2020</string>
        </void>
        <void property="index">
-        <int>8226</int>
+        <int>-1</int>
        </void>
        <void property="message">
-        <string>Liam Lee invite you to join his/her group.</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="Notice.Notice">
-       <void property="date">
-        <string>05/12/2020</string>
-       </void>
-       <void property="index">
-        <int>8098</int>
-       </void>
-       <void property="message">
-        <string>Liam Lee invite you to join his/her group.</string>
+        <string>You have been joined to Liam Lee&apos;s group.</string>
        </void>
        <void property="newIcon">
         <boolean>true</boolean>
@@ -244,26 +230,10 @@
      <void method="add">
       <object class="Notice.Notice">
        <void property="date">
-        <string>05/12/2020</string>
+        <string>05/13/2020</string>
        </void>
        <void property="index">
-        <int>8226</int>
-       </void>
-       <void property="message">
-        <string>Liam Lee invite you to join his/her group.</string>
-       </void>
-       <void property="newIcon">
-        <boolean>true</boolean>
-       </void>
-      </object>
-     </void>
-     <void method="add">
-      <object class="Notice.Notice">
-       <void property="date">
-        <string>05/12/2020</string>
-       </void>
-       <void property="index">
-        <int>8098</int>
+        <int>1740</int>
        </void>
        <void property="message">
         <string>Liam Lee invite you to join his/her group.</string>
@@ -277,16 +247,52 @@
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container5">
     <void property="ID">
      <string>43754</string>
     </void>
+    <void property="notice">
+     <void method="add">
+      <object class="Notice.Notice">
+       <void property="date">
+        <string>05/13/2020</string>
+       </void>
+       <void property="index">
+        <int>1740</int>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
+    </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container6">
     <void property="ID">
      <string>29384</string>
+    </void>
+    <void property="notice">
+     <void method="add">
+      <object class="Notice.Notice">
+       <void property="date">
+        <string>05/13/2020</string>
+       </void>
+       <void property="index">
+        <int>1740</int>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>

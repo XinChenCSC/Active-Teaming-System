@@ -16,6 +16,9 @@
     <void property="creatingGroup">
      <boolean>true</boolean>
     </void>
+    <void property="inGroup">
+     <boolean>true</boolean>
+    </void>
    </object>
   </void>
   <void method="add">
@@ -50,9 +53,6 @@
     </void>
     <void property="email">
      <string>MikeJones@gmail.com</string>
-    </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
     </void>
     <void property="interest">
      <string>Ski</string>
@@ -104,9 +104,6 @@
     <void property="email">
      <string>CarmenGabriela@gmail.com</string>
     </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
-    </void>
     <void property="interest">
      <string>Swimming</string>
     </void>
@@ -131,6 +128,9 @@
     </void>
     <void property="email">
      <string>JuanCarlos@gmail.com</string>
+    </void>
+    <void property="inGroup">
+     <boolean>true</boolean>
     </void>
     <void property="interest">
      <string>Hike</string>

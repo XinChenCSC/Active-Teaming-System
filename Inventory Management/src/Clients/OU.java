@@ -53,9 +53,8 @@ public class OU extends Client{
 	public void setNumCompliment(int numCompliment) {this.numCompliment = numCompliment;}
 	
 //	----------------------------------Need appeal getter and setter------------------------------
-	public boolean NeedAppeal() {return needAppeal;}
+	public boolean isNeedAppeal() {return needAppeal;}
 
-	
 	public void setNeedAppeal(boolean needAppeal) {this.needAppeal = needAppeal;}
 	
 //	----------------------------------Need appeal getter and setter------------------------------
@@ -67,4 +66,5 @@ public class OU extends Client{
 	public boolean isCreatingGroup() {return this.CreatingGroup;}
 	
 	public void setCreatingGroup(boolean creatingGroup) {this.CreatingGroup = creatingGroup;}
+
 }

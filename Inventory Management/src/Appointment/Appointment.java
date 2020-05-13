@@ -4,13 +4,15 @@ public class Appointment {
 
 	private String Date = "";
 		
-	private double Duration = 0.0;
+	private String Duration = " ";
+	
+	private boolean status = false;
 	
 	
 //	-------------------------------Contructors--------------------------------
 	public Appointment() {}
 	
-	public Appointment(String date, double duration) {
+	public Appointment(String date, String duration) {
 		this.setDate(date);
 		this.setDuration(duration);
 	}
@@ -21,7 +23,12 @@ public class Appointment {
 	public void setDate(String date) {Date = date;}
 	
 //	-------------------------------Duration getter and setter--------------------------------
-	public double getDuration() {return Duration;}
+	public String getDuration() {return Duration;}
 
-	public void setDuration(double duration) {Duration = duration;}
+	public void setDuration(String duration) {Duration = duration;}
+	
+//	-------------------------------Duration getter and setter--------------------------------
+	public boolean isStatus() {return status;}
+
+	public void setStatus(boolean status) {this.status = status;}
 }

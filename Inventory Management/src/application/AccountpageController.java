@@ -177,7 +177,7 @@ public class AccountpageController {
     		else {
     			//Labels of appointments
     			String str = "Meeting time: " + this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDate() +
-    					"\nDuration: " + Double.toString(this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDuration()) + " hours.";
+    					"\nDuration: " + this.Info_List.getInfo_Con().get(UserIndex).getAppointment().get(i).getDuration() + " hours.";
     			Label appointments = new Label(str);
     			getSetting(appointments, width, height*0.1, 0, 0);
     			appointments.setAlignment(Pos.CENTER);
@@ -825,12 +825,19 @@ public class AccountpageController {
     		if(this.target.getID().compareTo(this.Info_List.getInfo_Con().get(i).getID()) == 0) {
     			this.WhiteboxSize = this.Info_List.getInfo_Con().get(i).getWhitebox().size();
     			this.BlacklistSize = this.Info_List.getInfo_Con().get(i).getPersonal_Blacklist().size();
-    			this.AppointmentSize = this.Info_List.getInfo_Con().get(i).getAppointment().size();
+    			AllValidAppointments(i);
     			result = i;
     			break;
     		}
     	}
     	return result;
+    }
+    
+    private void AllValidAppointments(int i) {
+    	for(int j = 0; j < this.Info_List.getInfo_Con().get(i).getAppointment().size(); ++j) {
+    		if(this.Info_List.getInfo_Con().get(i).getAppointment().get(j).isStatus())
+    			++this.AppointmentSize;
+    	}
     }
     
     //Get the current time

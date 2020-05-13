@@ -113,7 +113,7 @@ public class LoginController{
         			}
         		HomepageController hc = Loader.getController();
         		//para1: eavluation; para2: password change; para3: transit userList; para4: specific user
-        		hc.carryingInformation(evaluation, false, this.userList,
+        		hc.LoginToHome(evaluation, false, this.userList,
         				userList.getAll_User().get(i), this.Info_List, this.G_List);        			
         	}
         }
@@ -149,14 +149,14 @@ public class LoginController{
     void Signup_Click(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("SignUpPage.fxml", "Registration");
     	SignupController sc = Loader.getController();
-    	sc.LoginToSignup(userList, Info_List);
+    	sc.LoginToSignup(this.userList, this.Info_List, this.G_List);
     }
 
     @FXML
     private void Guest_Mode(ActionEvent event) throws IOException {
     	FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");
     	HomepageController hc = Loader.getController();
-    	hc.GuestMode(this.G_List);
+    	hc.GuestMode(this.G_List, this.Info_List, this.userList);
     }
 
     //If your registration passed, a popup alert will notice you.
@@ -172,7 +172,7 @@ public class LoginController{
     	if(result.get() == login) {
     		FXMLLoader Loader = sceneSwitch("Homepage.fxml", "Homepage");	//Move to the homepage
     		HomepageController hc = Loader.getController();
-			hc.carryingInformation(false, true, userList,
+			hc.LoginToHome(false, true, userList,
 					userList.getGuest(), this.Info_List, this.G_List);   
     	}
     }
@@ -222,9 +222,10 @@ public class LoginController{
 		this.G_List = gl;
 	}
 
-	public void SignupToLogin(UserList ul, Information_List il) {
+	public void SignupToLogin(UserList ul, Information_List il, Group_List gl) {
 		this.userList = ul;
 		this.Info_List = il;
+		this.G_List = gl;
 	}
 	
 }

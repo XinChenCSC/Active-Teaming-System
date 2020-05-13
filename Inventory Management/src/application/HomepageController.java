@@ -166,6 +166,8 @@ public class HomepageController{
 	private int UserIndex = 0;
 	// Group index which the user belongs to
 	private int GroupIndex = -1;
+	// User's group index
+	private int UserGroupIndex = -1;
     //Window size
 	private final Rectangle2D screen = Screen.getPrimary().getVisualBounds();   
 	//is guest
@@ -182,6 +184,8 @@ public class HomepageController{
 	
     @FXML
     void initialize() throws IOException, InterruptedException {
+    	
+		
     	//Resize the background image
         Background.setLayoutX(screen.getWidth());
         Background.setLayoutY(screen.getHeight()); 
@@ -227,10 +231,10 @@ public class HomepageController{
     	});
     }
 
-    @SuppressWarnings("unused")
-	@FXML
+    @FXML
     void Group_Click(ActionEvent event) throws IOException {
-    	findGroupIndex(); //Refresh
+    	if(!this.isGuest)
+    		findGroupIndex(); //Refresh
     	
         // New window (Stage)
         Stage newWindow = new Stage();
@@ -251,9 +255,12 @@ public class HomepageController{
         	((Button)scene.getChildren().get(0)).setVisible(false);
         }
         //SU are not allowed to create a group
-        else if((this.target instanceof OU && !((OU) this.target).NeedAppeal()) ||
-        		(this.target instanceof VIP && !((VIP) this.target).NeedAppeal())) {
+        else if((this.target instanceof OU && !((OU) this.target).isNeedAppeal()) ||
+        		(this.target instanceof VIP && !((VIP) this.target).isNeedAppeal())) {
         	((Button)scene.getChildren().get(2)).setVisible(false);
+        }
+        else {
+        	((Button)scene.getChildren().get(2)).setVisible(true);
         }
         
 //      Check whether the cancel button needs to disable 
@@ -278,7 +285,16 @@ public class HomepageController{
         	if(isValidGroupID(((TextField)((HBox)scene.getChildren().get(1)).getChildren().get(2)).getText())) {
         		try {
         			newWindow.close();
-					FXMLLoader loader = sceneSwitch("GroupPage.fxml", "Group");
+        			if(this.isGuest) {
+        				FXMLLoader Loader = sceneSwitch("GroupPage.fxml", "Group");
+        				GrouppageController GC = Loader.getController();
+        				GC.GuestToGroup(this.G_List.getGroup_List().get(this.GroupIndex), this.G_List, this.Info_List, this.userList);
+        			}
+        			else {
+        				FXMLLoader Loader = sceneSwitch("GroupPage.fxml", "Group");
+        				GrouppageController GC = Loader.getController();
+        				GC.UserToGroup(this.target, this.userList, this.G_List, this.Info_List, this.G_List.getGroup_List().get(this.GroupIndex));
+        			}
 				} catch (IOException e1) {e1.printStackTrace();}
         	}
         	else {
@@ -299,10 +315,23 @@ public class HomepageController{
         		}
         		else {
         			//Submission completed, appeal button sets to invisible
-        			Alert alert = getAlert(AlertType.CONFIRMATION, "Submission completed.", ButtonType.OK, "Confirmation");
+        			Alert alert = getAlert(AlertType.CONFIRMATION, "Submission completed.", ButtonType.OK, "Confirmation");	
         			if(alert.getResult() == ButtonType.OK) {
         				newWindow_3.close();
         				((Button)scene.getChildren().get(2)).setVisible(false);
+            			//set needappeal button to false
+            	        if(this.target instanceof OU) {
+            	        	if(((OU)this.target).isNeedAppeal())
+            	        		((Button) scene.getChildren().get(2)).setVisible(false);}
+            	        else if(this.target instanceof VIP) {
+            	        	if(((VIP)this.target).isNeedAppeal())
+            	        		((Button) scene.getChildren().get(2)).setVisible(false);
+            	        }
+            	        findGroupIndex(); //Refresh
+            	        String str = "Group ID: " + this.G_List.getGroup_List().get(GroupIndex).getGroup_ID() + "\n My name is: " +
+            	        			this.target.getName();
+                    	Email email = new Email("Group appeal", str, this.target.getEmail());
+                    	this.Info_List.CreateEmail(userList.getSU_User().get(0).getID(), email);
         			}
         		}
         	});
@@ -355,7 +384,9 @@ public class HomepageController{
                     		try {
                     			Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
                     			GrouppageController gc = Loader.getController();
-                    			gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);     
+                    			findUserGroupIndex();
+                    			gc.HomeToGroup(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(UserGroupIndex),
+                    					this.G_List.getGroup_List().get(GroupIndex), this.Info_List, this.userList, this.G_List);  
                     			newWindow.close();
                     		} catch (IOException e1) {
                     			e1.printStackTrace();
@@ -568,7 +599,7 @@ public class HomepageController{
     		}
     		else {
     			//Save claim as email format to the SU
-    			String content = ((TextField)pane.getChildren().get(2)).getText() + "\n" + 
+    			String content = "ID: " + ((TextField)pane.getChildren().get(2)).getText() + "\nReason: " + 
     						((TextArea)pane.getChildren().get(3)).getText();
     			Email email = new Email(((ComboBox<String>)pane.getChildren().get(1)).getSelectionModel().getSelectedItem().toString(),
     					content, this.target.getName());
@@ -605,6 +636,7 @@ public class HomepageController{
     	pane.setVgap(h*0.05);
     	pane.setPadding(new Insets(w*0.05,h*0.05,w*0.05,h*0.05));
     	pane.getColumnConstraints().add(new ColumnConstraints(w*0.9));
+    	
     	//Title
     	Label title = new Label("Fill up your claim");
     	title.setPrefSize(w*0.9, h*0.1);
@@ -612,6 +644,7 @@ public class HomepageController{
     	title.setStyle("-fx-background-color: #FFA07A;");
     	pane.getRowConstraints().add(new RowConstraints(h*0.1));
     	pane.add(title, 0, 0);
+    	
     	//Claim types
     	ComboBox<String> claimType = new ComboBox<>();
     	claimType.getItems().addAll("Complaint", "Compliment");
@@ -619,17 +652,20 @@ public class HomepageController{
     	claimType.setPrefWidth(w*0.5);
     	GridPane.setHalignment(claimType, HPos.CENTER);
     	pane.add(claimType, 0, 1);
+    	
     	//Target
     	TextField target = new TextField();
     	target.setFocusTraversable(false);
     	target.setPromptText("Member ID");
     	GridPane.setHalignment(target, HPos.CENTER);
     	pane.add(target, 0, 2);
+    	
     	//Reason 
     	TextArea reason = new TextArea();
     	reason.setPromptText("Reason");
     	reason.setFocusTraversable(false);
     	pane.add(reason, 0, 3);
+    	
     	//Button
     	Button submit = new Button("Submit");
     	GridPane.setHalignment(submit, HPos.CENTER);
@@ -641,7 +677,8 @@ public class HomepageController{
     
     //----------------------------Group main scene------------------------------
     private StackPane groupMainScene(Stage stage, double w, double h) throws IOException {
-    	findGroupIndex();	//Refresh
+    	if(!this.isGuest)
+    		findGroupIndex();	//Refresh
         StackPane subScene = new StackPane();
         subScene.setPadding(new Insets(h*0.1,w*0.05,h*0.05,w*0.05));
         //Create label
@@ -649,7 +686,7 @@ public class HomepageController{
         lb.setFocusTraversable(false);
         
         //If the group has enough users to open
-        if(this.GroupIndex != -1 && isOpen()){
+        if(this.GroupIndex != -1 && isOpen() && isInGroup()){
         	lb.setDisable(false);
         	lb.setText("Group Page");
         	//Switch to group page
@@ -658,7 +695,9 @@ public class HomepageController{
         		try {
         			Loader = sceneSwitch("GroupPage.fxml", this.G_List.getGroup_List().get(GroupIndex).getTitle());
         			GrouppageController gc = Loader.getController();
-        			gc.HomeToGroup(this.target, this.G_List.getGroup_List().get(GroupIndex), this.Info_List);  
+        			findUserGroupIndex();
+        			gc.HomeToGroup(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(UserGroupIndex),
+        					this.G_List.getGroup_List().get(GroupIndex), this.Info_List, this.userList, this.G_List);  
         			stage.close();
         		} catch (IOException e1) {
         			e1.printStackTrace();
@@ -668,7 +707,6 @@ public class HomepageController{
         // Display group status
         else {
             lb.setDisable(true);
-            lb.setOpacity(1);
             lb.setText("You don't have a group."); 
             lb.setStyle("-fx-background-color: #F0F8FF;"
             		+ "-fx-border-color: #F0F8FF;");
@@ -713,7 +751,16 @@ public class HomepageController{
         
         //Appeal button
         Button appeal = new Button("Appeal");
+        appeal.setVisible(false);
         appeal.setFocusTraversable(false);
+//        if(this.target instanceof OU) {
+//        	if(((OU)this.target).isNeedAppeal())
+//				appeal.setVisible(true);}
+//        else if(this.target instanceof VIP) {
+//        	if(((VIP)this.target).isNeedAppeal())
+//				appeal.setVisible(true);
+//        }
+			
         
         //set the position
         StackPane.setAlignment(appeal, Pos.BOTTOM_LEFT);
@@ -724,9 +771,21 @@ public class HomepageController{
         return subScene;
     }
     
+    //Check the group is open or not
     private boolean isOpen() {
     	if(this.G_List.getGroup_List().get(GroupIndex).isOpen())
     		return true;
+    	return false;
+    }
+    
+    //Check the group is closed or not
+    private boolean isInGroup() {
+    	if(this.target instanceof OU) {
+    		return ((OU)this.target).isInGroup();
+    	}
+        else if(this.target instanceof VIP) {
+        	return ((VIP)this.target).isInGroup();
+        }
     	return false;
     }
         
@@ -855,12 +914,21 @@ public class HomepageController{
     	}
     }
     
+	private void findUserGroupIndex() {
+    	for(int i = 0; i < this.G_List.getGroup_List().get(GroupIndex).getA_Group().size(); ++i) {
+    		if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser().getID().compareTo(this.target.getID()) == 0)
+    			this.UserGroupIndex = i;
+    	}
+    }
+    
     private void freeAll() {
 		if(this.target instanceof OU) {
 			((OU)this.target).setCreatingGroup(false);
+			((OU)this.target).setInGroup(false);
 		}
 		else if(this.target instanceof VIP) {
 			((VIP)this.target).setCreatingGroup(false);
+			((VIP)this.target).setInGroup(false);
 		}
 		for(int i = 0; i < this.G_List.getGroup_List().get(GroupIndex).getA_Group().size(); ++i) {
 			if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().get(i).getUser() instanceof OU) {
@@ -1699,6 +1767,8 @@ public class HomepageController{
     									getAlert(AlertType.ERROR, "The group is already full.", ButtonType.OK, "Error");
     								else if(this.G_List.getGroup_List().get(r).isGroupMember(this.target.getID()))
     									getAlert(AlertType.WARNING, "You already in the group.", ButtonType.OK, "Warning");
+    								else if(!this.G_List.getGroup_List().get(r).isOpen())
+    									getAlert(AlertType.ERROR, "The group is closed.", ButtonType.OK, "Error");
     								else {
     									Group_Status GS = new Group_Status(this.target);	//New group member object
     									
@@ -2290,11 +2360,15 @@ public class HomepageController{
         NewWindow(newWindow, secondScene, mainScene, "New user evaluation"); 
     }
     
-    void carryingInformation(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il, Group_List g_List) {
+    void LoginToHome(boolean evaluation, boolean passwordChange, UserList ul, Client target, Information_List il, Group_List g_List) {
     	this.userList = ul;	//set userList
     	this.target = target; //set target user
     	this.Info_List = il; //set user information
     	this.G_List = g_List;
+//    	((OU)this.G_List.getGroup_List().get(0).getA_Group().get(1).getUser()).setNeedAppeal(true);;
+//    	this.G_List.getGroup_List().get(0).getA_Group().get(1).setEvaluation("GOOD");
+//    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setPraises(2);
+//    	this.G_List.getGroup_List().get(0).getA_Group().get(0).setisEvaluation(true);
     	if(evaluation)
     		recommenderEvaluation();
     	if(passwordChange)
@@ -2311,7 +2385,10 @@ public class HomepageController{
     	this.Claim.setVisible(false);
     }
     
-    void GuestMode(Group_List g_List2) {
+    void GuestMode(Group_List g_List2, Information_List info_list, UserList user_list) {
+    	this.Info_List = info_list;
+    	this.userList = user_list;
+    	this.G_List = g_List2;
     	this.Edit.setDisable(true);
     	this.Evaluation.setDisable(true);
     	this.Notification.setDisable(true);
@@ -2319,9 +2396,47 @@ public class HomepageController{
     	this.Profile.getItems().get(2).setDisable(true);
     	this.Profile.getItems().get(3).setDisable(true);
     	this.isGuest = true;
-    	this.G_List = g_List2;
     }
-//  ******************************************************************************************************************
+    
+	public void GuestToHome(UserList user_List, Group_List g_List2, Information_List info_List2) {
+		this.userList = user_List;
+		this.G_List = g_List2;
+		this.Info_List = info_List2;
+	}
+
+	private FXMLLoader sceneSwitch(String url, String title) throws IOException {
+		FXMLLoader Loader = new FXMLLoader(getClass().getResource(url));
+        Parent home_pane = Loader.load();
+        Stage stage = (Stage) Profile.getScene().getWindow();
+        stage.setScene(new Scene(home_pane));
+        stage.setTitle(title);
+        return Loader;
+	}
+	
+	public void AccountToHome(UserList ul, Information_List il, Client client, Group_List gl) {
+		this.userList = ul;
+		this.Info_List = il;
+		this.target = client;
+		this.G_List = gl;
+		if(this.target instanceof SU)
+			SUMode();
+	}
+	
+	public void GroupToHome(Group_Status target2, Group group2, Information_List info_List2, UserList user_List,
+			Group_List g_List2) {
+		this.target = target2.getUser();
+		this.Info_List = info_List2;
+		this.userList = user_List;
+		this.G_List = g_List2;
+	}
+	
+	public void GroupToUser(Client visitor, UserList user_List, Group_List g_List2, Information_List info_List2) {
+		this.target = visitor;
+		this.userList = user_List;
+		this.G_List = g_List2;
+		this.Info_List = info_List2;
+	}
+    //  ******************************************************************************************************************
     
 //  List three top members
     private void ListTopMember() {
@@ -2600,8 +2715,10 @@ public class HomepageController{
     
     private boolean isValidGroupID(String ID) {
     	for(int i = 0; i < this.G_List.getGroup_List().size(); ++i) {
-    		if(this.G_List.getGroup_List().get(i).getGroup_ID().compareTo(ID) == 0)
+    		if(this.G_List.getGroup_List().get(i).getGroup_ID().compareTo(ID) == 0) {
+    			this.GroupIndex = i;
     			return true;
+    		}
     	}
     	return false;
     }
@@ -2664,22 +2781,6 @@ public class HomepageController{
     	}
     	return "";
     }
-    
-	private FXMLLoader sceneSwitch(String url, String title) throws IOException {
-		FXMLLoader Loader = new FXMLLoader(getClass().getResource(url));
-        Parent home_pane = Loader.load();
-        Stage stage = (Stage) Profile.getScene().getWindow();
-        stage.setScene(new Scene(home_pane));
-        stage.setTitle(title);
-        return Loader;
-	}
-	
-	public void AccountToHome(UserList ul, Information_List il, Client client, Group_List gl) {
-		this.userList = ul;
-		this.Info_List = il;
-		this.target = client;
-		this.G_List = gl;
-		if(this.target instanceof SU)
-			SUMode();
-	}
+
+
 }

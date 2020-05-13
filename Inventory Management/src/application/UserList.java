@@ -122,9 +122,13 @@ public class UserList {
 	public void setCreatingGroup(String id, boolean bool) {
 		for(int i = 0; i < this.getAll_Size(); ++i) {
 			if(this.getAll_User().get(i).getID().compareTo(id) == 0 && this.getAll_User().get(i) instanceof OU) {
-				((OU)this.getAll_User().get(i)).setCreatingGroup(bool); break;}
+				((OU)this.getAll_User().get(i)).setCreatingGroup(bool); 
+				((OU)this.getAll_User().get(i)).setInGroup(bool);
+				break;}
 			else if(this.getAll_User().get(i).getID().compareTo(id) == 0 && this.getAll_User().get(i) instanceof VIP) {
-				((VIP)this.getAll_User().get(i)).setCreatingGroup(bool); break;
+				((VIP)this.getAll_User().get(i)).setCreatingGroup(bool); 
+				((VIP)this.getAll_User().get(i)).setInGroup(bool); 
+				break;
 			}
 		}
 	}	

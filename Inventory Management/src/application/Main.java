@@ -172,9 +172,14 @@ public class Main extends Application {
 //		System.out.println(userList.getVIP_Size());
 //		System.out.println(userList.getSU_Size());
 //		System.out.println(userList.getOU_User().get(0).isCreatingGroup());
-		System.out.println(this.gl.getGroup_List().get(0).getA_Group().size());
+		System.out.println(((OU)this.gl.getGroup_List().get(0).getA_Group().get(1).getUser()).isNeedAppeal());
+//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).getAttendances());
+//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).getPraises());
+//		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).isEvaluation());
+//		System.out.println(this.gl.getGroup_List().get(0).getVT(5));
 //		System.out.println(this.gl.getGroup_List().get(0).getGroup_ID());
-//		System.out.println(this.il.getInfo_Con().get(4).getNotice().get(0).getIndex());
+//		System.out.println(this.gl.getGroup_List().get(0).getTotalMember());
+//		System.out.println(this.il.getInfo_Con().get(1).getAppointment().get(13).isStatus());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -221,7 +226,7 @@ public class Main extends Application {
 				new_vip.setInGroup((((OU)this.userList.getOU_User().get(i)).isInGroup()));
 				new_vip.setImageURL((((OU)this.userList.getOU_User().get(i)).getImageURL()));
 				new_vip.setNumCompliment((((OU)this.userList.getOU_User().get(i)).getNumCompliment()));
-				new_vip.setNeedAppeal((((OU)this.userList.getOU_User().get(i)).NeedAppeal()));
+				new_vip.setNeedAppeal((((OU)this.userList.getOU_User().get(i)).isNeedAppeal()));
 				new_vip.setPresentee((((OU)this.userList.getOU_User().get(i)).getPresenteeList()));
 				
 				this.userList.removeOU_User(this.userList.getOU_User().get(i));
@@ -255,7 +260,7 @@ public class Main extends Application {
 				new_ou.setInGroup((((VIP)this.userList.getVip_User().get(i)).isInGroup()));
 				new_ou.setImageURL((((VIP)this.userList.getVip_User().get(i)).getImageURL()));
 				new_ou.setNumCompliment((((VIP)this.userList.getVip_User().get(i)).getNumCompliment()));
-				new_ou.setNeedAppeal((((VIP)this.userList.getVip_User().get(i)).NeedAppeal()));
+				new_ou.setNeedAppeal((((VIP)this.userList.getVip_User().get(i)).isNeedAppeal()));
 				new_ou.setPresentee((((VIP)this.userList.getVip_User().get(i)).getPresenteeList()));
 				
 				this.userList.removeVIP_User(this.userList.getVip_User().get(i));

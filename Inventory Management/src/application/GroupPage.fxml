@@ -29,9 +29,6 @@
               <font>
                 <Font name="Arial" size="15.0" fx:id="x1" />
               </font>
-              <items>
-                <MenuItem mnemonicParsing="false" text="Unknown" />
-              </items>
               <stylesheets>
                 <URL value="@application.css" />
               </stylesheets>

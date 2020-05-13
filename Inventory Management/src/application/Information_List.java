@@ -128,6 +128,10 @@ public class Information_List {
 		this.Info_Con.get(i).removeAppointment(appointment);
 	}
 	
+	public void setAppointmentPending(String id) {
+		int i = isExist(id);
+		this.Info_Con.get(i).getAppointment().get(this.Info_Con.get(i).getAppointment().size()-1).setStatus(true);
+	}
 //	-----------------------------------System Blacklist----------------------------------------
 	public void addSystemBlacklist(Client client) {System_Blacklist.add(client);}
 	

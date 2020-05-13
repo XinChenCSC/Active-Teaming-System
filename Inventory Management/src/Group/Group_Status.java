@@ -6,6 +6,8 @@ public class Group_Status {
 	
 	private Client user = new Client();
 	
+	private String Evaluation = ""; 
+
 	private int Attendances = 0;
 	
 	private int Warnings = 0;
@@ -18,12 +20,12 @@ public class Group_Status {
 	
 	private boolean Condition = true;
 	
-	private String Evaluation = ""; 
-	
 	private boolean Kick = false;
 	
 	//Constructor
-	public Group_Status() {}
+	public Group_Status() {
+		this.Evaluation = "";
+	}
 	
 	public Group_Status(Client client) { this.user = client;}
 
@@ -71,12 +73,13 @@ public class Group_Status {
 	public void setCondition(boolean condition) {Condition = condition;}
 
 //	------------------------------------------Evaluation-------------------------------------------
-	public String getEvaluation() {return Evaluation;}
+	public String getEvaluation() {return this.Evaluation;}
 
-	public void setEvaluation(String evaluation) {Evaluation = evaluation;}
+	public void setEvaluation(String evaluation) {this.Evaluation = evaluation;}
 
 //	------------------------------------------Kick-------------------------------------------
 	public boolean isKick() {return Kick;}
 
 	public void setKick(boolean kick) {Kick = kick;}
+
 }

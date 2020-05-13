@@ -39,4 +39,5 @@ public class Group_List {
 	public void addGroup(Group group) {
 		this.Group_List.add(group);
 	}
+
 }
