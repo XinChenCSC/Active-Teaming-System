@@ -3,7 +3,9 @@ package Clients;
 import java.util.ArrayList;
 
 public class SU extends Client{
+	@SuppressWarnings("unused")
 	private int count = 0;
+	@SuppressWarnings("unused")
 	private ArrayList<String> blacklist = new ArrayList<String>();
 	//Constructor
 	//Name - ID - Email - Position - Interest - Recommender - Password

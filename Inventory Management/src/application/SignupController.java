@@ -103,7 +103,7 @@ public class SignupController {
     @FXML
     void Signup_Click(ActionEvent event)throws IOException {
     	if(userList.getGuest().getName() != null)
-    		showAlert(AlertType.WARNING, "Can't signup at this moment."); 	
+    		showAlert(AlertType.WARNING, "Please wait until someone finish registering."); 	
     	else if (ValidateFields()) {
         	//Show the user that she/he has completed the registration
         	Alert alert = showAlert(AlertType.CONFIRMATION, "Registration completed. Please wait for the final decision.");

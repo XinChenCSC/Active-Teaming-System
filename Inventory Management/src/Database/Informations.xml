@@ -39,6 +39,35 @@ Number of registration: 1</string>
        </void>
       </object>
      </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Good</string>
+       </void>
+       <void property="subject">
+        <string>Good</string>
+       </void>
+       <void property="target">
+        <string>LiamLee@gmail.com</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Name: Wudi Wang
+Interest: Vellyball
+Recommender: Liam Lee
+Email: Wudi@gmail.com</string>
+       </void>
+       <void property="subject">
+        <string>Registration</string>
+       </void>
+       <void property="target">
+        <string>Wudi Wang</string>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
@@ -46,6 +75,21 @@ Number of registration: 1</string>
    <object class="Clients.Information_Container" id="Information_Container1">
     <void property="ID">
      <string>77777</string>
+    </void>
+    <void property="email_Content">
+     <void method="add">
+      <object class="Email.Email">
+       <void property="content">
+        <string>Good</string>
+       </void>
+       <void property="subject">
+        <string>Good</string>
+       </void>
+       <void property="target">
+        <string>SteveChan@gmail.com</string>
+       </void>
+      </object>
+     </void>
     </void>
     <void property="notice">
      <void method="add">
@@ -116,16 +160,49 @@ Number of registration: 1</string>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container2">
     <void property="ID">
      <string>55555</string>
+    </void>
+    <void property="notice">
+     <void method="add">
+      <object class="Notice.Notice">
+       <void property="date">
+        <string>05/13/2020</string>
+       </void>
+       <void property="index">
+        <int>4209</int>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group.</string>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="Clients.Information_Container">
+   <object class="Clients.Information_Container" id="Information_Container3">
     <void property="ID">
      <string>13579</string>
+    </void>
+    <void property="notice">
+     <void method="add">
+      <object class="Notice.Notice">
+       <void property="date">
+        <string>05/13/2020</string>
+       </void>
+       <void property="index">
+        <int>4209</int>
+       </void>
+       <void property="message">
+        <string>Liam Lee invite you to join his/her group.</string>
+       </void>
+       <void property="newIcon">
+        <boolean>true</boolean>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>

@@ -370,7 +370,7 @@ public class HomepageController{
             		automaticAdd((GridPane)((ScrollPane)pane.getChildren().get(2)).getContent());
             		
             		//Activate the cancel create button
-            		if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 4)
+            		if(this.G_List.getGroup_List().get(GroupIndex).getA_Group().size() < 2)
             			//If the current group >= 4 members, the cancel button will appear.
             			((Button)scene.getChildren().get(3)).setVisible(true);
             		else {
@@ -884,7 +884,7 @@ public class HomepageController{
     			++total;
     		}
     	}
-    	if(total >= 5) 
+    	if(total >= 2) 
     		return true;
     	return false;
     }
@@ -1201,8 +1201,6 @@ public class HomepageController{
     	    	memberManage(pane, w, h);
     		}
     	});
-    	//Get new member registration board
-    	newMemberBoard(pane, w, h);
     	//Set chidlren
     	hbox.setAlignment(Pos.TOP_CENTER);
     	hbox.getChildren().addAll(Search, searchField);
@@ -1220,69 +1218,6 @@ public class HomepageController{
 			id = Integer.toString(digit);	
 		}while(!newIDCheck(id));
     	return id;
-    }
-    
-    private void newMemberBoard(BorderPane pane, double w, double h) {
-    	//HBox
-    	HBox hbox = new HBox();
-    	//Gather random password and random ID;
-    	Button registration = new Button("Accept");
-    	Button Blacklist = new Button("Blacklist");
-    	Button Reject = new Button("Reject");
-    	SU su = new SU();
-    
-    	//Email adress
-    	TextField address = new TextField();
-    	address.setPromptText("Email address");
-    	
-    	registration.setOnMouseClicked(e->{
-    		if(this.userList.getGuest().getName() == null) {
-    			getAlert(AlertType.ERROR, "No such user.", ButtonType.OK, "Error");		    			
-    		}
-    		else if(isValidEmail(address.getText())) {
-    			getAlert(AlertType.ERROR, "Repeated email.", ButtonType.OK, "Error");		    			
-    		}   
-    		else {
-    			String account = generalTabEvent();
-    			String password = su.Generate_Pass();
-    	
-    			this.userList.getGuest().setID(account);
-    			this.userList.getGuest().setPassword(password);
-    			this.userList.getGuest().setActivate(true);
-    			
-    			if(this.userList.getGuest().getNumRegister() < 3) {
-    				this.userList.getGuest().setNumRegister(1);
-    				getAlert(AlertType.INFORMATION, "New Guest register completed", ButtonType.OK, "Confirmaton");		
-    			}
-    		}
-    	});
-    	
-    	Reject.setOnMouseClicked(e->{
-    		this.userList.getGuest().setNumRegister(1);
-    		if(this.userList.getGuest().getNumRegister() > 2) {
-    			this.Info_List.addSystemBlacklist(this.userList.getGuest());
-        		this.userList.setGuest(new Guest());
-        		getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");
-    		}
-    		else {
-    			getAlert(AlertType.INFORMATION, "Action completed.", ButtonType.OK, "Confirmaton");    			
-    		}
-//    		this.userList.getGuest().setActivate(false);
-//    		this.userList.getGuest().setNumRegister(0);
-    	});
-    	
-    	Blacklist.setOnMouseClicked(e->{
-    		this.Info_List.addSystemBlacklist(this.userList.getGuest());
-    		this.userList.setGuest(new Guest());
-    		if(!isValidEmail(address.getText()) && this.userList.getGuest().getName() != null)
-    			getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");	
-    		else 
-    			getAlert(AlertType.ERROR, "Already in the system blacklist.", ButtonType.OK, "Error");
-    	});
-    	
-    	hbox.setAlignment(Pos.CENTER);
-    	hbox.getChildren().addAll(Reject,Blacklist,registration, address);
-    	pane.setBottom(hbox);
     }
     
     private void memberManage(BorderPane pane, double w, double h) {
@@ -1457,11 +1392,6 @@ public class HomepageController{
         	ObservableList<Node> children = ((GridPane) content.getChildren().get(0)).getChildren();
         	setEmailContent(children, email_label, content, i);
         	
-        	//Reply
-        	((Button)children.get(5)).setOnAction(e->{
-        		emailReply(w*0.8, h*0.7, mainStage);
-        	});
-        	
         	//Hover effects
         	email_label.setOnMouseEntered(e->{
         		email_label.setStyle("-fx-background-color:#00CED1;"
@@ -1486,6 +1416,61 @@ public class HomepageController{
     		((TextField) children.get(1)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getTarget());
     		((TextField) children.get(3)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject());
     		((TextArea) children.get(4)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getContent());
+    		if(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getTarget().compareTo(this.userList.getGuest().getName()) == 0 &&
+    				this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject().compareTo("Registration") == 0) {
+    			((HBox) children.get(5)).setVisible(true);	
+    			((HBox) children.get(5)).setDisable(false);	
+    			HBox box = (HBox) children.get(5);
+    			SU su = new SU();
+    	    	((Button)box.getChildren().get(2)).setOnMouseClicked(t->{
+    	    		if(this.userList.getGuest().getName() == null) {
+    	    			getAlert(AlertType.ERROR, "No such user.", ButtonType.OK, "Error");		    			
+    	    		}
+    	    		else if(isValidEmail(this.userList.getGuest().getEmail())) {
+    	    			getAlert(AlertType.ERROR, "Repeated email.", ButtonType.OK, "Error");		    			
+    	    		}   
+    	    		else {
+    	    			String account = generalTabEvent();
+    	    			String password = su.Generate_Pass();
+    	    	
+    	    			this.userList.getGuest().setID(account);
+    	    			this.userList.getGuest().setPassword(password);
+    	    			this.userList.getGuest().setActivate(true);
+    	    			
+    	    			if(this.userList.getGuest().getNumRegister() < 3) {
+    	    				this.userList.getGuest().setNumRegister(1);
+    	    				getAlert(AlertType.INFORMATION, "New Guest register completed", ButtonType.OK, "Confirmaton");		
+    	    			}
+    	    		}
+    	    	});
+    	    	
+    	    	((Button)box.getChildren().get(1)).setOnMouseClicked(x->{
+    	    		this.userList.getGuest().setNumRegister(1);
+    	    		if(this.userList.getGuest().getNumRegister() > 2) {
+    	    			this.Info_List.addSystemBlacklist(this.userList.getGuest());
+    	        		this.userList.setGuest(new Guest());
+    	        		getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");
+    	    		}
+    	    		else {
+    	    			getAlert(AlertType.INFORMATION, "Action completed.", ButtonType.OK, "Confirmaton");    			
+    	    		}
+    	    	});
+    	    	
+    	    	((Button)box.getChildren().get(0)).setOnMouseClicked(w->{
+    	    		this.Info_List.addSystemBlacklist(this.userList.getGuest());
+    	    		this.userList.setGuest(new Guest());
+    	    		if(!isValidEmail(this.userList.getGuest().getEmail()) && this.userList.getGuest().getName() != null)
+    	    			getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");	
+    	    		else 
+    	    			getAlert(AlertType.ERROR, "Already in the system blacklist.", ButtonType.OK, "Error");
+    	    	});
+    		}
+    		else {
+    			if(!(this.target instanceof SU))
+    				((HBox) children.get(5)).setVisible(false);
+    			else
+    				((HBox) children.get(5)).setDisable(true);
+    		}
     	});
     }
     
@@ -1632,11 +1617,21 @@ public class HomepageController{
     	gridPane.add(contentArea, 0, 2);
     	
     	//Reply
-    	Button reply = new Button("Reply");
-    	gridPane.getRowConstraints().add(new RowConstraints(h*0.1));
-    	GridPane.setHalignment(reply, HPos.CENTER);
-    	gridPane.add(reply, 0, 3);
+    	HBox hbox = new HBox();
+    	Button registration = new Button("Accept");
+    	Button blacklist = new Button("Blacklist");
+    	Button reject = new Button("Reject");
+    	hbox.getChildren().addAll(blacklist, reject, registration);
+    	hbox.setAlignment(Pos.BOTTOM_CENTER);
+    	gridPane.add(hbox, 0, 3);
+    	if(!(this.target instanceof SU))
+    		hbox.setVisible(false);
  
+    	Button compose = new Button("Compose");
+    	GridPane.setHalignment(compose, HPos.CENTER);
+    	gridPane.add(compose, 0, 4);
+    	compose.setVisible(false);
+
     	content.getChildren().add(gridPane);
     	return content;
     }
@@ -1650,10 +1645,11 @@ public class HomepageController{
     	((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).setEditable(true);
     	((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(3)).setEditable(true);
     	((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).setEditable(true);
-    	Button send = (Button) ((GridPane) scene.getChildren().get(0)).getChildren().get(5);
-    	send.setText("Send");
+    	((HBox)((GridPane) scene.getChildren().get(0)).getChildren().get(5)).setVisible(false);
+    	
+    	((Button)((GridPane) scene.getChildren().get(0)).getChildren().get(6)).setVisible(true);
    	 	//Send button event
-    	send.setOnAction(e->{
+    	((Button)((GridPane) scene.getChildren().get(0)).getChildren().get(6)).setOnAction(e->{
   			//check whether object, subject, or content is empty, and whether the email address is valid
     		if(!((TextArea) ((GridPane) scene.getChildren().get(0)).getChildren().get(4)).getText().isEmpty() &&
     				!((TextField) ((GridPane) scene.getChildren().get(0)).getChildren().get(1)).getText().isEmpty() &&
@@ -1692,37 +1688,10 @@ public class HomepageController{
         //Set newWindow
         NewWindow(newWindow, secondScene, s, "Compose");    
     }
-   
-    //Email reply scene
-    private void emailReply(double w, double h, Stage s) {
-    	Pane pane = new Pane();
-    	
-    	//Object
-    	Label object = new Label("To unknown");
-    	getSetting(object, w*0.3, h*0.1,  w*0.1, 0);
-    	
-    	//Reply content
-    	TextArea content = new TextArea();
-    	getSetting(content, w*0.8, h*0.8, w*0.1, h*0.11);
-    	
-    	//send
-    	Button send = new Button("Send");
-    	getSetting(send, w*0.1, h*0.075, w*0.5-w*0.05, h*0.93);
-
-    	//Set children
-    	pane.getChildren().addAll(object, content, send);
-    	//Set new window
-    	Scene secondScene = new Scene(pane,w, h);
-        // New window (Stage)
-        Stage newWindow = new Stage();
-        // set new window
-        NewWindow(newWindow, secondScene, s, "Reply"); 
-        //Send event
-        emailSent(pane, send, w, h, newWindow);
-    }
     
     //Emial send event 
-    private void emailSent(Pane pane, Button b, double w, double h, Stage newWindow) {
+    @SuppressWarnings("unused")
+	private void emailSent(Pane pane, Button b, double w, double h, Stage newWindow) {
     	 //Send button event
     	b.setOnAction(e->{
    			if(!((TextArea) pane.getChildren().get(1)).getText().isEmpty()) {
@@ -1732,7 +1701,6 @@ public class HomepageController{
    					newWindow.close();
    			}
    			else {
-   				@SuppressWarnings("unused")
 				Alert alert = getAlert(AlertType.ERROR, "Content can't be empty!", ButtonType.OK, "Error");	
    			}
     	});
@@ -1815,7 +1783,7 @@ public class HomepageController{
     				}
     				else {
     					ButtonType accept = new ButtonType("Accept", ButtonData.FINISH);
-    					ButtonType later = new ButtonType("Later", ButtonData.CANCEL_CLOSE);
+    					ButtonType later = new ButtonType("Reject", ButtonData.OK_DONE);
     					Alert in_alert = getAlert(AlertType.CONFIRMATION, "Accept or Reject.", accept, later, "Important");
     					
     					Optional<ButtonType> result2 = in_alert.showAndWait();
@@ -1823,11 +1791,11 @@ public class HomepageController{
     						for(int r = 0 ; r < this.G_List.getGroup_List().size(); ++r) {
     							if(this.G_List.getGroup_List().get(r).getGroup_ID().compareTo(id) == 0) {
     								//If the member of group is greater than 7, can't join anymore
-    								if(this.G_List.getGroup_List().get(r).getA_Group().size() > 7)
+    								if(this.G_List.getGroup_List().get(r).getA_Group().size() > 1)
     									getAlert(AlertType.ERROR, "The group is already full.", ButtonType.OK, "Error");
     								else if(this.G_List.getGroup_List().get(r).isGroupMember(this.target.getID()))
     									getAlert(AlertType.WARNING, "You already in the group.", ButtonType.OK, "Warning");
-    								else if(!this.G_List.getGroup_List().get(r).isOpen())
+    								else if(this.G_List.getGroup_List().get(r).isClose())
     									getAlert(AlertType.ERROR, "The group is closed.", ButtonType.OK, "Error");
     								else {
     									Group_Status GS = new Group_Status(this.target);	//New group member object
@@ -1840,14 +1808,20 @@ public class HomepageController{
     									this.G_List.getGroup_List().get(r).addGroupMember(GS);	//Add the group member to the object 
     									
     									//Open group if the total members are greater than or equals 4
-    									if(this.G_List.getGroup_List().get(r).getA_Group().size() >= 4)
+    									if(this.G_List.getGroup_List().get(r).getA_Group().size() >= 2)
     										this.G_List.getGroup_List().get(r).setOpen(true);
     									
     									getAlert(AlertType.INFORMATION, "You are in the group now.", ButtonType.OK, "Important"); //Alert
-    									
     								}
     							}
     						}
+    					}
+    					else {
+    						getAlert(AlertType.INFORMATION, "You rejected the invitation. The notification has been deleted.", ButtonType.OK, "Important"); //Alert
+    	    				this.Info_List.removeNotice(this.target.getID(), temp);
+    	    				gridPane.getChildren().clear();
+    	    				gridPane.getRowConstraints().clear();
+    	    				getNotificationPane(); //Refresh the notification pane
     					}
     				}
     			}

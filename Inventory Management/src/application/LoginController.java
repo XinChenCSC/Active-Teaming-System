@@ -198,7 +198,7 @@ public class LoginController{
     				"Email: " + this.userList.getGuest().getEmail() + "\n" + 
     				"Number of registration: " + this.userList.getGuest().getNumRegister();
         	//Copy registration information to SU
-        	Email email = new Email("(Re) Registration", str, this.userList.getGuest().getName());
+        	Email email = new Email("Registration", str, this.userList.getGuest().getName());
         	this.Info_List.CreateEmail(userList.getSU_User().get(0).getID(), email);
         	
         	this.userList.getGuest().setNumRegister(0);
