@@ -1226,7 +1226,7 @@ public class HomepageController{
     	//HBox
     	HBox hbox = new HBox();
     	//Gather random password and random ID;
-    	Button registration = new Button("Randomize");
+    	Button registration = new Button("Accept");
     	Button Blacklist = new Button("Blacklist");
     	Button Reject = new Button("Reject");
     	SU su = new SU();
@@ -1253,7 +1253,6 @@ public class HomepageController{
     			if(this.userList.getGuest().getNumRegister() < 3) {
     				this.userList.getGuest().setNumRegister(1);
     				getAlert(AlertType.INFORMATION, "New Guest register completed", ButtonType.OK, "Confirmaton");		
-    				this.userList.getGuest().setActivate(true);
     			}
     		}
     	});
@@ -1265,7 +1264,11 @@ public class HomepageController{
         		this.userList.setGuest(new Guest());
         		getAlert(AlertType.INFORMATION, "The guest has been moved to system blacklist.", ButtonType.OK, "Confirmaton");
     		}
-    		getAlert(AlertType.INFORMATION, "Action completed.", ButtonType.OK, "Confirmaton");
+    		else {
+    			getAlert(AlertType.INFORMATION, "Action completed.", ButtonType.OK, "Confirmaton");    			
+    		}
+//    		this.userList.getGuest().setActivate(false);
+//    		this.userList.getGuest().setNumRegister(0);
     	});
     	
     	Blacklist.setOnMouseClicked(e->{
@@ -1288,6 +1291,7 @@ public class HomepageController{
     	gridPane.setStyle("-fx-background-color: #F5F5DC;");
     	gridPane.setPadding(new Insets(h*0.1, 0, 0, 0));
     	gridPane.setVgap(h*0.05);
+    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
     	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
     	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
     	final String[] tags = {"+ Score", "- Score", "System kick", "Member revise"};
@@ -1315,6 +1319,10 @@ public class HomepageController{
     			GridPane.setHalignment(memberName, HPos.CENTER);
     			gridPane.add(memberName, 1, i);
     		}
+    		Button confirm = new Button("Confirm");
+    		GridPane.setHalignment(confirm, HPos.LEFT);
+			gridPane.add(confirm, 2, i);
+    		
     	}
     	pane.setCenter(gridPane);
     	BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
@@ -2421,6 +2429,7 @@ public class HomepageController{
     	this.Info_List = il; //set user information
     	this.G_List = g_List;
     	this.guest_g = name;
+//    	this.userList.getGuest().setActivate(true);
     	if(evaluation)
     		recommenderEvaluation();
     	if(passwordChange)

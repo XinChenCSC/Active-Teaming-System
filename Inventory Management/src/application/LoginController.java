@@ -183,7 +183,7 @@ public class LoginController{
 	//Fail for registration, an additional resumbit with a proper reason is required.
 	void FailedSignupAlert() throws IOException {		
     	ButtonType later = new ButtonType("Later", ButtonData.FINISH);
-    	ButtonType submit = new ButtonType("Submit", ButtonData.OK_DONE);
+    	ButtonType submit = new ButtonType("Appeal", ButtonData.OK_DONE);
     	Alert alert = new Alert(AlertType.ERROR,
     			"Your registration has been denied, but you can submit again by click the submit button. ",
     			 submit, later);
@@ -218,7 +218,7 @@ public class LoginController{
 		
 		if(userList.getGuest().getNumRegister() > 0 && !userList.getGuest().isActivate())
 			FailedSignupAlert();	
-		else if(userList.getGuest().getNumRegister() > 0 ){
+		else if(userList.getGuest().getNumRegister() > 0 && userList.getGuest().isActivate()){
 			SuccessedSignupAlert();
 			this.userList.getGuest().setNumRegister(0);
 		}

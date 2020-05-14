@@ -176,6 +176,7 @@ public class Main extends Application {
 //		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get().getWarnings());
 //		System.out.println(this.userList.getAll_User().get(this.userList.getAll_Size()-1).getPassword());
 //		System.out.println(this.gl.getGroup_List().get(0).getA_Group().get(0).isEvaluation());
+		System.out.println(this.userList.getGuest().getName());
 //		System.out.println(this.userList.getGuest().isActivate());
 //		System.out.println(this.gl.getGroup_List().get(0).getVT(5));
 //		System.out.println(this.gl.getGroup_List().get(0).getGroup_ID());
