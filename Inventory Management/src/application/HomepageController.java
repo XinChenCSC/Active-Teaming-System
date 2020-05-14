@@ -181,7 +181,10 @@ public class HomepageController{
 	private Group_List G_List = new Group_List();
 	
 	private String guest_g = "";
+	
+	private String ID = "";
 
+	private Taboo_List bad_word_list = new Taboo_List();
 	
     @FXML
     void initialize() throws IOException, InterruptedException {
@@ -590,6 +593,8 @@ public class HomepageController{
     	NewWindow(newWindow, mainScene, mainStage, "Claim");
     	
     	((Button)pane.getChildren().get(4)).setOnAction(e->{
+    		((TextField)pane.getChildren().get(3)).setText(bad_word_list.taboo_check(((TextField)pane.getChildren().get(3)).getText()));
+    	    ((TextField)pane.getChildren().get(3)).setText(bad_word_list.taboo_check(((TextField)pane.getChildren().get(3)).getText()));
     		if(((ComboBox<String>)pane.getChildren().get(1)).getSelectionModel().isEmpty() ||
     				((TextField)pane.getChildren().get(2)).getText().isEmpty() ||
     				((TextArea)pane.getChildren().get(3)).getText().isEmpty()) {
@@ -1219,49 +1224,103 @@ public class HomepageController{
 		}while(!newIDCheck(id));
     	return id;
     }
+	
+	private void memberManage(BorderPane pane, double w, double h) {
+		int index = 0;
+		// find OU
+		for(int x = 0; x < this.userList.getAll_Size(); x++) {
+			if (this.userList.getAll_User().get(x).getID().compareTo(this.ID) == 0 ) {
+				index = x;
+			}
+		}
+		//Frame
+		GridPane gridPane = new GridPane();
+		ComboBox<Integer> scores1 = new ComboBox<>();
+		ComboBox<Integer> scores2 = new ComboBox<>();
+		scores1.setValue(0);
+		scores2.setValue(0);
+		Button confirm1 = null,confirm2 = null,confirm3 = null,confirm4 = null,memberName = null;
+		CheckBox checkBox = null;
+		gridPane.setStyle("-fx-background-color: #F5F5DC;");
+		gridPane.setPadding(new Insets(h*0.1, 0, 0, 0));
+		gridPane.setVgap(h*0.05);
+		gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
+		final String[] tags = {"+ Score", "- Score", "System kick", "Member revise"};
+		for(int i = 0; i < tags.length; ++i) {
+			//Tag
+			Label tag = new Label(tags[i]);
+			GridPane.setHalignment(tag, HPos.CENTER);
+			gridPane.add(tag, 0, i);
+			if(i < 1) {
+				//score combobox
+				scores1.getItems().addAll(1,2,3,4,5,6,7,8,10);
+				GridPane.setHalignment(scores1, HPos.CENTER);
+				gridPane.add(scores1, 1, i);
+				confirm1 = new Button("Confirm");
+				GridPane.setHalignment(confirm1, HPos.LEFT);
+				gridPane.add(confirm1, 2, i);
+			}
+			else if(i < 2) {
+				//score combobox
+				scores2.getItems().addAll(1,2,3,4,5,6,7,8,10);
+				GridPane.setHalignment(scores2, HPos.CENTER);
+				gridPane.add(scores2, 1, i);
+				confirm2 = new Button("Confirm");
+				GridPane.setHalignment(confirm2, HPos.LEFT);
+				gridPane.add(confirm2, 2, i);
+			}
+			else if(i < 3) {
+				//Check box
+				checkBox = new CheckBox();
+				GridPane.setHalignment(checkBox, HPos.CENTER);
+				gridPane.add(checkBox, 1, i);
+				confirm3 = new Button("Confirm");
+				GridPane.setHalignment(confirm3, HPos.LEFT);
+				gridPane.add(confirm3, 2, i);
+			}
+			else{
+				//Textfield
+				memberName = new Button("Confirm");
+				GridPane.setHalignment(memberName, HPos.CENTER);
+				gridPane.add(memberName, 1, i);
+				confirm4 = new Button("Confirm");
+				GridPane.setHalignment(confirm4, HPos.LEFT);
+				gridPane.add(confirm4, 2, i);
+			}
+			
+			
+		}
+		
+		final int point1 = scores1.getSelectionModel().getSelectedItem();
+		final int num1 = index;
+		confirm1.setOnAction(e->{
+			getAlert(AlertType.WARNING, "sucess", ButtonType.YES, "ok");  
+			this.userList.getAll_User().get(num1).addReputationScore(point1);
+			
+		});
+		final int point2 = scores2.getSelectionModel().getSelectedItem();
+		
+		confirm2.setOnAction(e->{
+			
+			getAlert(AlertType.WARNING, "sucess", ButtonType.YES, "ok");  
+			this.userList.getAll_User().get(num1).addReputationScore( (-point2));
+		});
+		final boolean selected =  checkBox.isSelected();
+		
+		confirm3.setOnAction(e->{
+			if(selected) {
+				getAlert(AlertType.WARNING, "sucess", ButtonType.YES, "ok");  
+				this.Info_List.addSystemBlacklist(this.userList.getAll_User().get(num1));
+				
+			}
+		});
+		confirm4.setOnAction(e->{System.out.println();});
+		pane.setCenter(gridPane);
+		BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
+	}
     
-    private void memberManage(BorderPane pane, double w, double h) {
-    	//Frame
-    	GridPane gridPane = new GridPane();
-    	gridPane.setStyle("-fx-background-color: #F5F5DC;");
-    	gridPane.setPadding(new Insets(h*0.1, 0, 0, 0));
-    	gridPane.setVgap(h*0.05);
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
-    	gridPane.getColumnConstraints().add(new ColumnConstraints(w*0.2));
-    	final String[] tags = {"+ Score", "- Score", "System kick", "Member revise"};
-    	for(int i = 0; i < tags.length; ++i) {
-    		//Tag
-    		Label tag = new Label(tags[i]);
-    		GridPane.setHalignment(tag, HPos.CENTER);
-    		gridPane.add(tag, 0, i);
-    		if(i < 2) {
-    			//score combobox
-    			ComboBox<Integer> scores = new ComboBox<>();
-    			scores.getItems().addAll(1,2,3,4,5,6,7,8,10);
-    			GridPane.setHalignment(scores, HPos.CENTER);
-    			gridPane.add(scores, 1, i);
-    		}
-    		else if(i < 3) {
-    			//Check box
-    			CheckBox checkBox = new CheckBox();
-    			GridPane.setHalignment(checkBox, HPos.CENTER);
-    			gridPane.add(checkBox, 1, i);
-    		}
-    		else{
-    			//Textfield
-    			Button memberName = new Button("Confirm");
-    			GridPane.setHalignment(memberName, HPos.CENTER);
-    			gridPane.add(memberName, 1, i);
-    		}
-    		Button confirm = new Button("Confirm");
-    		GridPane.setHalignment(confirm, HPos.LEFT);
-			gridPane.add(confirm, 2, i);
-    		
-    	}
-    	pane.setCenter(gridPane);
-    	BorderPane.setMargin(gridPane, new Insets(h*0.1, 0, 0, 0));
-    }
     
     //Member information board
     private void memberBoard(BorderPane pane, double w, double h, int index) {
@@ -1375,7 +1434,7 @@ public class HomepageController{
     		//Hide content area
     		content.setVisible(false);
     		//Create button and assign subject to it
-    		Button email_label = new Button(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject());
+    		Button email_label = new Button(bad_word_list.taboo_check(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject()));
     		getSetting(email_label, gridPane.getColumnConstraints().get(0).getPrefWidth(), h*0.1, 0, 0);
     		email_label.setAlignment(Pos.CENTER);
     		email_label.setFont(new Font(16));
@@ -1414,8 +1473,8 @@ public class HomepageController{
     	label.setOnAction(e->{
     		pane.setVisible(true);
     		((TextField) children.get(1)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getTarget());
-    		((TextField) children.get(3)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject());
-    		((TextArea) children.get(4)).setText(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getContent());
+    		((TextField) children.get(3)).setText(bad_word_list.taboo_check(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject()));
+    	    ((TextArea) children.get(4)).setText(bad_word_list.taboo_check(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getContent()));
     		if(this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getTarget().compareTo(this.userList.getGuest().getName()) == 0 &&
     				this.Info_List.getInfo_Con().get(UserIndex).getEmail_Content().get(i).getSubject().compareTo("Registration") == 0) {
     			((HBox) children.get(5)).setVisible(true);	
@@ -1956,6 +2015,7 @@ public class HomepageController{
     private void MessageSendEvent(Button send, GridPane messages, TextField text, int i) {
     	send.setOnAction(e->{
     		// messages
+    		text.setText(bad_word_list.taboo_check(text.getText()));
     		Label input = new Label(text.getText());
     		input.setStyle("-fx-background-color: #7FFF00;");
     		input.setWrapText(true);

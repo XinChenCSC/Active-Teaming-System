@@ -164,6 +164,28 @@ Email: Wudi@gmail.com</string>
     <void property="ID">
      <string>55555</string>
     </void>
+    <void property="message_Content">
+     <void method="add">
+      <object class="Message.Message_Container" id="Message_Container0">
+       <void property="ID">
+        <string>92484</string>
+       </void>
+       <void id="StringArrayArray0" property="content">
+        <void index="0">
+         <void index="0">
+          <string>1</string>
+         </void>
+         <void index="1">
+          <string>***</string>
+         </void>
+        </void>
+       </void>
+       <void property="position">
+        <int>1</int>
+       </void>
+      </object>
+     </void>
+    </void>
     <void property="notice">
      <void method="add">
       <object class="Notice.Notice">
@@ -238,6 +260,35 @@ Email: Wudi@gmail.com</string>
    <object class="Clients.Information_Container">
     <void property="ID">
      <string>65428</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Clients.Information_Container" id="Information_Container4">
+    <void property="ID">
+     <string>92484</string>
+    </void>
+    <void property="message_Content">
+     <void method="add">
+      <object class="Message.Message_Container" id="Message_Container1">
+       <void property="ID">
+        <string>55555</string>
+       </void>
+       <void id="StringArrayArray1" property="content">
+        <void index="0">
+         <void index="0">
+          <string>0</string>
+         </void>
+         <void index="1">
+          <string>***</string>
+         </void>
+        </void>
+       </void>
+       <void property="position">
+        <int>1</int>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
