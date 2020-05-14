@@ -5,21 +5,10 @@
    <object class="Clients.SU" id="SU0"/>
   </void>
   <void method="add">
-   <object class="Clients.OU" id="OU0">
-    <void property="inGroup">
-     <boolean>true</boolean>
-    </void>
-   </object>
+   <object class="Clients.OU" id="OU0"/>
   </void>
   <void method="add">
-   <object class="Clients.VIP" id="VIP0">
-    <void property="creatingGroup">
-     <boolean>true</boolean>
-    </void>
-    <void property="inGroup">
-     <boolean>true</boolean>
-    </void>
-   </object>
+   <object class="Clients.VIP" id="VIP0"/>
   </void>
   <void method="add">
    <object class="Clients.OU" id="OU1">
@@ -146,104 +135,8 @@
     </void>
    </object>
   </void>
-  <void method="add">
-   <object class="Clients.OU" id="OU5">
-    <void property="ID">
-     <string>92484</string>
-    </void>
-    <void property="date_Of_Join">
-     <string>05/13/2020</string>
-    </void>
-    <void property="email">
-     <string>Wudi@gmail.com</string>
-    </void>
-    <void property="interest">
-     <string>Vellyball</string>
-    </void>
-    <void property="name">
-     <string>Wudi Wang</string>
-    </void>
-    <void property="recommender">
-     <string>Liam Lee</string>
-    </void>
-    <void property="reputationScore">
-     <int>0</int>
-    </void>
-    <void property="total_Group_Engaged">
-     <int>0</int>
-    </void>
-    <void property="total_Penalty_Received">
-     <int>0</int>
-    </void>
-    <void property="total_Project_Completed">
-     <int>0</int>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="Clients.OU" id="OU6">
-    <void property="ID">
-     <string>92484</string>
-    </void>
-    <void property="date_Of_Join">
-     <string>05/13/2020</string>
-    </void>
-    <void property="email">
-     <string>Wudi@gmail.com</string>
-    </void>
-    <void property="interest">
-     <string>Vellyball</string>
-    </void>
-    <void property="name">
-     <string>Wudi Wang</string>
-    </void>
-    <void property="recommender">
-     <string>Liam Lee</string>
-    </void>
-    <void property="reputationScore">
-     <int>0</int>
-    </void>
-    <void property="total_Group_Engaged">
-     <int>0</int>
-    </void>
-    <void property="total_Penalty_Received">
-     <int>0</int>
-    </void>
-    <void property="total_Project_Completed">
-     <int>0</int>
-    </void>
-   </object>
-  </void>
  </object>
- <object class="Clients.Guest">
-  <void property="ID">
-   <string>92484</string>
-  </void>
-  <void property="activate">
-   <boolean>true</boolean>
-  </void>
-  <void property="email">
-   <string>Wudi@gmail.com</string>
-  </void>
-  <void property="interest">
-   <string>Vellyball</string>
-  </void>
-  <void property="login">
-   <boolean>true</boolean>
-  </void>
-  <void property="name">
-   <string>Wudi Wang</string>
-  </void>
-  <void property="numRegister">
-   <int>2</int>
-  </void>
-  <void property="password">
-   <string>66666</string>
-  </void>
-  <void property="recommender">
-   <string>Liam Lee</string>
-  </void>
- </object>
+ <object class="Clients.Guest"/>
  <object class="java.util.ArrayList">
   <void method="add">
    <object idref="OU0"/>
@@ -259,12 +152,6 @@
   </void>
   <void method="add">
    <object idref="OU4"/>
-  </void>
-  <void method="add">
-   <object idref="OU5"/>
-  </void>
-  <void method="add">
-   <object idref="OU6"/>
   </void>
  </object>
  <object class="java.util.ArrayList">
